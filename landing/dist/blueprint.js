@@ -181,7 +181,7 @@ function render(message,progress=false){
  byId('client-select').value=c.id;byId('nav-task-label').textContent=featureNames[c.id];byId('feature-icon').src='assets/icons/'+featureIcons[c.id]+'.svg';
  byId('workspace-company').textContent=c.company;byId('client-name').textContent=w.job;byId('workspace-subtitle').textContent=w.question;byId('work-id').textContent=c.workId;
  byId('stage-kicker').textContent=step.label;byId('stage-title').textContent=step.title;byId('stage-description').textContent=step.description;
- if(!verified()){byId('stage-title').textContent='주소와 거래 정보를 먼저 확인해요.';byId('stage-description').textContent='발급 서명과 요청한 정보가 맞아야 다음 업무로 이어갈 수 있어요.';}
+ if(!verified()){byId('stage-title').textContent='업무 내역과 표시 항목';byId('stage-description').textContent='확인 내역에 담을 항목을 선택하고, 관련 업무 내역을 살펴보세요.';}
  if(c.id==='game'&&current.stage===4&&current.received){byId('stage-title').textContent=w.received.title;byId('stage-description').textContent=w.received.description;}
  byId('task-status').textContent=shortStatus();byId('task-status').dataset.tone=statusTone();
  byId('context-source').textContent=gateCase?.record?.payload?.recordId||gateCase?.recordId||'—';byId('context-time').textContent=referenceTime();

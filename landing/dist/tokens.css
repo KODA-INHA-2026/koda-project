@@ -12,6 +12,13 @@
   --line-strong: #7A8782;
   --warning: #8A5000;
   --danger: #B42318;
+  --type-reading: 16px;
+  --type-body: 15px;
+  --type-label: 14px;
+  --type-caption: 13px;
+  --type-micro: 12px;
+  --type-code: 13px;
+  --type-body-leading: 1.65;
   --sans: "Pretendard Variable", sans-serif;
   --mono: "IBM Plex Mono", monospace;
   --radius: 8px;

@@ -63,6 +63,7 @@ window.KODA_ASSURANCE_UI=(()=>{
   function input(parent,label,path,{wide=false,type='text',note}={}){
    const wrap=el('label',undefined,'assurance-field'+(wide?' wide':'')),id='request-'+path.replaceAll('.','-');wrap.htmlFor=id;wrap.append(el('span',label));
    const control=el('input');control.id=id;control.type=type;control.value=scalar(readPath(request,path));control.autocomplete='off';control.spellcheck=false;control.setAttribute('autocapitalize','none');control.dataset.requestPath=path;
+   if(/(wallet|counterparty|recipient|from|to)$/.test(path)||/(transaction\.id|transactions\.\d+\.id)$/.test(path))control.dataset.requestFormat='identifier';
    if(type==='text')control.inputMode='text';if(type==='number')control.step='any';
    control.addEventListener('input',()=>{writePath(request,path,type==='number'?control.value:control.value.trim());onChange(path);});wrap.append(control);
    if(note){const help=el('small',note);help.id=id+'-help';control.setAttribute('aria-describedby',help.id);wrap.append(help);}parent.append(wrap);fields.push(control);

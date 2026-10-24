@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-25.3",
+  "version": "2026-10-25.5",
   "source": "koda-motion-20261021/design/koda-tokens.json",
   "colors": {
     "ink": "#10201B",
@@ -18,6 +18,15 @@
   "fonts": {
     "sans": "Pretendard Variable",
     "mono": "IBM Plex Mono"
+  },
+  "typography": {
+    "reading": "16px",
+    "body": "15px",
+    "label": "14px",
+    "caption": "13px",
+    "micro": "12px",
+    "code": "13px",
+    "body-leading": "1.65"
   },
   "radius": "8px",
   "motion": {
