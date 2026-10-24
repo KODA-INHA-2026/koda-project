@@ -1,0 +1,62 @@
+/* Shared evidence controls and result presentation; colors/fonts inherit tokens.css. */
+.assurance-zone{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;margin:0 0 32px;align-items:start}
+.assurance-controls,.assurance-result{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px}
+.assurance-controls h2,.assurance-result h2{font-size:19px;font-weight:600;line-height:1.5;margin:0 0 18px;letter-spacing:-.035em}
+.assurance-controls label,.assurance-field{display:block;margin:0 0 16px;font-size:12px;font-weight:550;color:var(--ink)}
+.assurance-controls label>span,.assurance-field>span{display:block;margin-bottom:7px}
+.assurance-controls select,.assurance-controls input,.receiver-text{width:100%;min-height:46px;box-sizing:border-box;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;padding:11px 12px}
+.assurance-controls input,.receiver-text{font-family:var(--mono);font-size:12px;letter-spacing:0}
+.assurance-controls input[aria-invalid=true],.receiver-text[aria-invalid=true]{border-color:var(--danger)}
+.assurance-controls input:focus-visible,.assurance-controls select:focus-visible,.receiver-text:focus-visible{outline:2px solid var(--action);outline-offset:3px}
+.assurance-controls small,.assurance-note{display:block;font-size:11px;font-weight:400;line-height:1.7;color:var(--muted);margin-top:7px;overflow-wrap:anywhere}
+.assurance-more{border-top:1px solid var(--line);margin-top:20px;padding-top:16px}
+.assurance-more summary{cursor:pointer;font-size:12px;font-weight:550;min-height:28px}
+.assurance-more[open] summary{margin-bottom:18px}
+.assurance-fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.assurance-fields-grid>.assurance-field.wide{grid-column:1/-1}
+.assurance-target{padding-top:16px;border-top:1px solid var(--line);margin-top:16px}
+.assurance-target:first-child{border-top:0;margin-top:0;padding-top:0}
+.assurance-result[data-state=failed]{border-color:var(--danger)}
+.assurance-result[data-state=passed]{border-color:var(--action)}
+.assurance-summary{display:flex;gap:12px;align-items:flex-start;margin:0 0 20px}
+.assurance-summary>span{display:grid;place-items:center;flex:none;border:1px solid currentColor;width:28px;height:28px;border-radius:50%;font-size:15px;color:var(--action)}
+.assurance-result[data-state=failed] .assurance-summary>span{color:var(--danger)}
+.assurance-summary h3{font-size:19px;line-height:1.5;letter-spacing:-.03em;margin:0 0 5px;font-weight:600}
+.assurance-summary p{font-size:12px;line-height:1.7;color:var(--muted);margin:0}
+.assurance-checks{list-style:none;margin:0;padding:0}
+.assurance-check{padding:13px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.6;min-width:0}
+.assurance-check-heading{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.assurance-check-heading strong{font-weight:550}
+.assurance-check-heading b{font-size:11px;white-space:nowrap;font-weight:550;color:var(--action)}
+.assurance-check[data-status=failed] .assurance-check-heading b{color:var(--danger)}
+.assurance-check[data-status=not_checked] .assurance-check-heading b{color:var(--muted)}
+.assurance-check p{margin:5px 0 0;font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.assurance-diff{margin-top:8px!important;font-family:var(--mono);font-size:11px!important;letter-spacing:0;overflow-wrap:anywhere;word-break:break-all}
+.assurance-diff span{display:block}
+.assurance-diff mark{background:color-mix(in srgb,var(--danger) 10%,var(--surface));color:var(--danger);font-weight:650;border-bottom:1px solid currentColor;padding:1px 0}
+.assurance-meta{margin:20px 0 0;padding-top:15px;border-top:1px solid var(--line);font-size:11px;line-height:1.8;color:var(--muted)}
+.assurance-meta strong{color:var(--ink);font-weight:550}
+.assurance-meta p{margin:3px 0;overflow-wrap:anywhere}
+.assurance-scope{font-size:11px;line-height:1.8;color:var(--muted);margin:18px 0 0}
+.assurance-recheck{margin-top:18px}
+.assurance-error{color:var(--danger);font-size:12px;line-height:1.7;margin:10px 0}
+.receiver-main{max-width:1120px;width:calc(100% - 80px);margin:0 auto;padding:54px 0 72px}
+.receiver-heading{max-width:760px;margin-bottom:32px}
+.receiver-heading h1{font-size:36px;line-height:1.45;letter-spacing:-.045em;font-weight:600;margin:0 0 14px}
+.receiver-heading p{font-size:14px;line-height:1.8;color:var(--muted)}
+.receiver-text{display:block;height:270px;resize:none;line-height:1.7;white-space:pre;overflow:auto}
+.receiver-import{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0 20px}
+.receiver-file{max-width:100%;font-size:12px;line-height:1.7}
+.receiver-file::file-selector-button{padding:9px 12px;border:1px solid var(--line-strong);border-radius:7px;color:var(--ink);background:var(--surface);font:inherit;margin-right:10px;cursor:pointer}
+.receiver-links{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;margin-top:28px;color:var(--action)}
+.console-receiver-link{display:inline-block;margin-top:15px;color:var(--action);font-size:12px;line-height:1.8}
+@media(max-width:1080px){.assurance-zone{grid-template-columns:1fr;gap:20px}.assurance-checks{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}.assurance-result:focus{scroll-margin-top:140px}}
+@media(max-width:600px){.assurance-controls,.assurance-result{padding:22px 20px;border-radius:13px}.assurance-zone{gap:18px;margin-bottom:24px}.assurance-checks,.assurance-fields-grid{display:block}.assurance-result h2{font-size:17px}.assurance-summary h3{font-size:18px}.receiver-main{width:calc(100% - 40px);padding:30px 0 48px}.receiver-heading h1{font-size:27px}.receiver-text{height:240px}.assurance-controls input{font-size:11px}.assurance-result:focus{scroll-margin-top:170px}}
+@media(prefers-reduced-motion:reduce){.assurance-zone *{scroll-behavior:auto!important;transition:none!important}}
+@media(forced-colors:active){.assurance-result,.assurance-controls{border-color:CanvasText}.assurance-diff mark{color:MarkText;background:Mark}.assurance-check-heading b{color:CanvasText}}
+
+.assurance-controls input{scroll-margin-top:180px}.assurance-primary-checks{display:block}.assurance-primary-checks .assurance-check p{font-size:11px}
+
+.console-utility-nav{margin-left:auto;display:flex;align-items:center;gap:20px;flex-shrink:0}.console-utility-nav a{display:inline-flex;align-items:center;min-height:44px;font-size:12px;text-decoration:none;color:var(--muted)}.console-utility-nav a:hover{color:var(--action)}@media(max-width:600px){.console-utility-nav{gap:12px}.console-utility-nav a{font-size:10px}}
+.assurance-result,.assurance-result:focus{scroll-margin-top:100px}
+@media(max-width:800px){.assurance-result,.assurance-result:focus{scroll-margin-top:20px}}

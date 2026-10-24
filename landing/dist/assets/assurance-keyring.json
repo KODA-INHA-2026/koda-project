@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "description": "Only a project sample key is trusted. This is not a KODA public key.",
+  "keys": [
+    {
+      "id": "sample-p256-20261024",
+      "label": "산학프로젝트 샘플 발급키",
+      "algorithm": "ECDSA-P256-SHA256",
+      "publicKeySpki": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERpSjMUGAJQlYTHMmMtKgAN4RfZWXxU490fvJc4Cqm2SYRSN8XZ4XFTXjgCU6Uy3O78ehgD271u7kDjs-vVgoQA",
+      "fingerprint": "fd88436f4d735226dd278c0b463d0973a81c44d724981baf7706e7c1d6d2deae",
+      "validFrom": "2026-10-01T00:00:00.000Z",
+      "validUntil": "2027-01-01T00:00:00.000Z"
+    }
+  ]
+}

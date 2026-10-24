@@ -1,0 +1,17 @@
+{
+  "name": "koda-inha-concept-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build-tokens.mjs && node build-motion.mjs",
+    "check": "node --check dist/app.js && node --check dist/blueprint.js && node --check dist/product-motion.js && node verify-static.mjs"
+  },
+  "dependencies": {
+    "embla-carousel": "8.6.0",
+    "motion": "14.6.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

@@ -1,0 +1,19 @@
+/* Generated from shared design/visual-tokens.json */
+:root {
+  --ink: #10201B;
+  --muted: #44534E;
+  --paper: #F4F6F5;
+  --surface: #FFFFFF;
+  --brand: #00D998;
+  --action: #00704F;
+  --action-ink: #005A40;
+  --soft: #E3F5EE;
+  --line: #DBE2DF;
+  --line-strong: #7A8782;
+  --warning: #8A5000;
+  --danger: #B42318;
+  --sans: "Pretendard Variable", sans-serif;
+  --mono: "IBM Plex Mono", monospace;
+  --radius: 8px;
+  --feedback: 140ms;
+}

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "path": "landing/dist/assets/custody-core-v6.png",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/custody-core-v6.png",
+      "bytes": 1632431,
+      "sha256": "e5db0d4645a89ff6fb9ba975395a897841baec2dafa1b594bfb5a4d09e2a740e"
+    },
+    {
+      "path": "landing/dist/assets/ibm-plex-mono-latin-400-normal.woff2",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/ibm-plex-mono-latin-400-normal.woff2",
+      "bytes": 14708,
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
+    },
+    {
+      "path": "landing/dist/assets/koda-concept-demo-30s-v7-poster.jpg",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/koda-concept-demo-30s-v7-poster.jpg",
+      "bytes": 117057,
+      "sha256": "d8d8f8970a78453d72119ecbbb7ca595b539d9c5e39be63ae2d5de2d76e1f381"
+    },
+    {
+      "path": "landing/dist/assets/koda-concept-demo-30s-v7.mp4",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/koda-concept-demo-30s-v7.mp4",
+      "bytes": 4156462,
+      "sha256": "cb750c853cedbdff41a72cd6a47f9b723e24d590ca708cae633b8a5c36bfbc94"
+    },
+    {
+      "path": "landing/dist/assets/PretendardVariable.woff2",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/PretendardVariable.woff2",
+      "bytes": 2057688,
+      "sha256": "9599f12fd42fc0bce1cd50b47a0c022e108d7aa64dd0d1bb0ed44f3282d900b4"
+    }
+  ]
+}

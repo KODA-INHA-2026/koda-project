@@ -1,0 +1,18 @@
+{
+  "isDemo": true,
+  "description": "Synthetic data for an industry-academia concept. No actual KODA data, wallet, transaction, assurance, signature or ZK proof.",
+  "demoCheckTime": "2026-10-24T14:30:00+09:00",
+  "demoValiditySeconds": 3600,
+  "source": "FIXTURE-CUSTODY-01",
+  "company": "한빛테크 (가상 법인)",
+  "wallet": "DEMO-WALLET-01",
+  "transaction": "DEMO-TX-20261024-01",
+  "referenceNetwork": "Ethereum",
+  "amount": 25000,
+  "asset": "USDC",
+  "scenarios": [
+    {"id":"match","requestedNetwork":"Ethereum","referenceTime":"2026-10-24T14:00:00+09:00"},
+    {"id":"mismatch","requestedNetwork":"Polygon","referenceTime":"2026-10-24T14:00:00+09:00"},
+    {"id":"stale","requestedNetwork":"Ethereum","referenceTime":"2026-10-23T14:00:00+09:00"}
+  ]
+}

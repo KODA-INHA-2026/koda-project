@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10201B">
+<title>KODA Workspace — 법인 업무</title>
+<link rel="preload" href="assets/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="workspace-v6.css"><link rel="stylesheet" href="assurance-ui.css">
+<script src="commercial-data.js" defer></script><script src="product-copy.js" defer></script><script src="assurance-core.js" defer></script><script src="assurance-ui.js" defer></script><script src="blueprint.js" defer></script><script src="product-motion.js" defer></script>
+</head>
+<body class="console-page">
+<a class="skip" href="#main">본문으로 이동</a>
+<header class="console-topbar">
+ <a class="console-brand" href="index.html" aria-label="KODA Workspace 홈"><img src="assets/koda.svg" width="117" height="26" alt="KODA"><span>Workspace</span></a>
+ <div class="console-company"><label for="client-select">법인</label><select id="client-select" name="client"><option value="export">한빛정밀 · 수출 제조</option><option value="game">루멘게임즈 · 게임·콘텐츠</option><option value="audit">새봄자산운용 · 자산운용</option></select></div>
+ <nav class="console-utility-nav" aria-label="보조 메뉴"><a href="verification.html">받은 자료 확인</a><a href="index.html#films">30초 영상 ↗</a></nav>
+</header>
+<div class="console-shell">
+ <aside class="console-sidebar">
+  <p class="console-nav-label">법인 업무</p>
+  <nav class="console-nav" aria-label="업무 메뉴">
+   <a href="?view=list" data-view="list" aria-current="page"><img src="assets/icons/layout-dashboard.svg" width="19" height="19" alt=""><span>업무 홈</span></a>
+   <a href="?view=detail" data-view="detail"><img id="feature-icon" src="assets/icons/receipt.svg" width="19" height="19" alt=""><span id="nav-task-label">대금 확인</span><small>1</small></a>
+   <a href="?view=activity" data-view="activity"><img src="assets/icons/arrows-exchange.svg" width="19" height="19" alt=""><span>활동 내역</span></a>
+   <a href="?view=archive" data-view="archive"><img src="assets/icons/file-text.svg" width="19" height="19" alt=""><span>자료 보관함</span></a>
+  </nav>
+  <div class="console-sidebar-bottom"><a href="research.html">서비스 방향 <span aria-hidden="true">↗</span></a><a href="brand.html">코다의 다음 모습 <span aria-hidden="true">↗</span></a><a href="verification.html">받은 자료 확인하기 <span aria-hidden="true">↗</span></a></div>
+ </aside>
+ <div class="console-body">
+ <main id="main" class="console-content">
+ <p id="view-status" class="sr-only" role="status" aria-live="polite"></p>
+ <section id="view-list" data-view-panel="list" aria-labelledby="list-heading">
+  <div class="console-page-heading"><div><p class="console-eyebrow" id="list-company">한빛정밀</p><h1 id="list-heading" tabindex="-1">업무 홈</h1><p>확인할 내역과 다음 할 일을 한곳에서 보세요.</p></div></div>
+  <div class="console-section-heading"><h2>진행 중인 업무 <span class="console-count">1</span></h2><span id="list-industry"></span></div>
+  <div class="console-table-wrap"><table class="console-table console-task-table"><caption class="sr-only">선택한 법인의 진행 중인 업무 1건</caption><thead><tr><th scope="col">업무</th><th scope="col">현재 상태</th><th scope="col" class="console-number" id="list-value-label">금액</th><th scope="col">다음 담당</th><th scope="col"><span class="sr-only">업무 열기</span></th></tr></thead><tbody id="task-list-body"></tbody></table></div>
+  <p class="console-list-note">업무를 열어 자료를 확인하고 필요한 일을 이어가세요.</p>
+ </section>
+ <section id="view-detail" data-view-panel="detail" aria-labelledby="client-name" hidden>
+  <button type="button" id="back-to-list" class="console-back"><span aria-hidden="true">←</span> 업무 목록</button>
+  <div class="console-page-heading console-detail-heading"><div><p class="console-eyebrow"><span id="workspace-company">한빛정밀</span><span class="console-dot" aria-hidden="true">·</span><span id="work-id" class="console-mono"></span></p><h1 id="client-name" tabindex="-1">받은 대금 맞춰보기</h1><p id="workspace-subtitle"></p></div><div class="console-actions"><button type="button" id="next-stage" class="console-button console-primary">청구서와 맞춰보기</button><button type="button" id="repair-case" class="console-button console-outline" hidden>기본 자료로 바꾸기</button><button type="button" id="receive-execution" class="console-button console-primary" hidden>처리 결과 불러오기</button><button type="button" id="download-work" class="console-button console-primary" hidden>업무 기록 저장하기</button></div></div>
+  <section class="assurance-zone" aria-label="주소와 거래 정보 확인">
+   <div class="assurance-controls"><h2>확인할 정보</h2><label for="assurance-scenario"><span>확인할 상황</span><select id="assurance-scenario" disabled><option>자료를 불러오는 중</option></select></label><div id="assurance-inputs"></div><p id="assurance-input-error" class="assurance-error" role="alert" hidden></p><p class="assurance-note">입력을 바꾸면 앞서 확인한 결과와 승인을 지워요.</p></div>
+   <div id="assurance-result" class="assurance-result" tabindex="-1" aria-live="polite" aria-atomic="false"><h2>확인 결과</h2><p class="assurance-note">주소와 거래 정보를 확인해 주세요.</p></div>
+  </section>
+  <div class="console-detail-grid">
+   <div class="console-detail-main">
+    <section class="console-task-surface" aria-labelledby="stage-title">
+     <div class="console-task-heading"><div><p id="stage-kicker" class="console-eyebrow"></p><h2 id="stage-title"></h2></div><span id="task-status" class="console-status"></span></div>
+     <p id="stage-description" class="console-description"></p>
+     <div id="audit-disclosure" class="console-disclosure" hidden><fieldset><legend>확인 내역에 담을 항목</legend><label><input type="checkbox" id="audit-company" checked><span><strong>법인 이름</strong><small>자료에서 법인 이름을 표시해요.</small></span></label><label><input type="checkbox" id="audit-amount"><span><strong>거래한 수량</strong><small>자산과 수량을 함께 담아요.</small></span></label><p>선택에서 뺀 정보도 공개 원자료에는 남아요. 비밀정보 보호 기능은 아니에요. 항목을 바꾸면 다시 확인해요.</p></fieldset></div>
+     <div id="stage-records" class="console-records"></div>
+     <div id="approval-panel" class="console-approvals" hidden><div class="console-section-heading"><h3>두 명 승인</h3><strong id="approval-count">0 / 2</strong></div><p>요청자와 다른 A·B 역할로 각자의 승인을 남기세요.</p><div class="console-approval-grid"><section><div class="console-person" aria-hidden="true">A</div><h4>승인자 A</h4><p>거래 상대와 금액 확인</p><button type="button" id="approve-a" class="console-button console-outline">A 역할로 승인하기</button></section><section><div class="console-person" aria-hidden="true">B</div><h4>승인자 B</h4><p>같은 자료를 한 번 더 확인</p><button type="button" id="approve-b" class="console-button console-outline">B 역할로 승인하기</button></section></div></div>
+     <div id="stage-status" class="console-inline-status" role="status" aria-live="polite" aria-atomic="true"></div>
+     
+     <p id="output-help" class="console-output-help" hidden></p><a class="console-receiver-link" href="verification.html">저장한 확인 내역을 받는 쪽에서 확인하기 ↗</a>
+    </section>
+   </div>
+   <aside class="console-context" aria-label="담당자와 기준 자료">
+    <section><h2>다음 담당</h2><strong id="next-owner" class="console-owner">재무 담당자</strong><p id="context-responsibility"></p></section>
+    <section><h2>기준 자료</h2><dl class="console-context-data"><dt>자료 출처</dt><dd id="context-source" class="console-mono"></dd><dt>자료 기준 시간</dt><dd id="context-time"></dd></dl><button type="button" id="restart-case" class="console-button console-quiet"><img src="assets/icons/refresh.svg" width="16" height="16" alt="">정상 자료로 바꾸기</button></section>
+    <section><div class="console-section-heading"><h2>최근 활동</h2><a href="?view=activity" data-view="activity">전체 보기</a></div><ol id="event-log" class="console-timeline"></ol></section>
+   </aside>
+  </div>
+ </section>
+ <section id="view-activity" data-view-panel="activity" aria-labelledby="activity-heading" hidden>
+  <div class="console-page-heading"><div><p class="console-eyebrow view-company"></p><h1 id="activity-heading" tabindex="-1">활동 내역</h1><p>지금 열려 있는 업무에서 남긴 기록이에요.</p></div><button class="console-button console-outline" type="button" data-open-current>업무 내역 열기</button></div>
+  <div class="console-table-wrap" id="activity-table-wrap"><table class="console-table"><caption class="sr-only">현재 업무의 활동 내역</caption><thead><tr><th scope="col" class="console-order-column">순서</th><th scope="col">담당</th><th scope="col">내용</th></tr></thead><tbody id="activity-table-body"></tbody></table></div>
+  <div id="activity-empty" class="console-empty" hidden><img src="assets/icons/arrows-exchange.svg" width="32" height="32" alt=""><h2>아직 남긴 활동이 없어요.</h2><p>업무를 확인하면 이곳에서 기록을 볼 수 있어요.</p><button class="console-button console-outline" type="button" data-open-current>업무 확인하기</button></div>
+ </section>
+ <section id="view-archive" data-view-panel="archive" aria-labelledby="archive-heading" hidden>
+  <div class="console-page-heading"><div><p class="console-eyebrow view-company"></p><h1 id="archive-heading" tabindex="-1">자료 보관함</h1><p>확인을 마친 자료를 저장하고 연결된 업무를 살펴보세요.</p></div></div>
+  <div id="archive-content" hidden><div class="console-table-wrap"><table class="console-table console-archive-table"><caption class="sr-only">현재 업무에서 준비한 자료</caption><thead><tr><th scope="col">자료</th><th scope="col">자료 기준</th><th scope="col">상태</th><th scope="col"><span class="sr-only">자료 저장</span></th></tr></thead><tbody><tr><th scope="row"><strong id="archive-name"></strong><small id="archive-file" class="console-mono"></small></th><td><span id="archive-source" class="console-mono"></span><small id="archive-time"></small></td><td><span class="console-status">자료 준비됨</span></td><td><button type="button" id="download-archive" class="console-button console-outline">JSON 저장</button></td></tr></tbody></table></div><p id="archive-description" class="console-list-note"></p><a class="console-receiver-link" href="verification.html">받은 자료 확인하기 ↗</a><button type="button" class="console-text-action" data-open-current>연결된 업무 보기 <span aria-hidden="true">→</span></button></div>
+  <div id="archive-empty" class="console-empty"><img src="assets/icons/file-text.svg" width="32" height="32" alt=""><h2 id="archive-empty-title">아직 준비된 자료가 없어요.</h2><p id="archive-empty-description">업무 내용을 확인한 뒤 자료를 정리해 주세요.</p><button class="console-button console-outline" type="button" data-open-current>업무 확인하기</button></div>
+ </section>
+ </main>
+ <footer class="console-footer"><span>KODA Workspace</span><p>산학프로젝트 프로토타입 · 실제 거래 없음</p><a href="assets/CREDITS.txt">출처·라이선스</a></footer>
+ </div>
+</div>
+<noscript><p class="noscript">업무를 시작하려면 JavaScript를 켜 주세요. <a href="index.html#films">영상으로 둘러보기</a></p></noscript>
+</body></html>
+
+
+

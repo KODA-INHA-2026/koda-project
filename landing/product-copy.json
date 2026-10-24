@@ -1,0 +1,527 @@
+{
+  "schemaVersion": 1,
+  "version": "2026-10-25.4",
+  "locale": "ko-KR",
+  "meta": {
+    "stageIndexBase": 0,
+    "caseIds": [
+      "export",
+      "game",
+      "audit"
+    ],
+    "parameters": [
+      "company",
+      "role",
+      "workId",
+      "source",
+      "step",
+      "count",
+      "actor",
+      "reference",
+      "recordCount"
+    ],
+    "outputFormat": "JSON",
+    "preserveOutputFlags": [
+      "isDemo",
+      "blueprintOnly",
+      "externalExecution",
+      "cryptographicVerification",
+      "zkProof"
+    ],
+    "preserveStateAndData": true
+  },
+  "demo": {
+    "badge": "",
+    "notice": "산학프로젝트 프로토타입 · 실제 거래 없음",
+    "detail": "",
+    "outputNotice": "업무 기록을 JSON 파일로 저장해요.",
+    "previewLabel": "업무 미리보기",
+    "dataControlsLabel": "자료 선택",
+    "executionDataHelp": "요청·승인 기록에 처리 결과를 연결해요."
+  },
+  "shell": {
+    "documentTitle": "KODA — 법인 자산 업무",
+    "description": "받은 대금을 청구서와 맞춰보고, 파트너 정산을 승인하고, 감사에 필요한 자료를 준비해요.",
+    "workspaceName": "법인 자산 업무",
+    "navigation": {
+      "clients": "법인 고르기",
+      "workbench": "업무 처리",
+      "film": "30초로 둘러보기",
+      "strategy": "서비스 방향",
+      "verification": "정보 맞춰보기"
+    },
+    "hero": {
+      "eyebrow": "법인 디지털자산 업무",
+      "titleLines": [
+        "받은 대금부터 정산까지,",
+        "다음 할 일이 보여요."
+      ],
+      "description": "받은 대금을 청구서와 맞춰보고, 파트너 정산을 승인하고, 감사에 필요한 자료를 준비해요. 자료와 담당자, 다음 할 일이 같은 업무 번호로 이어져요.",
+      "primaryAction": "법인 업무 열기",
+      "secondaryAction": "30초로 둘러보기"
+    },
+    "clients": {
+      "eyebrow": "법인 선택",
+      "title": "어떤 업무를 할까요?",
+      "description": "법인을 바꾸면 그 법인의 업무를 처음부터 시작해요.",
+      "action": "선택한 법인 업무 열기",
+      "legend": "업무를 볼 법인"
+    },
+    "preview": {
+      "label": "법인별 업무",
+      "position": "{count} / 3",
+      "currentClient": "열려 있는 법인 · {company}",
+      "previous": "이전 법인",
+      "next": "다음 법인",
+      "pick": "{company} 업무 미리보기",
+      "open": "{company} 업무 열기",
+      "browseHelp": "미리보기만 넘겨볼 수 있어요. 업무 열기를 누르면 그 법인으로 이동해요.",
+      "keyboardHelp": "왼쪽·오른쪽 방향키로 미리보기를 바꿀 수 있어요.",
+      "announcement": "{count} / 3 · {company}"
+    },
+    "workbench": {
+      "eyebrow": "업무 처리",
+      "title": "지금 할 일과, 다음 담당자.",
+      "description": "자료를 확인하고 다음 업무로 이어가세요.",
+      "clientRole": "{role}",
+      "changeClient": "법인 바꾸기",
+      "contextLabel": "업무 정보",
+      "sourceTitle": "자료 출처",
+      "referenceTitle": "자료 기준 시간",
+      "responsibilityTitle": "담당자와 다음 할 일",
+      "eventsTitle": "활동 내역",
+      "notesTitle": "같은 업무 번호로 이어져요.",
+      "notesBody": "자료 확인, 승인, 처리 상태와 보낼 자료를 함께 보고 남은 일을 이어가요.",
+      "verificationAction": "주소·네트워크 맞춰보기"
+    },
+    "film": {
+      "eyebrow": "서비스 둘러보기",
+      "title": "주소와 거래 확인을 30초로.",
+      "description": "주소와 거래 정보를 확인하고, 받은 자료도 다시 검사해요.",
+      "download": "30초 영상 저장",
+      "transcript": "영상 내용 읽기",
+      "earlierFilm": "정보 확인만 보고 싶다면",
+      "earlierFilmAction": "30초 영상 보기"
+    },
+    "footer": {
+      "brand": "KODA × 인하대학교",
+      "context": "산학프로젝트 프로토타입 · 실제 거래 없음",
+      "licenseAction": "출처·라이선스",
+      "returnAction": "다른 법인 업무 열기"
+    },
+    "noscript": "업무를 시작하려면 JavaScript를 켜 주세요. 설명과 영상은 그대로 볼 수 있어요."
+  },
+  "common": {
+    "labels": {
+      "workId": "업무 번호",
+      "company": "법인",
+      "counterparty": "거래 상대",
+      "invoiceAmount": "청구서 금액",
+      "receiptAmount": "받은 금액",
+      "network": "네트워크",
+      "difference": "금액 차이",
+      "linkedRecords": "함께 볼 자료",
+      "settlementTotal": "보낼 금액 합계",
+      "approvals": "승인",
+      "executionReference": "처리번호",
+      "reconciliationStatus": "정산 내역",
+      "recordCount": "거래 건수",
+      "source": "자료 출처",
+      "referenceTime": "자료 기준 시간",
+      "companyIncluded": "법인명",
+      "amountIncluded": "거래한 수량",
+      "recordScope": "담을 자료",
+      "nextOwner": "다음 담당",
+      "included": "포함",
+      "excluded": "제외",
+      "matched": "같아요",
+      "notRegistered": "등록 정보가 없어요",
+      "notReceived": "아직 없어요",
+      "received": "받았어요",
+      "reconciliationPending": "결과를 기다려요",
+      "reconciled": "내역을 맞춰봤어요",
+      "approvalCount": "{count} / 2명",
+      "transactionCount": "{recordCount}건"
+    },
+    "controls": {
+      "restart": "처음부터 하기",
+      "scenarioLegend": "자료 상태",
+      "normalScenario": "기본 자료",
+      "repair": "기본 자료로 바꾸기",
+      "download": "업무 기록 저장하기",
+      "downloadFormat": "JSON",
+      "downloadHelp": "업무 번호, 자료 출처, 진행 상태와 고른 항목을 JSON 파일로 저장해요.",
+      "receiveExecution": "처리 결과 불러오기"
+    },
+    "messages": {
+      "started": "{company} 업무를 열었어요.",
+      "reset": "처음으로 돌아왔어요. 첫 단계부터 확인해 주세요.",
+      "clientChanged": "{company}로 바꿨어요. 첫 단계부터 확인해 주세요.",
+      "scenarioChanged": "자료를 바꿨어요. 진행 중인 업무를 처음으로 돌렸어요.",
+      "repaired": "기본 자료로 바꿨어요. 내용을 다시 확인해 주세요.",
+      "disclosureChanged": "담을 항목을 바꿨어요. 이전 결과를 지우고 다시 확인해요.",
+      "defaultStatus": "다음 할 일을 확인해 주세요."
+    },
+    "events": {
+      "defaultActor": "업무 담당자",
+      "started": "업무 시작",
+      "stageConfirmed": "{step} 마침",
+      "recordUpdated": "기본 자료로 변경",
+      "recordUpdateActor": "자료 확인 담당자",
+      "approval": "정산 승인",
+      "approvalActor": "승인자 {actor}",
+      "executionReceived": "{reference} 받음 · 내역 연결",
+      "executionActor": "처리 결과 확인 담당자"
+    },
+    "approvalPanel": {
+      "title": "두 명 승인",
+      "description": "요청자와 다른 두 명이 내용을 확인하고 각자 승인해요.",
+      "approve": "승인자 {actor}로 승인하기",
+      "approved": "승인자 {actor} · 승인했어요",
+      "count": "{count} / 2명 승인"
+    },
+    "auditDisclosure": {
+      "title": "어떤 항목을 보여줄까요?",
+      "company": "법인명 보여주기",
+      "amount": "거래한 수량 보여주기",
+      "help": "저장할 파일에 담을 항목을 골라요.",
+      "changeHelp": "항목을 바꾸면 업무를 처음부터 다시 확인해요."
+    },
+    "fieldHelp": {
+      "network": "디지털자산이 이동하는 네트워크예요. 거래 상대의 정보와 같은지 확인해요.",
+      "executionReference": "처리번호와 실제 처리 내역을 함께 확인해요.",
+      "referenceTime": "어느 시간의 자료인지 알려줘요.",
+      "approval": "두 명이 승인해도 돈이 바로 보내지는 건 아니에요.",
+      "auditOutput": "감사에 필요한 자료 목록이에요."
+    }
+  },
+  "cases": {
+    "export": {
+      "company": "한빛정밀",
+      "industry": "수출 제조",
+      "role": "재무 담당자",
+      "job": "받은 대금 맞춰보기",
+      "question": "받은 대금의 주소와 거래가 요청한 정보와 맞나요?",
+      "outputLabel": "받은 대금의 주소·거래 확인 내역",
+      "responsibility": "받은 대금 확인 → 재무 담당자 확인 → 회계팀에 자료 전달",
+      "contextNote": "청구서와 받은 대금 내역을 함께 확인해요.",
+      "linkedRecords": "청구서 · 받은 대금 내역 · 담당자 확인",
+      "preview": {
+        "title": "받은 금액이 100 USDC 적어요.",
+        "description": "청구서와 받은 대금 내역을 다시 확인해야 해요.",
+        "owner": "재무 담당자",
+        "receiptLabel": "받은 금액 · 차이 있는 자료"
+      },
+      "stages": [
+        {
+          "index": 0,
+          "label": "정보 확인",
+          "title": "주소와 거래 정보를 먼저 확인해요.",
+          "description": "샘플 발급키의 서명과 요청한 정보를 확인해요.",
+          "action": "정보 확인하기",
+          "status": {
+            "tone": "neutral",
+            "title": "정보 확인이 필요해요.",
+            "body": "확인할 정보를 살펴본 뒤 정보 확인하기를 눌러 주세요."
+          }
+        },
+        {
+          "index": 1,
+          "label": "청구서 확인",
+          "title": "확인한 대금을 청구서와 연결해요.",
+          "description": "발급 서명과 거래 사실이 맞는지 확인했어요. 이 대금과 연결할 청구서를 살펴봐 주세요.",
+          "action": "청구서와 연결하기",
+          "status": {
+            "tone": "neutral",
+            "title": "청구서와 연결할 차례예요.",
+            "body": "원자료의 거래 사실 확인과 청구서의 업무 판단은 별도로 남겨요."
+          }
+        },
+        {
+          "index": 2,
+          "label": "담당자 확인",
+          "title": "연결할 청구서와 대금이 맞는지 봐 주세요.",
+          "description": "재무 담당자가 내용을 확인한 뒤 받은 대금과 청구서를 연결해요.",
+          "action": "내역 연결하기",
+          "status": {
+            "tone": "neutral",
+            "title": "담당자가 확인할 차례예요.",
+            "body": "거래 상대와 금액이 맞는지 한 번 더 확인해요."
+          }
+        },
+        {
+          "index": 3,
+          "label": "내역 연결",
+          "title": "회계팀에 보낼 자료를 준비해요.",
+          "description": "청구서, 받은 대금 내역과 담당자 확인을 같은 업무 번호로 묶어요.",
+          "action": "회계팀에 보낼 자료 만들기",
+          "status": {
+            "tone": "neutral",
+            "title": "함께 보낼 자료를 확인해요.",
+            "body": "자료 출처와 연결 내용을 확인한 뒤 목록을 만들어요."
+          }
+        },
+        {
+          "index": 4,
+          "label": "자료 준비",
+          "title": "확인 내역을 저장할 수 있어요.",
+          "description": "발급 서명과 주소·거래를 확인한 내용을 받는 쪽에서도 다시 확인할 수 있어요.",
+          "action": "확인 내역 준비됨",
+          "status": {
+            "tone": "neutral",
+            "title": "확인 내역을 저장할 수 있어요.",
+            "body": "파일을 받은 쪽은 받은 자료 확인하기에서 다시 검사할 수 있어요."
+          }
+        }
+      ],
+      "exception": {
+        "blockedStageIndex": 1,
+        "label": "100 USDC 적게 받은 자료",
+        "title": "받은 금액이 100 USDC 모자라요.",
+        "description": "청구서에는 25,000 USDC, 받은 금액에는 24,900 USDC가 적혀 있어요. 재무 담당자가 확인할 때까지 멈춰둘게요.",
+        "status": {
+          "tone": "danger",
+          "title": "금액이 달라서 잠시 멈췄어요.",
+          "body": "재무 담당자가 청구서와 받은 대금 내역을 확인해 주세요."
+        },
+        "nextOwner": "재무 담당자",
+        "repairAction": "기본 자료로 바꾸기"
+      },
+      "output": {
+        "download": "확인 내역 저장하기",
+        "format": "JSON",
+        "description": "주소·거래 확인 내역을 JSON으로 저장해요. 업무 판단과 활동 기록은 이 화면에서 확인할 수 있어요."
+      }
+    },
+    "game": {
+      "company": "루멘게임즈",
+      "industry": "게임·콘텐츠",
+      "role": "정산 담당자",
+      "job": "파트너에게 정산하기",
+      "question": "세 파트너의 받을 주소와 정산 요청이 등록 자료와 맞나요?",
+      "outputLabel": "지급 전 파트너 등록 주소 확인 내역",
+      "responsibility": "정산 요청자 → 승인자 두 명 → 지급 담당자 → 결과 확인 담당자",
+      "contextNote": "지급 담당자가 처리번호와 처리 내역을 확인해요.",
+      "preview": {
+        "title": "승인해도 바로 보내지지는 않아요.",
+        "description": "처리번호와 실제 처리 내역이 도착해야 다음 확인을 할 수 있어요.",
+        "owner": "처리 결과 확인 담당자"
+      },
+      "stages": [
+        {
+          "index": 0,
+          "label": "정보 확인",
+          "title": "주소와 거래 정보를 먼저 확인해요.",
+          "description": "샘플 발급키의 서명과 요청한 정보를 확인해요.",
+          "action": "정보 확인하기",
+          "status": {
+            "tone": "neutral",
+            "title": "정보 확인이 필요해요.",
+            "body": "확인할 정보를 살펴본 뒤 정보 확인하기를 눌러 주세요."
+          }
+        },
+        {
+          "index": 1,
+          "label": "거래 상대",
+          "title": "확인한 세 파트너의 요청을 검토해요.",
+          "description": "등록 주소·자산·요청 수량을 확인했어요. 같은 요청을 두 승인자가 검토해요.",
+          "action": "두 명에게 승인 요청하기",
+          "status": {
+            "tone": "neutral",
+            "title": "지급 전 요청을 검토할 차례예요.",
+            "body": "주소 확인은 지급 완료를 뜻하지 않아요. 승인자는 같은 요청의 주소와 금액을 확인해요."
+          }
+        },
+        {
+          "index": 2,
+          "label": "두 명 승인",
+          "title": "두 명의 승인을 기다려요.",
+          "description": "요청자와 다른 두 승인자가 같은 거래 상대·금액·자료를 확인해요.",
+          "action": "지급 담당자에게 넘기기",
+          "status": {
+            "tone": "warning",
+            "title": "{count} / 2명이 승인했어요.",
+            "body": "두 명 모두 승인해야 다음 단계로 갈 수 있어요."
+          },
+          "statusVariants": {
+            "none": {
+              "tone": "warning",
+              "title": "두 명의 승인을 기다려요.",
+              "body": "승인자 A와 B가 내용을 확인해 주세요."
+            },
+            "partial": {
+              "tone": "warning",
+              "title": "한 명이 더 승인해야 해요.",
+              "body": "남은 승인자의 판단을 기다려요."
+            },
+            "complete": {
+              "tone": "success",
+              "title": "두 명이 승인했어요.",
+              "body": "지급 담당자에게 넘길 수 있어요. 아직 지급이 끝난 건 아니에요."
+            }
+          }
+        },
+        {
+          "index": 3,
+          "label": "지급 담당자",
+          "title": "승인한 요청을 지급 담당자에게 넘겨요.",
+          "description": "보낼 금액과 승인 기록을 함께 넘길 준비를 해요. 처리번호와 처리 내역을 함께 확인해야 해요.",
+          "action": "처리 상태 확인하기",
+          "status": {
+            "tone": "neutral",
+            "title": "넘길 자료가 준비됐어요.",
+            "body": "아직 지급이 끝난 건 아니에요. 처리 결과가 필요해요."
+          }
+        },
+        {
+          "index": 4,
+          "label": "결과 확인",
+          "title": "확인 내역을 저장할 수 있어요.",
+          "description": "발급 서명과 주소·거래를 확인한 내용을 받는 쪽에서도 다시 확인할 수 있어요.",
+          "action": "확인 내역 준비됨",
+          "status": {
+            "tone": "neutral",
+            "title": "확인 내역을 저장할 수 있어요.",
+            "body": "파일을 받은 쪽은 받은 자료 확인하기에서 다시 검사할 수 있어요."
+          },
+          "statusVariants": {
+            "pending": {
+              "tone": "warning",
+              "title": "처리번호가 아직 없어요.",
+              "body": "지급 담당자에게 처리번호와 실제 처리 내역을 확인해 주세요."
+            },
+            "received": {
+              "tone": "success",
+              "title": "처리번호를 기록에 연결했어요.",
+              "body": "정산 요청과 승인 기록에 처리번호를 붙였어요. 실제 지급 여부는 처리 내역과 함께 확인해야 해요."
+            }
+          }
+        }
+      ],
+      "exception": {
+        "blockedStageIndex": 1,
+        "label": "Nova Art 등록 정보가 없는 자료",
+        "title": "Nova Art의 등록 정보가 없어요.",
+        "description": "등록되지 않은 거래 상대가 있어 승인을 요청할 수 없어요. 등록 자료를 먼저 확인해 주세요.",
+        "status": {
+          "tone": "danger",
+          "title": "등록 정보를 먼저 확인해 주세요.",
+          "body": "등록 정보가 준비되기 전에는 승인이나 지급 담당자에게 넘기는 일을 진행할 수 없어요."
+        },
+        "nextOwner": "거래처 등록 담당자",
+        "repairAction": "기본 자료로 바꾸기"
+      },
+      "received": {
+        "title": "처리번호를 업무에 연결했어요.",
+        "description": "처리번호 DEMO-EXEC-1028을 정산 요청의 활동 기록에 연결했어요.",
+        "action": "기록이 준비됐어요",
+        "referenceLabel": "처리번호",
+        "referenceValue": "DEMO-EXEC-1028",
+        "reconciliationLabel": "처리번호를 연결했어요"
+      },
+      "output": {
+        "download": "확인 내역 저장하기",
+        "format": "JSON",
+        "pendingDescription": "지급 결과는 아직 없어요. 파일에는 지급 전 등록 주소와 요청 정보를 확인한 내역을 담아요.",
+        "receivedDescription": "처리번호는 활동 기록에 연결했어요. 파일은 지급 전 주소·요청 확인 내역이며 실제 지급 확인서는 아니에요.",
+        "description": "주소·거래 확인 내역을 JSON으로 저장해요. 업무 판단과 활동 기록은 이 화면에서 확인할 수 있어요."
+      }
+    },
+    "audit": {
+      "company": "새봄자산운용",
+      "industry": "자산운용",
+      "role": "운용 지원 담당자",
+      "job": "감사에 보낼 자료 준비하기",
+      "question": "수탁 거래 목록과 대상 지갑이 서명된 자료와 맞나요?",
+      "outputLabel": "수탁 거래 목록·대상 지갑 확인 내역",
+      "responsibility": "운용 지원 → 자료 담당자 → 공유 확인 담당자 → 감사자료 받는 사람",
+      "contextNote": "고른 항목을 저장할 자료 목록에 반영해요.",
+      "recordScope": "수탁 기록 · 거래 건수 · 출처 · 기준 시간 · 고른 항목",
+      "preview": {
+        "title": "필요한 항목만, 출처와 함께.",
+        "description": "법인명과 거래한 수량을 보여줄지 고르고 자료 기준 시간을 확인해요.",
+        "owner": "공유 확인 담당자"
+      },
+      "stages": [
+        {
+          "index": 0,
+          "label": "정보 확인",
+          "title": "주소와 거래 정보를 먼저 확인해요.",
+          "description": "샘플 발급키의 서명과 요청한 정보를 확인해요.",
+          "action": "정보 확인하기",
+          "status": {
+            "tone": "neutral",
+            "title": "정보 확인이 필요해요.",
+            "body": "확인할 정보를 살펴본 뒤 정보 확인하기를 눌러 주세요."
+          }
+        },
+        {
+          "index": 1,
+          "label": "출처 확인",
+          "title": "받는 쪽에 보여줄 항목을 골라요.",
+          "description": "수탁 거래 번호·지갑·자산·수량과 출처를 확인했어요. 필요한 표시 항목을 고르고 다음 내용을 확인해요.",
+          "action": "담을 내용 확인하기",
+          "status": {
+            "tone": "neutral",
+            "title": "필요한 표시 항목을 골라 주세요.",
+            "body": "항목을 바꾸면 이전 확인 결과를 지우고 다시 검사해요. 공개 원자료는 파일에 함께 담겨요."
+          }
+        },
+        {
+          "index": 2,
+          "label": "내용 확인",
+          "title": "받는 사람에게 필요한 내용인가요?",
+          "description": "보내려는 목적에 맞는 항목이 담겼는지 확인해 주세요.",
+          "action": "보여줄 항목 정하기",
+          "status": {
+            "tone": "neutral",
+            "title": "보여줄 내용을 확인해요.",
+            "body": "법인명과 거래한 수량을 넣을지 확인한 뒤 정해요."
+          }
+        },
+        {
+          "index": 3,
+          "label": "항목 확정",
+          "title": "저장할 자료를 한 번 더 봐 주세요.",
+          "description": "고른 항목과 자료 기준을 목록으로 묶어요. 항목을 바꾸면 처음부터 다시 확인해요.",
+          "action": "감사자료 목록 만들기",
+          "status": {
+            "tone": "neutral",
+            "title": "고른 항목을 확인해요.",
+            "body": "넣을 항목과 뺄 항목, 자료 기준이 맞는지 봐 주세요."
+          }
+        },
+        {
+          "index": 4,
+          "label": "자료 준비",
+          "title": "확인 내역을 저장할 수 있어요.",
+          "description": "발급 서명과 주소·거래를 확인한 내용을 받는 쪽에서도 다시 확인할 수 있어요.",
+          "action": "확인 내역 준비됨",
+          "status": {
+            "tone": "neutral",
+            "title": "확인 내역을 저장할 수 있어요.",
+            "body": "파일을 받은 쪽은 받은 자료 확인하기에서 다시 검사할 수 있어요."
+          }
+        }
+      ],
+      "exception": {
+        "blockedStageIndex": 1,
+        "label": "오래된 자료",
+        "title": "자료가 오래됐어요.",
+        "description": "2026.10.23 14:00 KST 자료로는 진행할 수 없어요. 자료 담당자에게 새 자료를 요청해 주세요.",
+        "status": {
+          "tone": "danger",
+          "title": "새 자료가 필요해요.",
+          "body": "확인 기준은 2026.10.24 14:30 KST예요. 자료는 기준 시간부터 1시간 안에 확인해야 해요."
+        },
+        "nextOwner": "자료 출처 담당자",
+        "repairAction": "기본 자료로 바꾸기"
+      },
+      "output": {
+        "download": "확인 내역 저장하기",
+        "format": "JSON",
+        "description": "주소·거래 확인 내역을 JSON으로 저장해요. 업무 판단과 활동 기록은 이 화면에서 확인할 수 있어요."
+      }
+    }
+  }
+}

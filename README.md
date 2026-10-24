@@ -5,11 +5,10 @@
 
 ## 현재 상태
 
-- GitHub 기본 협업 공간을 준비하는 단계입니다.
-- 개발 소요는 정리·공유 후 기능별 범위와 담당을 확정합니다.
-- 가상 고객 시나리오를 이용해 제안 서비스의 사용 모습을 보여주는 데모를 준비합니다.
-- 기술 스택과 공통 실행환경은 아직 확정하지 않았습니다.
-- 현재 이 저장소에는 안내 문서만 있으며, 실행 가능한 앱이나 검증 기능은 아직 없습니다.
+- 주소·발급처·서명·유효시간·거래 대상을 확인하고, 받은 파일을 다시 검사하는 웹 프로토타입입니다.
+- 수출 제조의 받은 대금 확인, 게임·콘텐츠의 정산 주소 확인과 두 명 승인, 자산운용의 감사 자료 준비를 제공합니다.
+- 합성 자료의 ECDSA P-256/SHA-256 서명 검증은 실제 WebCrypto로 실행합니다. 발급처는 `산학프로젝트 샘플 발급키`입니다.
+- 후속 승인·처리 상태는 브라우저 안의 시연 상태이며, 실제 KODA·블록체인·결제·LLM·ZK 서비스와 연결하지 않습니다.
 
 시연에서는 실제로 구현한 기능, 가상 데이터로 처리한 부분, 목업, 추후 구현 계획을 구분합니다.
 
@@ -22,6 +21,8 @@
 | Google Drive | [팀 공동 작업 폴더](https://drive.google.com/drive/folders/1fl7Cx1Iven9TYFBXJs-MV222u8SYiVWH?usp=sharing) | 발표자료·이미지·시연 영상 등 파일 |
 | 공동 Google 슬라이드 | [KODA 1024 공동 발표자료](https://docs.google.com/presentation/d/1-HxONos-pEA9OlyIPW4XS_Th8nf-ItAW42_Y8_Kqdos/edit?slide=id.h7f535652ed8e08af_0_0#slide=id.h7f535652ed8e08af_0_0) | 발표에 들어갈 내용 공동 작성 |
 | 협업 안내 | [CONTRIBUTING.md](CONTRIBUTING.md) | 작업 공유·문서·데이터 관리 기준 |
+| 공개 웹 | [KODA Workspace](https://koda-inha-demo-oct28.insiapark.chatgpt.site) | 주소·거래 확인과 받은 자료 재검증 |
+| 30초 영상 | [제품 시연 영상](https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/koda-concept-demo-30s-v7.mp4) | 핵심 확인 흐름 |
 
 Drive와 슬라이드의 접근 권한은 GitHub 접근 권한과 별개입니다.
 
@@ -49,15 +50,46 @@ GitHub 관리 권한과 특정 기능의 개발 담당은 별개입니다.
 
 ## 개발환경과 실행 방법
 
-현재 실행할 앱과 설치 명령은 없습니다. 개발 소요와 사용할 코드·도구가 정리되면 아래 내용을 추가합니다.
+Node.js 22 이상과 npm을 사용합니다. API 키와 환경변수는 필요하지 않습니다. 아래 명령은 저장소 최상위에서 실행합니다.
 
-- 필요한 도구와 버전
-- 설치·실행 방법
-- 가상 데이터 준비 방법
-- 동작 확인·테스트 방법
-- 실제 구현과 목업·가상 처리의 구분
+```sh
+npm install
+npm run media:fetch
+npm run build
+npm run dev
+```
 
-필요가 확인되기 전에 특정 프레임워크나 ZK 도구를 선정하거나 운영 시스템 연동을 전제하지 않습니다.
+[http://localhost:4389](http://localhost:4389)를 엽니다. `file://`로 열면 JSON 로드와 WebCrypto 동작이 제한되므로 로컬 서버를 사용합니다. 다른 포트는 `PORT` 환경변수로 지정할 수 있습니다.
+
+`npm install`은 `landing/package-lock.json`에 고정된 패키지를 설치합니다. `media:fetch`는 이미지·폰트·30초 영상을 공개 웹에서 내려받아 SHA-256을 확인합니다. 미디어 없이도 소스 빌드와 도메인 테스트는 가능하지만 화면과 전체 정적 자산 검사는 미디어가 필요합니다. 영상·이미지 바이너리는 Git에 포함하지 않습니다.
+
+```sh
+npm test
+npm run check
+npm run media:verify
+```
+
+`npm test`는 실제 검증 코어의 정상·유사 주소·스팸·서명 변조·유효시간·대상 불일치·수신 파일 조작을 검사합니다. `check`는 페이지 참조와 자산·합성 데이터의 일관성을 검사합니다.
+
+## 편집할 파일
+
+| 작업 | 파일 |
+| --- | --- |
+| 홈 레이아웃·스타일 | `landing/dist/index.html`, `landing/dist/home.css` |
+| 홈 업무 미리보기·모션 | `landing/build-motion.mjs`, `landing/motion-source.js`, `landing/dist/home-assurance.js` |
+| 업무 콘솔·상태 전환 | `landing/dist/workspace.html`, `landing/dist/blueprint.js`, `landing/dist/workspace-v6.css` |
+| 공통 검증 입력·결과 표현 | `landing/dist/assurance-ui.js`, `landing/dist/assurance-ui.css` |
+| 받은 파일 재검증 | `landing/dist/verification.html`, `landing/dist/app.js` |
+| 검증 규칙·공개 데이터 | `landing/dist/assurance-core.js`, `landing/dist/assets/assurance-fixtures.json`, `landing/dist/assets/assurance-keyring.json` |
+| 색상·문구·설명 | `landing/design/visual-tokens.json`, `landing/product-copy.json`, `landing/global-evidence.html`, `landing/brand-direction.html` |
+
+빌드는 `tokens.css`, `fixtures.js`, `commercial-data.js`, `product-copy.js`, `product-motion.js`, `brand.html`과 홈·서비스 원리의 지정 구간을 갱신합니다. 생성 파일을 직접 고치면 다음 빌드에서 덮어쓸 수 있으므로 해당 원본을 편집합니다. 자세한 동작 계약은 [개발 안내](docs/DEVELOPMENT.md), 외부 라이선스는 [고지](THIRD_PARTY_NOTICES.md)를 따릅니다.
+
+## 검증 범위
+
+원자료 서명과 요청한 주소·거래의 일치는 별도로 확인합니다. 서명이 유효해도 다른 주소나 거래라면 통과하지 않습니다. 확인 기준은 **2026-10-24 14:30 KST**의 고정된 시연 시각이며 실시간 조회가 아닙니다.
+
+내보낸 JSON에는 수신자가 서명을 재검증할 수 있도록 공개 합성 원자료 전체가 포함됩니다. 표시 항목을 해제해도 원자료의 값이 사라지지 않습니다. 원자료만 발급키로 서명되며 출력 파일의 체크섬은 발신자 인증이나 원래 선택값의 서명이 아닙니다. 실제 지갑 소유권·온체인 실행·비밀보호·ZK 증명을 제공하지 않습니다.
 
 ## 자료·보안 기준
 

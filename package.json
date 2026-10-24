@@ -1,0 +1,16 @@
+{
+  "name": "koda-inha-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.0.0" },
+  "scripts": {
+    "postinstall": "npm --prefix landing ci",
+    "build": "npm --prefix landing run build",
+    "dev": "node scripts/dev.mjs",
+    "test": "node --test tests/assurance-core.test.mjs",
+    "check": "npm --prefix landing run check",
+    "media:fetch": "node scripts/fetch-media.mjs",
+    "media:verify": "node scripts/fetch-media.mjs --verify"
+  }
+}

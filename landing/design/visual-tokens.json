@@ -1,0 +1,27 @@
+{
+  "version": "2026-10-25.3",
+  "source": "koda-motion-20261021/design/koda-tokens.json",
+  "colors": {
+    "ink": "#10201B",
+    "muted": "#44534E",
+    "paper": "#F4F6F5",
+    "surface": "#FFFFFF",
+    "brand": "#00D998",
+    "action": "#00704F",
+    "action-ink": "#005A40",
+    "soft": "#E3F5EE",
+    "line": "#DBE2DF",
+    "line-strong": "#7A8782",
+    "warning": "#8A5000",
+    "danger": "#B42318"
+  },
+  "fonts": {
+    "sans": "Pretendard Variable",
+    "mono": "IBM Plex Mono"
+  },
+  "radius": "8px",
+  "motion": {
+    "feedback": "140ms",
+    "structure": "220ms"
+  }
+}

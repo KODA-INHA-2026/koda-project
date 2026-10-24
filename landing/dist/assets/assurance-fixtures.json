@@ -1,0 +1,1041 @@
+{
+  "schemaVersion": 1,
+  "isDemo": true,
+  "issuerLabel": "산학프로젝트 샘플 발급키",
+  "checkTime": "2026-10-24T05:30:00.000Z",
+  "clockMode": "fixed-reference",
+  "description": "Public synthetic records. Signature verification authenticates this sample source only, not wallet ownership, blockchain execution, KODA issuance or confidentiality.",
+  "clients": [
+    {
+      "id": "export",
+      "company": "한빛정밀",
+      "scope": "received-payment-facts",
+      "label": "받은 대금의 주소·거래 확인",
+      "request": {
+        "network": "eip155:1",
+        "wallet": "0x0000000000000000000000000000000000001101",
+        "counterparty": "0x0000000000000000000000000000000000002201",
+        "transaction": {
+          "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+          "from": "0x0000000000000000000000000000000000002201",
+          "to": "0x0000000000000000000000000000000000001101",
+          "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+          "asset": "USDC",
+          "amount": "25000"
+        }
+      },
+      "scenarios": [
+        {
+          "id": "normal",
+          "label": "정상 자료",
+          "recordId": "export-normal"
+        },
+        {
+          "id": "lookalike",
+          "label": "중간 글자가 다른 거래 상대 주소",
+          "recordId": "export-normal",
+          "request": {
+            "network": "eip155:1",
+            "wallet": "0x0000000000000000000000000000000000001101",
+            "counterparty": "0x000000000000000000a000000000000000002201",
+            "transaction": {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+              "from": "0x000000000000000000a000000000000000002201",
+              "to": "0x0000000000000000000000000000000000001101",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "amount": "25000"
+            }
+          }
+        },
+        {
+          "id": "spam",
+          "label": "서명은 있지만 다른 입금",
+          "recordId": "export-spam"
+        },
+        {
+          "id": "network",
+          "label": "네트워크가 다른 요청",
+          "recordId": "export-normal",
+          "request": {
+            "network": "eip155:137",
+            "wallet": "0x0000000000000000000000000000000000001101",
+            "counterparty": "0x0000000000000000000000000000000000002201",
+            "transaction": {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+              "from": "0x0000000000000000000000000000000000002201",
+              "to": "0x0000000000000000000000000000000000001101",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "amount": "25000"
+            }
+          }
+        },
+        {
+          "id": "asset",
+          "label": "자산 식별자가 다른 요청",
+          "recordId": "export-normal",
+          "request": {
+            "network": "eip155:1",
+            "wallet": "0x0000000000000000000000000000000000001101",
+            "counterparty": "0x0000000000000000000000000000000000002201",
+            "transaction": {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+              "from": "0x0000000000000000000000000000000000002201",
+              "to": "0x0000000000000000000000000000000000001101",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003999",
+              "asset": "USDC",
+              "amount": "25000"
+            }
+          }
+        },
+        {
+          "id": "tampered",
+          "label": "서명 뒤 바뀐 자료",
+          "recordId": "export-tampered"
+        },
+        {
+          "id": "stale",
+          "label": "유효 시간이 지난 자료",
+          "recordId": "export-stale"
+        },
+        {
+          "id": "untrusted",
+          "label": "등록되지 않은 발급키",
+          "recordId": "export-untrusted"
+        }
+      ]
+    },
+    {
+      "id": "game",
+      "company": "루멘게임즈",
+      "scope": "pre-payment-partner-registration",
+      "label": "지급 전 파트너 등록 주소 확인",
+      "request": {
+        "network": "eip155:1",
+        "wallet": "0x0000000000000000000000000000000000001102",
+        "partners": [
+          {
+            "id": "orion",
+            "recipient": "0x0000000000000000000000000000000000002202",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "8000"
+          },
+          {
+            "id": "pixel",
+            "recipient": "0x0000000000000000000000000000000000002203",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "6000"
+          },
+          {
+            "id": "nova",
+            "recipient": "0x0000000000000000000000000000000000002204",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "4000"
+          }
+        ]
+      },
+      "scenarios": [
+        {
+          "id": "normal",
+          "label": "정상 자료",
+          "recordId": "game-normal"
+        },
+        {
+          "id": "lookalike",
+          "label": "중간 글자가 다른 파트너 주소",
+          "recordId": "game-normal",
+          "request": {
+            "network": "eip155:1",
+            "wallet": "0x0000000000000000000000000000000000001102",
+            "partners": [
+              {
+                "id": "orion",
+                "recipient": "0x000000000000000000a000000000000000002202",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "8000"
+              },
+              {
+                "id": "pixel",
+                "recipient": "0x0000000000000000000000000000000000002203",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "6000"
+              },
+              {
+                "id": "nova",
+                "recipient": "0x0000000000000000000000000000000000002204",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "4000"
+              }
+            ]
+          }
+        },
+        {
+          "id": "spam",
+          "label": "다른 등록 주소 자료",
+          "recordId": "game-spam"
+        },
+        {
+          "id": "network",
+          "label": "네트워크가 다른 요청",
+          "recordId": "game-normal",
+          "request": {
+            "network": "eip155:137",
+            "wallet": "0x0000000000000000000000000000000000001102",
+            "partners": [
+              {
+                "id": "orion",
+                "recipient": "0x0000000000000000000000000000000000002202",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "8000"
+              },
+              {
+                "id": "pixel",
+                "recipient": "0x0000000000000000000000000000000000002203",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "6000"
+              },
+              {
+                "id": "nova",
+                "recipient": "0x0000000000000000000000000000000000002204",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "4000"
+              }
+            ]
+          }
+        },
+        {
+          "id": "asset",
+          "label": "자산 식별자가 다른 요청",
+          "recordId": "game-normal",
+          "request": {
+            "network": "eip155:1",
+            "wallet": "0x0000000000000000000000000000000000001102",
+            "partners": [
+              {
+                "id": "orion",
+                "recipient": "0x0000000000000000000000000000000000002202",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003999",
+                "asset": "USDC",
+                "amount": "8000"
+              },
+              {
+                "id": "pixel",
+                "recipient": "0x0000000000000000000000000000000000002203",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "6000"
+              },
+              {
+                "id": "nova",
+                "recipient": "0x0000000000000000000000000000000000002204",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "4000"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tampered",
+          "label": "서명 뒤 바뀐 자료",
+          "recordId": "game-tampered"
+        },
+        {
+          "id": "stale",
+          "label": "유효 시간이 지난 자료",
+          "recordId": "game-stale"
+        },
+        {
+          "id": "untrusted",
+          "label": "등록되지 않은 발급키",
+          "recordId": "game-untrusted"
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "company": "새봄자산운용",
+      "scope": "custody-transaction-set",
+      "label": "수탁 거래 목록·대상 지갑 확인",
+      "request": {
+        "network": "synthetic-custody-ledger",
+        "wallet": "0x0000000000000000000000000000000000001103",
+        "transactions": [
+          {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+            "wallet": "0x0000000000000000000000000000000000001103",
+            "network": "eip155:1",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "5000"
+          },
+          {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+            "wallet": "0x0000000000000000000000000000000000001103",
+            "network": "eip155:1",
+            "assetId": "eip155:1/slip44:60",
+            "asset": "ETH",
+            "amount": "-1"
+          },
+          {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+            "wallet": "0x0000000000000000000000000000000000001103",
+            "network": "synthetic-custody-ledger",
+            "assetId": "synthetic-custody:BTC",
+            "asset": "BTC",
+            "amount": "0.1"
+          }
+        ]
+      },
+      "scenarios": [
+        {
+          "id": "normal",
+          "label": "정상 자료",
+          "recordId": "audit-normal"
+        },
+        {
+          "id": "lookalike",
+          "label": "중간 글자가 다른 대상 지갑",
+          "recordId": "audit-normal",
+          "request": {
+            "network": "synthetic-custody-ledger",
+            "wallet": "0x000000000000000000a000000000000000001103",
+            "transactions": [
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "eip155:1",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "5000"
+              },
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "eip155:1",
+                "assetId": "eip155:1/slip44:60",
+                "asset": "ETH",
+                "amount": "-1"
+              },
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "synthetic-custody-ledger",
+                "assetId": "synthetic-custody:BTC",
+                "asset": "BTC",
+                "amount": "0.1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "spam",
+          "label": "다른 거래가 섞인 자료",
+          "recordId": "audit-spam"
+        },
+        {
+          "id": "network",
+          "label": "네트워크가 다른 요청",
+          "recordId": "audit-normal",
+          "request": {
+            "network": "different-custody-ledger",
+            "wallet": "0x0000000000000000000000000000000000001103",
+            "transactions": [
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "eip155:1",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+                "asset": "USDC",
+                "amount": "5000"
+              },
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "eip155:1",
+                "assetId": "eip155:1/slip44:60",
+                "asset": "ETH",
+                "amount": "-1"
+              },
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "synthetic-custody-ledger",
+                "assetId": "synthetic-custody:BTC",
+                "asset": "BTC",
+                "amount": "0.1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "asset",
+          "label": "자산 식별자가 다른 요청",
+          "recordId": "audit-normal",
+          "request": {
+            "network": "synthetic-custody-ledger",
+            "wallet": "0x0000000000000000000000000000000000001103",
+            "transactions": [
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "eip155:1",
+                "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003999",
+                "asset": "USDC",
+                "amount": "5000"
+              },
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "eip155:1",
+                "assetId": "eip155:1/slip44:60",
+                "asset": "ETH",
+                "amount": "-1"
+              },
+              {
+                "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+                "wallet": "0x0000000000000000000000000000000000001103",
+                "network": "synthetic-custody-ledger",
+                "assetId": "synthetic-custody:BTC",
+                "asset": "BTC",
+                "amount": "0.1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tampered",
+          "label": "서명 뒤 바뀐 자료",
+          "recordId": "audit-tampered"
+        },
+        {
+          "id": "stale",
+          "label": "유효 시간이 지난 자료",
+          "recordId": "audit-stale"
+        },
+        {
+          "id": "untrusted",
+          "label": "등록되지 않은 발급키",
+          "recordId": "audit-untrusted"
+        }
+      ]
+    }
+  ],
+  "records": {
+    "export-normal": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "export",
+        "recordId": "SAMPLE-EXPORT-20261024",
+        "scope": "received-payment-facts",
+        "company": "한빛정밀",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001101",
+          "counterparty": "0x0000000000000000000000000000000000002201",
+          "transaction": {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+            "from": "0x0000000000000000000000000000000000002201",
+            "to": "0x0000000000000000000000000000000000001101",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "25000"
+          }
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "go5FbKLfuYRpruF-cL2BzRoAl1ImIw-RdRL5HvWLgvDByUJdPzyWdx1loCqePo7CP6p444T41rx1zCxqulviZw"
+    },
+    "export-stale": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "export",
+        "recordId": "SAMPLE-EXPORT-20261024-STALE",
+        "scope": "received-payment-facts",
+        "company": "한빛정밀",
+        "referenceTime": "2026-10-23T05:00:00.000Z",
+        "validFrom": "2026-10-23T05:00:00.000Z",
+        "validUntil": "2026-10-23T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001101",
+          "counterparty": "0x0000000000000000000000000000000000002201",
+          "transaction": {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+            "from": "0x0000000000000000000000000000000000002201",
+            "to": "0x0000000000000000000000000000000000001101",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "25000"
+          }
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "79d2qtxkgp_14QIy9GUrjlb0Vn10EOap3dF4UXDvaMUq5E5wahMqS1PYAABJ1NauNDBFZ3WQISHctJZTZDMHXw"
+    },
+    "export-spam": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "export",
+        "recordId": "SAMPLE-EXPORT-20261024-SPAM",
+        "scope": "received-payment-facts",
+        "company": "한빛정밀",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001101",
+          "counterparty": "0x0000000000000000000000000000000000dead01",
+          "transaction": {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000dead01",
+            "from": "0x0000000000000000000000000000000000dead01",
+            "to": "0x0000000000000000000000000000000000001101",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "0.000001"
+          }
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "Beis8N1vx5loe6gYFldvCZ0WPNyYEMd37jaooKBTDGRhFzCri92YAjGQDsaEFG57yyRiUthGspKl3F9VKUahgw"
+    },
+    "export-untrusted": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "untrusted-sample",
+        "clientId": "export",
+        "recordId": "SAMPLE-EXPORT-20261024-UNTRUSTED",
+        "scope": "received-payment-facts",
+        "company": "한빛정밀",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001101",
+          "counterparty": "0x0000000000000000000000000000000000002201",
+          "transaction": {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+            "from": "0x0000000000000000000000000000000000002201",
+            "to": "0x0000000000000000000000000000000000001101",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "25000"
+          }
+        }
+      },
+      "keyId": "untrusted-sample",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "hmqOHYZwDiLV9QA6Q5TL7ADJsvQcp070K9apu93rwyMFcoZxPahpSU6DcWzXNzWdq2ywAd1h_fIN2B0301YYjQ"
+    },
+    "export-tampered": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "export",
+        "recordId": "SAMPLE-EXPORT-20261024",
+        "scope": "received-payment-facts",
+        "company": "한빛정밀",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x000000000000000000a000000000000000001101",
+          "counterparty": "0x0000000000000000000000000000000000002201",
+          "transaction": {
+            "id": "0x0000000000000000000000000000000000000000000000000000000000004101",
+            "from": "0x0000000000000000000000000000000000002201",
+            "to": "0x0000000000000000000000000000000000001101",
+            "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+            "asset": "USDC",
+            "amount": "25000"
+          }
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "go5FbKLfuYRpruF-cL2BzRoAl1ImIw-RdRL5HvWLgvDByUJdPzyWdx1loCqePo7CP6p444T41rx1zCxqulviZw"
+    },
+    "game-normal": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "game",
+        "recordId": "SAMPLE-GAME-20261024",
+        "scope": "pre-payment-partner-registration",
+        "company": "루멘게임즈",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001102",
+          "partners": [
+            {
+              "id": "orion",
+              "registeredAddress": "0x0000000000000000000000000000000000002202",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "8000"
+            },
+            {
+              "id": "pixel",
+              "registeredAddress": "0x0000000000000000000000000000000000002203",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "6000"
+            },
+            {
+              "id": "nova",
+              "registeredAddress": "0x0000000000000000000000000000000000002204",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "4000"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "NbbVThQhrOtHCdu4pdrh7LBJ95PwVE4hMktaIFpsBHUEu-Z_O0S0xpSuhTUn-EAyeDU3XKMRHxXBfHVoJtPQZg"
+    },
+    "game-stale": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "game",
+        "recordId": "SAMPLE-GAME-20261024-STALE",
+        "scope": "pre-payment-partner-registration",
+        "company": "루멘게임즈",
+        "referenceTime": "2026-10-23T05:00:00.000Z",
+        "validFrom": "2026-10-23T05:00:00.000Z",
+        "validUntil": "2026-10-23T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001102",
+          "partners": [
+            {
+              "id": "orion",
+              "registeredAddress": "0x0000000000000000000000000000000000002202",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "8000"
+            },
+            {
+              "id": "pixel",
+              "registeredAddress": "0x0000000000000000000000000000000000002203",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "6000"
+            },
+            {
+              "id": "nova",
+              "registeredAddress": "0x0000000000000000000000000000000000002204",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "4000"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "6mmYVUVVnHF0dTmGAZO6RVoIYUuX3p0movAKWV15meia2wyJlsEeJUo_Zm3GLFgSNYW8W2NBccQcteHZlpRIbQ"
+    },
+    "game-spam": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "game",
+        "recordId": "SAMPLE-GAME-20261024-SPAM",
+        "scope": "pre-payment-partner-registration",
+        "company": "루멘게임즈",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001102",
+          "partners": [
+            {
+              "id": "orion",
+              "registeredAddress": "0x0000000000000000000000000000000000002202",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "8000"
+            },
+            {
+              "id": "pixel",
+              "registeredAddress": "0x0000000000000000000000000000000000002203",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "6000"
+            },
+            {
+              "id": "nova",
+              "registeredAddress": "0x0000000000000000000000000000000000dead02",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "4000"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "_IxZNQnREDfW9H1A4f__n821jzmKtNXXWIH87FaOH_cCf0ZE7V4EGnZnxTyJNBZOXp9V4DZ4qRbx59VfSd0yNg"
+    },
+    "game-untrusted": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "untrusted-sample",
+        "clientId": "game",
+        "recordId": "SAMPLE-GAME-20261024-UNTRUSTED",
+        "scope": "pre-payment-partner-registration",
+        "company": "루멘게임즈",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x0000000000000000000000000000000000001102",
+          "partners": [
+            {
+              "id": "orion",
+              "registeredAddress": "0x0000000000000000000000000000000000002202",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "8000"
+            },
+            {
+              "id": "pixel",
+              "registeredAddress": "0x0000000000000000000000000000000000002203",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "6000"
+            },
+            {
+              "id": "nova",
+              "registeredAddress": "0x0000000000000000000000000000000000002204",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "4000"
+            }
+          ]
+        }
+      },
+      "keyId": "untrusted-sample",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "GBww-BdEmkGPL8wkt_HKmELOleDRoDlCSKnDRClCHYVqxOK26FT5cTB1JsqpUcRof3EnHnWjL4Ne7m56NBYe-g"
+    },
+    "game-tampered": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "game",
+        "recordId": "SAMPLE-GAME-20261024",
+        "scope": "pre-payment-partner-registration",
+        "company": "루멘게임즈",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "eip155:1",
+          "wallet": "0x000000000000000000a000000000000000001102",
+          "partners": [
+            {
+              "id": "orion",
+              "registeredAddress": "0x0000000000000000000000000000000000002202",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "8000"
+            },
+            {
+              "id": "pixel",
+              "registeredAddress": "0x0000000000000000000000000000000000002203",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "6000"
+            },
+            {
+              "id": "nova",
+              "registeredAddress": "0x0000000000000000000000000000000000002204",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "plannedAmount": "4000"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "NbbVThQhrOtHCdu4pdrh7LBJ95PwVE4hMktaIFpsBHUEu-Z_O0S0xpSuhTUn-EAyeDU3XKMRHxXBfHVoJtPQZg"
+    },
+    "audit-normal": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "audit",
+        "recordId": "SAMPLE-AUDIT-20261024",
+        "scope": "custody-transaction-set",
+        "company": "새봄자산운용",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "synthetic-custody-ledger",
+          "wallet": "0x0000000000000000000000000000000000001103",
+          "transactions": [
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "amount": "5000"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/slip44:60",
+              "asset": "ETH",
+              "amount": "-1"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "synthetic-custody-ledger",
+              "assetId": "synthetic-custody:BTC",
+              "asset": "BTC",
+              "amount": "0.1"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "rbyru9Y97YE1zXDTf_igbFeFzexqxbYOJ7ZrsmM96jGd9hLNKBCgBEejag2TQl8pin8TEkPvjbsjmPlFGY6V3A"
+    },
+    "audit-stale": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "audit",
+        "recordId": "SAMPLE-AUDIT-20261024-STALE",
+        "scope": "custody-transaction-set",
+        "company": "새봄자산운용",
+        "referenceTime": "2026-10-23T05:00:00.000Z",
+        "validFrom": "2026-10-23T05:00:00.000Z",
+        "validUntil": "2026-10-23T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "synthetic-custody-ledger",
+          "wallet": "0x0000000000000000000000000000000000001103",
+          "transactions": [
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "amount": "5000"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/slip44:60",
+              "asset": "ETH",
+              "amount": "-1"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "synthetic-custody-ledger",
+              "assetId": "synthetic-custody:BTC",
+              "asset": "BTC",
+              "amount": "0.1"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "Hm47qtyA1jfHbIJUjfGROjFiEhmpjnjrOSaoGHcbQ0XpRklbVkscV_n2-qhoBTnnnJI99W977-3EccOLI915dA"
+    },
+    "audit-spam": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "audit",
+        "recordId": "SAMPLE-AUDIT-20261024-SPAM",
+        "scope": "custody-transaction-set",
+        "company": "새봄자산운용",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "synthetic-custody-ledger",
+          "wallet": "0x0000000000000000000000000000000000001103",
+          "transactions": [
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "amount": "5000"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/slip44:60",
+              "asset": "ETH",
+              "amount": "-1"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000dead03",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "synthetic-custody-ledger",
+              "assetId": "synthetic-custody:BTC",
+              "asset": "BTC",
+              "amount": "0.1"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "SnJnE0y70KLP-ea42d6YwIpOz5TZ5TTDqNXCLMjJB9qIWNzdEuMF21_QZGirrucPt-M1o_1hcT4z76UN4erpzg"
+    },
+    "audit-untrusted": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "untrusted-sample",
+        "clientId": "audit",
+        "recordId": "SAMPLE-AUDIT-20261024-UNTRUSTED",
+        "scope": "custody-transaction-set",
+        "company": "새봄자산운용",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "synthetic-custody-ledger",
+          "wallet": "0x0000000000000000000000000000000000001103",
+          "transactions": [
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "amount": "5000"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/slip44:60",
+              "asset": "ETH",
+              "amount": "-1"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "synthetic-custody-ledger",
+              "assetId": "synthetic-custody:BTC",
+              "asset": "BTC",
+              "amount": "0.1"
+            }
+          ]
+        }
+      },
+      "keyId": "untrusted-sample",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "XjJTc41_OXt3Av-RRHrLiNTVgYR4qenZa2Nm6AuaIZLSFDmM3n9KRFfgxqJXcik2fN3Pm2GXCpZqkG0-06Fqvg"
+    },
+    "audit-tampered": {
+      "payload": {
+        "schemaVersion": 1,
+        "issuerId": "sample-p256-20261024",
+        "clientId": "audit",
+        "recordId": "SAMPLE-AUDIT-20261024",
+        "scope": "custody-transaction-set",
+        "company": "새봄자산운용",
+        "referenceTime": "2026-10-24T05:00:00.000Z",
+        "validFrom": "2026-10-24T05:00:00.000Z",
+        "validUntil": "2026-10-24T06:00:00.000Z",
+        "synthetic": true,
+        "facts": {
+          "network": "synthetic-custody-ledger",
+          "wallet": "0x000000000000000000a000000000000000001103",
+          "transactions": [
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004201",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/erc20:0x0000000000000000000000000000000000003001",
+              "asset": "USDC",
+              "amount": "5000"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004202",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "eip155:1",
+              "assetId": "eip155:1/slip44:60",
+              "asset": "ETH",
+              "amount": "-1"
+            },
+            {
+              "id": "0x0000000000000000000000000000000000000000000000000000000000004203",
+              "wallet": "0x0000000000000000000000000000000000001103",
+              "network": "synthetic-custody-ledger",
+              "assetId": "synthetic-custody:BTC",
+              "asset": "BTC",
+              "amount": "0.1"
+            }
+          ]
+        }
+      },
+      "keyId": "sample-p256-20261024",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "rbyru9Y97YE1zXDTf_igbFeFzexqxbYOJ7ZrsmM96jGd9hLNKBCgBEejag2TQl8pin8TEkPvjbsjmPlFGY6V3A"
+    }
+  }
+}
