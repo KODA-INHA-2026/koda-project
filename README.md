@@ -20,7 +20,7 @@
 | GitHub 조직 | [KODA-INHA-2026](https://github.com/KODA-INHA-2026) | 팀 공동 관리 공간 |
 | 개발 저장소 | [koda-project](https://github.com/KODA-INHA-2026/koda-project) | 코드·개발 문서·변경 이력 |
 | Google Drive | [팀 공동 작업 폴더](https://drive.google.com/drive/folders/1fl7Cx1Iven9TYFBXJs-MV222u8SYiVWH?usp=sharing) | 발표자료·이미지·시연 영상 등 파일 |
-| 공동 Google 슬라이드 | 공유 URL을 받으면 추가 | 발표에 들어갈 내용 공동 작성 |
+| 공동 Google 슬라이드 | [KODA 1024 공동 발표자료](https://docs.google.com/presentation/d/1-HxONos-pEA9OlyIPW4XS_Th8nf-ItAW42_Y8_Kqdos/edit?slide=id.h7f535652ed8e08af_0_0#slide=id.h7f535652ed8e08af_0_0) | 발표에 들어갈 내용 공동 작성 |
 | 협업 안내 | [CONTRIBUTING.md](CONTRIBUTING.md) | 작업 공유·문서·데이터 관리 기준 |
 
 Drive와 슬라이드의 접근 권한은 GitHub 접근 권한과 별개입니다.
