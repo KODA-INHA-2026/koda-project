@@ -9,6 +9,7 @@
 | Tabler Icons | MIT. `landing/dist/assets/licenses/tabler-icons-LICENSE.txt` |
 | Pretendard Variable | SIL Open Font License 1.1. `landing/dist/assets/licenses/Pretendard-OFL.txt` |
 | IBM Plex Mono | SIL Open Font License 1.1. `landing/dist/assets/IBMPlex-OFL.txt` |
+| IBM Plex Sans KR | SIL Open Font License 1.1. `landing/dist/assets/fonts-v11/IBM-Plex-OFL-1.1.txt` |
 | KODA 로고 | 상표·로고 권리는 KODA에 귀속. 공식 운영 서비스와 제휴·보증을 주장하지 않음 |
 | 프로젝트 이미지·영상·음악 | 공개 링크와 SHA-256 목록으로 연결. 재사용 범위와 상세 출처는 `landing/dist/assets/CREDITS.txt` 및 `AUDIO-CREDITS.txt` 참조 |
 

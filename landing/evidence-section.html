@@ -1,0 +1,81 @@
+<section class="evidence-section wrap" id="features" aria-labelledby="features-title">
+  <div class="evidence-intro">
+    <p class="home-eyebrow">거래 사실을 읽는 기준</p>
+    <h2 id="features-title">같은 거래도,<br>확인할 근거는 <br>다릅니다.</h2>
+    <p>발급키·시점·대상을 나누어 확인하고, 아직 증명하지 못한 범위도 함께 남깁니다.</p>
+    <p class="evidence-intro-note">원자료 확인과 거래 완료는 <br>서로 다른 사실입니다.</p>
+  </div>
+
+  <div class="evidence-reader" data-evidence-reader data-state="pending" aria-busy="false">
+    <header class="evidence-record-header">
+      <div><p>공개 합성자료</p><h3>한빛정밀 · 받은 대금 확인</h3></div>
+      <p class="evidence-record-id"><span>원자료 번호</span><code data-evidence="record-id">자료를 불러오면 표시합니다.</code></p>
+    </header>
+
+    <div class="evidence-facets" role="tablist" aria-label="같은 원자료를 읽는 관점" hidden>
+      <button type="button" id="evidence-tab-source" role="tab" aria-selected="true" aria-controls="evidence-panel-source" tabindex="0">원자료의 신뢰</button>
+      <button type="button" id="evidence-tab-target" role="tab" aria-selected="false" aria-controls="evidence-panel-target" tabindex="-1">요청과의 일치</button>
+      <button type="button" id="evidence-tab-scope" role="tab" aria-selected="false" aria-controls="evidence-panel-scope" tabindex="-1">어디까지 확인했나</button>
+    </div>
+
+    <div class="evidence-panels">
+      <section class="evidence-panel" id="evidence-panel-source" aria-labelledby="evidence-tab-source">
+        <div class="evidence-panel-heading"><h4>원자료의 발급 근거</h4><p>등록된 샘플 공개키로 원자료 서명과 유효시간을 검사합니다.</p></div>
+        <dl class="evidence-checks" aria-label="원자료 검사 결과">
+          <div><dt>원자료 서명</dt><dd data-evidence-check="source_signature" data-status="not_checked">미확인</dd></div>
+          <div><dt>발급키 유효시간</dt><dd data-evidence-check="key_time" data-status="not_checked">미확인</dd></div>
+          <div><dt>원자료 유효시간</dt><dd data-evidence-check="source_time" data-status="not_checked">미확인</dd></div>
+        </dl>
+        <dl class="evidence-source-meta">
+          <div><dt>발급키 표시</dt><dd data-evidence="issuer-label">산학프로젝트 샘플 발급키</dd></div>
+          <div><dt>발급키 식별자</dt><dd><code data-evidence="issuer-id">아직 확인하지 않았습니다.</code></dd></div>
+          <div><dt>공개키 지문 <span>SHA-256</span></dt><dd><code class="evidence-fingerprint" data-evidence="fingerprint">아직 계산하지 않았습니다.</code></dd></div>
+        </dl>
+        <div class="evidence-clock">
+          <p class="evidence-clock-label">현재 시각 대신 사용하는 고정 시연 기준</p>
+          <dl>
+            <div><dt>원자료 기준</dt><dd><time data-evidence="reference-time">미확인</time></dd></div>
+            <div><dt>검사 기준</dt><dd><time data-evidence="checked-time">미확인</time></dd></div>
+            <div><dt>자료 만료</dt><dd><time data-evidence="expiry-time">미확인</time></dd></div>
+          </dl>
+        </div>
+        <p class="evidence-boundary">샘플 발급키와의 대응을 확인합니다. 실제 KODA 발급 사실이나 지갑 소유권을 증명하지 않습니다.</p>
+      </section>
+
+      <section class="evidence-panel" id="evidence-panel-target" aria-labelledby="evidence-tab-target">
+        <div class="evidence-panel-heading"><h4>이 요청에 쓸 수 있는 자료일까요.</h4><p>서명이 유효해도 요청한 거래 상대가 다르면 사용할 수 없습니다.</p></div>
+        <dl class="evidence-addresses">
+          <div><dt>원자료의 거래 상대 주소</dt><dd><code data-evidence="source-address">자료를 불러오면 전체 주소를 표시합니다.</code></dd></div>
+          <div><dt>요청의 거래 상대 주소</dt><dd><code data-evidence="request-address">자료를 불러오면 전체 주소를 표시합니다.</code></dd></div>
+        </dl>
+        <div class="evidence-target-result" data-evidence-target-result data-status="not_checked">
+          <span>거래 상대 주소 대조</span><strong data-evidence="target-verdict">미확인</strong>
+          <p data-evidence="target-explanation">원자료의 신뢰·유효성을 확인한 뒤 전체 주소를 대조합니다.</p>
+        </div>
+        <dl class="evidence-checks evidence-target-signature"><div><dt>별도로 확인한 원자료 서명</dt><dd data-evidence-check="source_signature" data-status="not_checked">미확인</dd></div></dl>
+        <p class="evidence-boundary">주소 일치는 서명된 자료와 요청 사이의 일치입니다. 거래 상대의 소유권이나 실제 지급 완료를 뜻하지 않습니다.</p>
+      </section>
+
+      <section class="evidence-panel" id="evidence-panel-scope" aria-labelledby="evidence-tab-scope">
+        <div class="evidence-panel-heading"><h4>원자료 확인 다음에는 어떤 증거가 필요할까요.</h4><p>이 자료만으로는 아래 여섯 가지 거래 사실을 확인할 수 없습니다.</p></div>
+        <dl class="evidence-claims" aria-label="별도 증거가 필요한 거래 사실">
+          <div><dt>거래 요청 접수</dt><dd><strong>미확인</strong><span>실제 접수 시스템의 요청 식별자</span></dd></div>
+          <div><dt>조직 정책에 따른 승인</dt><dd><strong>미확인</strong><span>인증된 승인자·권한·승인 기록</span></dd></div>
+          <div><dt>수탁 시스템 서명·전송</dt><dd><strong>미확인</strong><span>수탁 시스템의 거래 서명·전송 기록</span></dd></div>
+          <div><dt>블록체인 거래 기록</dt><dd><strong>미확인</strong><span>네트워크 영수증·확정성 근거</span></dd></div>
+          <div><dt>상대방 자산 수령</dt><dd><strong>미확인</strong><span>수령 대상과 자산 도착 근거</span></dd></div>
+          <div><dt>내부 장부 대사</dt><dd><strong>미확인</strong><span>원장·회계 자료의 대사 결과</span></dd></div>
+        </dl>
+        <div class="evidence-scope-notes">
+          <p>A/B 승인은 브라우저 안의 역할 시연이며, 인증된 조직 승인이 아닙니다.</p>
+          <p>원자료 서명은 수탁 시스템의 거래 서명·전송 증거가 아닙니다.</p>
+          <p>JSON 재검증은 자료 확인이며, 상대방의 자산 수령 확인이 아닙니다.</p>
+        </div>
+      </section>
+    </div>
+
+    <p class="evidence-state-message" data-evidence="state-message">이 화면은 아직 원자료를 검사하지 않았습니다. 아래 주소 대조에서 검사 결과와 전체 주소를 함께 살펴볼 수 있습니다.</p>
+    <footer class="evidence-footer"><a href="#comparison">주소 대조해 보기 <span aria-hidden="true">↓</span></a><a href="verification.html">받은 자료 확인하기 <span aria-hidden="true">↗</span></a></footer>
+    <p class="evidence-live" data-evidence-live role="status" aria-live="polite" aria-atomic="true"></p>
+  </div>
+</section>

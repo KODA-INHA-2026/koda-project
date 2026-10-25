@@ -12,7 +12,7 @@
 .assurance-controls input[data-request-format=identifier],.receiver-text{font-family:var(--mono);font-size:var(--type-code,13px);font-weight:400;letter-spacing:0;font-variant-ligatures:none}
 .assurance-controls input[aria-invalid=true],.receiver-text[aria-invalid=true]{border-color:var(--danger)}
 .assurance-controls input:focus-visible,.assurance-controls select:focus-visible,.receiver-text:focus-visible{outline:3px solid var(--action);outline-offset:3px}
-.assurance-controls input{scroll-margin-top:110px}
+.assurance-controls input,.assurance-controls select,.assurance-controls textarea{scroll-margin-top:var(--console-anchor-offset,110px)}
 .assurance-controls small,.assurance-note{display:block;font-size:var(--type-caption,13px);font-weight:400;line-height:1.75;color:var(--muted);margin-top:8px;overflow-wrap:anywhere}
 .assurance-more{border-top:1px solid var(--line);margin-top:24px;padding-top:12px}
 .assurance-more summary{cursor:pointer;font-size:var(--type-label,14px);font-weight:550;min-height:44px;line-height:1.7;padding:10px 0}
@@ -21,7 +21,7 @@
 .assurance-fields-grid>.assurance-field.wide{grid-column:1/-1}
 .assurance-target{padding-top:20px;border-top:1px solid var(--line);margin-top:20px}
 .assurance-target:first-child{border-top:0;margin-top:0;padding-top:0}
-.assurance-result{position:relative;scroll-margin-top:100px;border-top:3px solid var(--line-strong);padding-top:27px}
+.assurance-result{position:relative;scroll-margin-top:var(--console-anchor-offset,100px);border-top:3px solid var(--line-strong);padding-top:27px}
 .assurance-result[data-state=passed]{border-top-color:var(--action)}
 .assurance-result[data-state=failed]{border-top-color:var(--danger)}
 .assurance-result h2{color:var(--muted)}
@@ -67,6 +67,11 @@
 .assurance-controls .receiver-file{display:block;max-width:100%;min-height:48px;padding:0;border:0;border-radius:0;background:transparent;font-family:var(--sans);font-size:var(--type-label,14px);line-height:1.7;cursor:pointer;overflow:hidden;text-overflow:ellipsis}
 .receiver-file::file-selector-button{min-height:46px;padding:10px 14px;border:1px solid var(--line-strong);border-radius:var(--radius);color:var(--ink);background:var(--surface);font:inherit;font-weight:550;margin-right:12px;cursor:pointer}
 .receiver-file:hover::file-selector-button{border-color:var(--action);background:var(--soft)}
+.receiver-example{margin-bottom:26px;padding:0 0 25px;border-bottom:1px solid var(--line)}
+.receiver-example strong{font-size:var(--type-label);font-weight:600}
+.receiver-example p{font-size:var(--type-label);line-height:1.8;color:var(--muted);margin-top:7px}
+.receiver-example button{margin-top:13px;text-align:left}
+.receiver-example .assurance-note:empty{display:none}
 .receiver-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:20px}
 .receiver-actions .console-primary{flex:1}
 .receiver-links{display:flex;gap:24px;flex-wrap:wrap;font-size:var(--type-label,14px);margin-top:28px;color:var(--action)}
@@ -76,7 +81,7 @@
 .console-receiver-link:hover{text-decoration:underline}
 @media(max-width:1180px){.assurance-controls,.assurance-result{padding-inline:24px}.receiver-main{width:calc(100% - 64px)}}
 @media(max-width:1000px){.assurance-zone,.receiver-page .assurance-zone{grid-template-columns:minmax(0,1fr)}.assurance-controls{border-right:0;border-bottom:1px solid var(--line)}.assurance-result{border-top-width:3px}.assurance-summary{min-height:112px}.receiver-main{max-width:820px}.receiver-page .assurance-controls,.receiver-page .assurance-result{padding:28px}.receiver-text{height:220px;min-height:220px}}
-@media(max-width:800px){.assurance-result,.assurance-result:focus{scroll-margin-top:20px}.assurance-controls input{scroll-margin-top:24px}}
+@media(max-width:800px){.receiver-page{--console-anchor-offset:24px}}
 @media(max-width:600px){.assurance-zone{margin-bottom:32px}.assurance-controls,.assurance-result{padding:24px 20px}.assurance-result{padding-top:21px}.assurance-checks,.assurance-fields-grid{display:block}.assurance-controls h2{font-size:19px;margin-bottom:22px}.assurance-result h2{font-size:var(--type-label,14px);margin-bottom:20px}.assurance-summary{gap:12px;min-height:126px;margin-bottom:22px}.assurance-summary h3{font-size:26px}.assurance-summary>span{width:30px;height:30px;font-size:16px}.assurance-primary-checks .assurance-check-heading strong{font-size:17px}.assurance-check[data-status=failed]{padding-left:12px}.assurance-check-heading{gap:6px 12px}.assurance-controls input,.assurance-controls select,.assurance-controls textarea,.assurance-controls input[data-request-format=identifier]{font-size:16px}.assurance-diff{font-size:12px!important}.receiver-main{width:calc(100% - 40px);padding:30px 0 40px}.receiver-heading{margin-bottom:26px}.receiver-heading h1{font-size:32px}.receiver-heading>p:last-child{font-size:var(--type-label,14px)}.receiver-page .assurance-controls,.receiver-page .assurance-result{padding:24px 20px}.receiver-text{height:240px;min-height:240px}.receiver-actions{align-items:stretch}.receiver-actions .console-primary{flex:auto;width:100%}.receiver-actions .console-quiet{width:100%}.receiver-links{gap:4px;margin-top:20px;flex-direction:column}}
 @media(prefers-reduced-motion:reduce){.assurance-zone *{scroll-behavior:auto!important;transition:none!important}}
 @media(forced-colors:active){.assurance-result,.assurance-controls,.assurance-check[data-status=failed]{border-color:CanvasText}.assurance-diff mark{color:MarkText;background:Mark}.assurance-check-heading b{color:CanvasText}.assurance-result[data-state=passed] .assurance-summary>span,.assurance-result[data-state=failed] .assurance-summary>span{color:CanvasText;background:Canvas;border-color:CanvasText}}

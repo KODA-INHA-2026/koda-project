@@ -15,6 +15,8 @@ const fragment=`<div class="task-preview"><div class="task-tabs" role="tablist" 
 if(!motionOnly){
  const htmlFile=path.join(here,'dist/index.html');
  let html=await fs.readFile(htmlFile,'utf8');
+ const evidence=await fs.readFile(path.join(here,'evidence-section.html'),'utf8');
+ html=html.replace(/<!-- EVIDENCE-READER START -->[\s\S]*?<!-- EVIDENCE-READER END -->/,`<!-- EVIDENCE-READER START -->${evidence}<!-- EVIDENCE-READER END -->`);
  html=html.replace(/<!-- PRODUCT-PREVIEW START -->[\s\S]*?<!-- PRODUCT-PREVIEW END -->/,`<!-- PRODUCT-PREVIEW START -->${fragment}<!-- PRODUCT-PREVIEW END -->`);
  await fs.writeFile(htmlFile,html);
 }

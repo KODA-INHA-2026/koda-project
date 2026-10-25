@@ -302,7 +302,7 @@ async function runVerification(){
   addEvent(result.passed===true?'발급 서명과 요청한 정보를 확인했어요.':'정보 확인에서 다른 항목을 찾았어요.');
  }catch{if(version===gateRevision){const error=byId('assurance-input-error');error.textContent='정보를 확인하지 못했어요. 입력을 확인하고 다시 눌러 주세요.';error.hidden=false;}}
  finally{gateBusy=false;render();}
- if(version===gateRevision){const invalid=document.querySelector('[data-request-path][aria-invalid=true]');if(invalid?.closest('details'))invalid.closest('details').open=true;if(invalid)invalid.focus();else assuranceUI.focusResult(byId('assurance-result'));}
+ if(version===gateRevision){const invalid=document.querySelector('[data-request-path][aria-invalid=true]');if(invalid?.closest('details'))invalid.closest('details').open=true;if(invalid){invalid.focus({preventScroll:true});invalid.scrollIntoView({block:'center',behavior:'auto'});}else assuranceUI.focusResult(byId('assurance-result'));}
 }
 window.addEventListener('popstate',()=>{
  const query=new URLSearchParams(location.search),id=query.get('client'),view=query.get('view'),scenario=scenarioIds.includes(query.get('scenario'))?query.get('scenario'):'normal';

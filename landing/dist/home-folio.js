@@ -10,6 +10,8 @@
   let motionEpoch = 0;
   let requestedScenario = null;
   let settledScenario = null;
+  let settledEvidence = null;
+  const report = (status, detail = {}) => window.dispatchEvent(new CustomEvent('koda:comparison-state', {detail: {status, ...detail}}));
 
   const text = (selector, value) => {
     instrument.querySelectorAll(selector).forEach(element => { element.textContent = value; });
@@ -158,8 +160,9 @@
     requestedScenario = scenario;
     stopMotion();
     // Returning to the still-visible settled case cancels a pending request.
-    if (settledScenario === scenario) { busy(false); return; }
+    if (settledScenario === scenario) { busy(false); if (settledEvidence) report('ready', settledEvidence); return; }
     busy(true);
+    report('loading', {scenario});
     try {
       const core = window.KODA_ASSURANCE;
       if (!core) throw new Error('Verifier unavailable');
@@ -172,11 +175,14 @@
       const first = mayMove && epoch === motionEpoch ? capture() : [];
       commit(view, scenario);
       settledScenario = scenario;
+      settledEvidence = {scenario, data, result};
+      report('ready', settledEvidence);
       busy(false);
       if (mayMove) alignPapers(first, own, epoch);
     } catch {
       if (own !== revision) return;
       settledScenario = null;
+      settledEvidence = null;
       requestedScenario = null;
       selectLinks(scenario);
       instrument.dataset.state = 'error';
@@ -192,6 +198,7 @@
       text('[data-signal-position]', '주소 미확인');
       digits('[data-signal-source]', '', 20);
       digits('[data-signal-request]', '', 20);
+      report('error', {scenario});
     } finally {
       if (own === revision) busy(false);
     }

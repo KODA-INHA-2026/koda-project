@@ -5,6 +5,7 @@
 <main id="main" class="receiver-main"><div class="receiver-heading"><p class="console-eyebrow">자료 수신</p><h1>받은 자료 확인</h1><p>받은 확인 내역을 가져와 다시 확인하세요. 원자료의 서명과 요청한 주소·거래를 각각 검사해요.</p></div>
 <div class="assurance-zone"><form class="assurance-controls" id="receiver-form" novalidate>
 <h2>자료 가져오기</h2>
+<div class="receiver-example"><div><strong>파일이 없어도 살펴볼 수 있어요.</strong><p>공개 합성 예시를 불러온 뒤 직접 검사해 보세요.</p></div><button type="button" id="load-public-example" class="console-button console-quiet" disabled>공개 예시 자료 불러오기</button><p id="receiver-example-status" class="assurance-note" role="status"></p></div>
 <div class="receiver-import"><label for="received-file" class="receiver-file-label">저장한 JSON 파일</label><input id="received-file" class="receiver-file" type="file" accept=".json,application/json" aria-describedby="receiver-help receiver-error"><p id="receiver-help" class="assurance-note">JSON 파일 1개 · 최대 1MB. 선택한 파일은 이 화면에서만 읽어요.</p></div>
 <label for="received-json"><span>또는 JSON 내용 붙여넣기</span><textarea id="received-json" class="receiver-text" spellcheck="false" autocomplete="off" aria-describedby="receiver-help receiver-error" placeholder="저장한 확인 내역을 여기에 붙여넣으세요."></textarea></label>
 <p id="receiver-error" class="assurance-error" role="alert" hidden></p>
