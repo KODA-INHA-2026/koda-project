@@ -2,12 +2,31 @@
 (async()=>{
  const panels=[...document.querySelectorAll('[data-assurance-preview]')];
  const put=(parent,tag,text,className)=>{const el=document.createElement(tag);el.textContent=String(text??'');if(className)el.className=className;parent.append(el);return el;};
+ function renderArtifact(panel,data){
+  const root=panel.querySelector('[data-preview-artifact]');if(!root)return;
+  root.replaceChildren();root.classList.add(`artifact-${data.id}`);
+  const top=put(root,'div','','artifact-top');put(top,'span',data.id==='export'?'받은 입금 요청':data.id==='game'?'지급 전 등록 주소 대조':'요청한 수탁 거래');put(top,'span',data.company);
+  if(data.id==='export'){
+   put(root,'div','거래 상대와 연결할 받은 대금','artifact-heading');
+   const amount=put(root,'div',new Intl.NumberFormat('ko-KR',{maximumFractionDigits:8}).format(Number(data.request.transaction.amount)),'artifact-amount');put(amount,'small',data.request.transaction.asset);
+   const foot=put(root,'div','','artifact-foot');put(foot,'span','원자료와 주소·거래를 각각 대조');put(foot,'span','청구서 연결은 확인 이후');
+  }else if(data.id==='game'){
+   const partners=put(root,'div','','artifact-partners');
+   for(const partner of data.request.partners){const item=put(partners,'div','','artifact-partner');put(item,'strong',partner.id);put(item,'span',`${partner.amount} ${partner.asset} · 요청 수량`);put(item,'code',partner.recipient);}
+   const approval=put(root,'div','','artifact-approvals');put(approval,'b','A');put(approval,'b','B');put(approval,'span','주소·자료 확인 이후 두 명 승인');
+  }else{
+   const ledger=put(root,'div','','artifact-ledger');
+   for(const transaction of data.request.transactions){put(ledger,'span',transaction.asset);put(ledger,'span',transaction.amount);}
+   const foot=put(root,'div','','artifact-foot');put(foot,'span','필요한 항목 선택 → 확인 내역 저장');put(foot,'span','받는 사람도 재검증');
+  }
+ }
  try{
   if(!window.KODA_ASSURANCE)throw new Error('확인 기능을 불러오지 못했어요.');
   await window.KODA_ASSURANCE.ready;
   await Promise.all(panels.map(async panel=>{
    try{
     const caseData=window.KODA_ASSURANCE.getCase(panel.dataset.assurancePreview,panel.dataset.scenario);
+    renderArtifact(panel,caseData);
     const result=await window.KODA_ASSURANCE.verify(panel.dataset.assurancePreview,panel.dataset.scenario);
     const verdict=panel.querySelector('[data-preview-verdict]');verdict.dataset.tone=result.passed?'success':'warning';
     panel.querySelector('.preview-verdict-mark').textContent=result.passed?'✓':'!';
