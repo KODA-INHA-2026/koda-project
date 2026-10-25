@@ -2,13 +2,19 @@
 
 앱은 정적 HTML/CSS/JavaScript로 구성됩니다. `npm run build`로 공유 토큰·문구·모션을 생성하고 `npm run dev`로 실행합니다. `landing/dist`가 웹 루트입니다. 서버는 로컬 파일만 제공하며 금융 데이터·계정·지갑을 연결하지 않습니다.
 
-현재 UI는 v12이며 홈을 브랜드 이미지 → 세 관점의 근거 열람기 → 세 기업의 실무 흐름 순서로 구성합니다. 열람기는 같은 자료를 원자료의 신뢰·요청과의 일치·확인 범위로 나누어 읽습니다. 서비스 원리에서는 자료의 검사 구조와 외부 거래 사실을 구분합니다. 홈의 자료 전환은 `landing/dist/home-folio.js`, 브랜드 첫 화면의 스타일은 `landing/dist/brand-v11.css`가 담당합니다. 기존 `assurance-core.js`의 서명·주소·거래 검증과 업무 진행 조건을 유지합니다. 공개 영상은 v7의 단일 30초 파일을 그대로 사용합니다.
+현재 UI는 v13이며 공개 수탁 기반에서 산업별 활용 가능성과 세 가지 합성 업무 시연으로 이어지는 구성을 제공합니다. 별도 `industries.html`에서는 세 산업·세부 업종·기업명을 탐색합니다. 근거 열람기는 같은 자료를 원자료의 신뢰·요청과의 일치·확인 범위로 나누어 읽습니다. 서비스 원리에서는 자료의 검사 구조와 외부 거래 사실을 구분합니다. 기존 `assurance-core.js`의 서명·주소·거래 검증과 업무 진행 조건을 유지하며 공개 영상은 v7의 단일 30초 파일을 그대로 사용합니다.
 
-브랜드 제목은 자체 호스팅 IBM Plex Sans KR Regular 400·Medium 500·SemiBold 600을 사용하며, 한국어 본문·업무 UI의 Pretendard Variable과 정확한 식별자의 IBM Plex Mono는 유지합니다. 글꼴 파일과 OFL 고지를 함께 전달하고 크기·행간·weight는 공유 토큰과 스타일에서 조정합니다.
+공개 제목의 서체는 SUIT Variable 2.040이며 2,668개 한글 음절을 포함합니다. 나머지 글자는 Pretendard Variable로 표시합니다. `fonts.displayFallback`까지 포함한 공유 토큰에서 표시용 서체 스택을 생성하며 공개 스타일은 `landing/dist/public-type-v13.css`가 담당합니다. 한국어 본문·업무 UI의 Pretendard Variable과 정확한 식별자의 IBM Plex Mono는 유지합니다. SUIT 파일과 원본 OFL은 `landing/dist/assets/fonts-v13/`에 함께 전달하고 기존 Plex 고지도 보존합니다.
 
 ## 데이터와 화면
 
-`assurance-core.js`가 검증 결과의 기준입니다. 화면의 선택 상태나 색상으로 통과 판정을 만들지 않습니다. `blueprint.js`는 업무 상태, `assurance-ui.js`는 입력·검사 항목 표시, `app.js`는 수신 파일 검사를 담당합니다. 고객·주소·거래 자료는 모두 공개 합성 예시입니다.
+`assurance-core.js`가 검증 결과의 기준입니다. 화면의 선택 상태나 색상으로 통과 판정을 만들지 않습니다. `blueprint.js`는 업무 상태, `assurance-ui.js`는 입력·검사 항목 표시, `app.js`는 수신 파일 검사를 담당합니다. 업무 시연의 고객·주소·거래 자료는 공개 합성 예시이며 아래 실재 기업의 산업별 조사 자료와 구분합니다.
+
+산업별 잠재 활용 기업의 canonical 원본은 `landing/prospect-companies-v13.json`입니다. 세 업종에 100개씩 총 300개를 포함하며 `classification`은 `prospective`입니다. 기업의 공개 출처·업종 분류와 프로젝트가 제안한 활용 장면을 함께 제공하며 고객·제휴·도입 관계를 확인한 목록이 아닙니다. `landing/build-industries.mjs`가 중복과 수량·출처 URL을 검사하고 공개 사본 `landing/dist/assets/prospect-companies-v13.json`을 생성합니다. `industries.js`는 세부 업종 필터·이름 검색·가로 목록 탐색을 담당합니다.
+
+수탁 기반의 HTML 원본은 `landing/capability-section.html`입니다. 86.6%와 국내 1위 표시는 KODA 공개 자료의 2024년 하반기 수탁고 기준이며 현재 수치가 아닙니다. 해당 기준 시점과 외부 보고서의 발행 주체·시점을 제거하지 않습니다. 공식 서비스의 기능·공개 자료는 활용 제안의 배경이며 합성 시연이 실제 KODA 서비스와 연결되었다는 의미가 아닙니다.
+
+빌드는 `build-tokens.mjs` → `build-motion.mjs` → `build-industries.mjs` 순서입니다. 마지막 단계가 홈의 수탁 기반·산업별 미리보기, 산업 페이지의 공개 근거 구간과 공개 네 페이지의 공통 탐색을 반영합니다. 공통 메뉴의 열기·닫기와 키보드 처리는 `landing/dist/public-ui-v13.js`에서 관리합니다. 생성 구간과 공개 JSON을 수정할 때는 canonical 원본을 먼저 편집합니다.
 
 홈 근거 열람기의 HTML 원본은 `landing/evidence-section.html`이며 빌드가 홈의 지정 구간에 반영합니다. `landing/dist/evidence-reader.css`와 `evidence-reader.js`는 세 관점의 배치와 키보드 탭 전환, 코어 검사 결과의 표시를 담당합니다. 서비스 원리의 증거 구조와 외부 사실 목록은 `landing/dist/research.html`, 표현은 `landing/dist/evidence-research.css`에서 편집합니다. 하단 배경 자료의 원본인 `landing/global-evidence.html`은 별도로 빌드에 반영합니다.
 
@@ -54,5 +60,7 @@ URL에 `client`, `view`, `scenario`가 명시되면 저장 세션보다 우선�
 ## 변경 후 확인
 
 `npm test`로 도메인 검증을 실행하고 `npm run build` 후 `npm run check`로 생성 결과와 참조를 확인합니다. 실제 화면에서는 세 법인의 목록→상세→확인→후속 업무, 입력 변경에 따른 무효화, JSON 다운로드와 수신 재검증, 키보드 조작과 좁은 화면을 확인합니다. 기능 테스트만으로 화면·영상·음향의 검수를 대신하지 않습니다.
+
+산업별 활용은 각 산업 100개와 총 300개, 고객·제휴 아님 문구, 출처 링크와 원본/공개 JSON 일치를 확인합니다. 산업 탭·세부 업종·검색·빈 결과·불러오기 실패·재시도·가로 목록의 키보드 및 터치 조작을 점검하고, 실제 공개 페이지에서 SUIT와 대체 글자의 표시·모바일 메뉴·넘침을 확인합니다.
 
 기존 합성 자료의 서명된 값을 직접 편집하면 의도대로 서명 검증이 실패합니다. 공개 저장소에는 샘플 공개키만 있으며 발급용 개인키는 제공하지 않습니다. 새 발급 체계를 도입할 때는 키 관리와 신뢰 근거를 별도로 설계해야 합니다.

@@ -5,7 +5,8 @@
 
 ## 현재 상태
 
-- 현재 웹 UI는 v12입니다. 홈은 브랜드 이미지, 원자료의 신뢰·요청과의 일치·확인 범위를 읽는 세 관점의 근거 열람기, 세 기업의 실무 흐름 순서로 구성합니다. 서비스 원리에서는 자료 검사와 외부 거래 사실의 증거를 구분합니다.
+- 현재 웹 UI는 v13입니다. 홈의 수탁 기반·근거 열람기와 별도 산업별 활용 페이지를 통해 KODA 공개 기능에서 세 산업의 확인 업무로 이어지는 확장안을 제안합니다. 서비스 원리에서는 자료 검사와 외부 거래 사실의 증거를 구분합니다.
+- 산업별 활용에는 수출·제조, 게임·콘텐츠, 금융·자산운용의 잠재 활용 기업을 100개씩 총 300개 정리합니다. 공개 출처에 기반한 업종 분류와 프로젝트의 활용 제안이며, 실제 고객·제휴·도입 여부를 뜻하지 않습니다.
 - 주소·발급처·서명·유효시간·거래 대상을 확인하고, 받은 파일을 다시 검사하는 웹 프로토타입입니다.
 - 수출 제조의 받은 대금 확인, 게임·콘텐츠의 정산 주소 확인과 두 명 승인, 자산운용의 감사 자료 준비를 제공합니다.
 - 합성 자료의 ECDSA P-256/SHA-256 서명 검증은 실제 WebCrypto로 실행합니다. 발급처는 `산학프로젝트 샘플 발급키`입니다.
@@ -25,6 +26,7 @@
 | 공동 Google 슬라이드 | [KODA 1024 공동 발표자료](https://docs.google.com/presentation/d/1-HxONos-pEA9OlyIPW4XS_Th8nf-ItAW42_Y8_Kqdos/edit?slide=id.h7f535652ed8e08af_0_0#slide=id.h7f535652ed8e08af_0_0) | 발표에 들어갈 내용 공동 작성 |
 | 협업 안내 | [CONTRIBUTING.md](CONTRIBUTING.md) | 작업 공유·문서·데이터 관리 기준 |
 | 공개 웹 | [KODA Workspace](https://koda-inha-demo-oct28.insiapark.chatgpt.site) | 주소·거래 확인과 받은 자료 재검증 |
+| 산업별 활용 | [잠재 활용 기업과 업무 시연](https://koda-inha-demo-oct28.insiapark.chatgpt.site/industries.html) | 산업·세부 업종 탐색과 활용 제안 |
 | 30초 영상 | [제품 시연 영상](https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/koda-concept-demo-30s-v7.mp4) | 핵심 확인 흐름 |
 
 Drive와 슬라이드의 접근 권한은 GitHub 접근 권한과 별개입니다.
@@ -66,9 +68,9 @@ npm run dev
 
 `npm install`은 `landing/package-lock.json`에 고정된 패키지를 설치합니다. `media:fetch`는 이미지·폰트·30초 영상을 공개 웹에서 내려받아 SHA-256을 확인합니다. 미디어 없이도 소스 빌드와 도메인 테스트는 가능하지만 화면과 전체 정적 자산 검사는 미디어가 필요합니다. 영상·이미지 바이너리는 Git에 포함하지 않습니다.
 
-공개 영상은 기존 `koda-concept-demo-30s-v7.mp4` 한 편입니다. UI의 v12 표시는 영상 파일 버전과 별개입니다.
+공개 영상은 기존 `koda-concept-demo-30s-v7.mp4` 한 편입니다. UI의 v13 표시는 영상 파일 버전과 별개입니다.
 
-브랜드 제목은 자체 호스팅 IBM Plex Sans KR을, 한국어 본문과 업무 UI는 Pretendard Variable을 사용합니다. 정확한 주소·거래 ID는 IBM Plex Mono로 표시합니다. 글꼴의 SIL Open Font License 고지는 `landing/dist/assets/fonts-v11/IBM-Plex-OFL-1.1.txt`, `landing/dist/assets/IBMPlex-OFL.txt`, `landing/dist/assets/licenses/Pretendard-OFL.txt`에 보존합니다.
+공개 페이지의 제목은 자체 호스팅 SUIT Variable 2.040을 사용하며, 포함되지 않은 한글은 Pretendard Variable로 표시합니다. 한국어 본문·업무 UI는 Pretendard Variable, 정확한 주소·거래 ID는 IBM Plex Mono를 사용합니다. SUIT의 SIL Open Font License 고지는 `landing/dist/assets/fonts-v13/SUIT-OFL-1.1.txt`에 있으며 기존 IBM Plex·Pretendard 고지도 함께 보존합니다.
 
 ```sh
 npm test
@@ -85,6 +87,9 @@ npm run media:verify
 | 홈 레이아웃·스타일 | `landing/dist/index.html`, `landing/dist/home.css`, `landing/dist/brand-v11.css` |
 | 홈 원자료·주소 대조·모션 | `landing/dist/home-folio.js`, `landing/build-motion.mjs`, `landing/motion-source.js`, `landing/dist/home-assurance.js` |
 | 홈 근거 열람기 | `landing/evidence-section.html`, `landing/dist/evidence-reader.css`, `landing/dist/evidence-reader.js` |
+| 공개 수탁 기반·산업별 활용 생성 | `landing/capability-section.html`, `landing/build-industries.mjs` |
+| 산업별 활용 탐색·기업 자료 | `landing/dist/industries.html`, `landing/dist/industries.css`, `landing/dist/industries.js`, `landing/prospect-companies-v13.json` |
+| 공개 페이지 서체·공통 탐색 | `landing/dist/public-type-v13.css`, `landing/dist/public-ui-v13.js` |
 | 서비스 원리의 증거 구조·외부 사실 | `landing/dist/research.html`, `landing/dist/evidence-research.css` |
 | 업무 콘솔·상태 전환 | `landing/dist/workspace.html`, `landing/dist/blueprint.js`, `landing/dist/workspace-v6.css` |
 | 공통 검증 입력·결과 표현 | `landing/dist/assurance-ui.js`, `landing/dist/assurance-ui.css` |
@@ -92,9 +97,11 @@ npm run media:verify
 | 검증 규칙·공개 데이터 | `landing/dist/assurance-core.js`, `landing/dist/assets/assurance-fixtures.json`, `landing/dist/assets/assurance-keyring.json` |
 | 색상·문구·설명 | `landing/design/visual-tokens.json`, `landing/product-copy.json`, `landing/global-evidence.html`, `landing/brand-direction.html` |
 
-빌드는 `tokens.css`, `fixtures.js`, `commercial-data.js`, `product-copy.js`, `product-motion.js`, `brand.html`과 홈·서비스 원리의 지정 구간을 갱신합니다. 홈 근거 열람기의 HTML 원본은 `landing/evidence-section.html`입니다. 생성 파일을 직접 고치면 다음 빌드에서 덮어쓸 수 있으므로 해당 원본을 편집합니다. 자세한 동작 계약은 [개발 안내](docs/DEVELOPMENT.md), 외부 라이선스는 [고지](THIRD_PARTY_NOTICES.md)를 따릅니다.
+빌드는 토큰 → 모션 → 산업별 활용 순서로 실행합니다. `tokens.css`, `fixtures.js`, `commercial-data.js`, `product-copy.js`, `product-motion.js`, `brand.html`과 페이지의 지정 구간·공통 탐색을 갱신합니다. 근거 열람기의 원본은 `landing/evidence-section.html`, 기업 자료의 원본은 `landing/prospect-companies-v13.json`입니다. 생성 구간·자료를 직접 고치면 다음 빌드에서 덮어쓸 수 있으므로 해당 원본을 편집합니다. 자세한 동작 계약은 [개발 안내](docs/DEVELOPMENT.md), 외부 라이선스는 [고지](THIRD_PARTY_NOTICES.md)를 따릅니다.
 
 ## 검증 범위
+
+수탁 기반에 표시한 86.6%와 국내 1위는 KODA가 공개한 **2024년 하반기 수탁고 기준**입니다. 현재 점유율이나 이 프로젝트의 성과 지표로 읽지 않습니다. 공개 수탁 기능·외부 보고서와 별도 산학프로젝트 시연의 구현 범위도 구분합니다.
 
 원자료 서명과 요청한 주소·거래의 일치는 별도로 확인합니다. 서명이 유효해도 다른 주소나 거래라면 통과하지 않습니다. 확인 기준은 **2026-10-24 14:30 KST**의 고정된 시연 시각이며 실시간 조회가 아닙니다.
 
@@ -102,7 +109,7 @@ npm run media:verify
 
 ## 자료·보안 기준
 
-- 프로토타입에는 가상 고객·모의 거래 데이터를 사용하고 모의 자료임을 표시합니다.
+- 업무 프로토타입에는 가상 고객·모의 거래 데이터를 사용하고 모의 자료임을 표시합니다. 산업별 목록의 실재 기업은 공개 자료에 기반한 잠재 활용 대상으로만 소개합니다.
 - 실제 고객 정보, 개인키, 복구 구문, 비밀번호, API 키, 인증 토큰, 회사 내부 운영 자료는 올리지 않습니다.
 - PPT·PDF·이미지·영상 등 발표 파일은 Drive에 두고 필요한 링크를 문서에 남깁니다.
 - 외부 공개 범위와 라이선스는 팀에서 별도로 결정합니다.

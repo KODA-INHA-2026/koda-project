@@ -26,6 +26,12 @@
       "sha256": "5ad7db28ba74d59fe14c260205c62ddb701320f4f098d8a45ef2757bebc29666"
     },
     {
+      "path": "landing/dist/assets/fonts-v13/SUIT-Variable.woff2",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/fonts-v13/SUIT-Variable.woff2",
+      "bytes": 624536,
+      "sha256": "aa894a204d5a6fbae259dac6868d350cbd373a390caee0313f92946af741df23"
+    },
+    {
       "path": "landing/dist/assets/ibm-plex-mono-latin-400-normal.woff2",
       "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/ibm-plex-mono-latin-400-normal.woff2",
       "bytes": 14708,

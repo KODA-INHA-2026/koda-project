@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KODA Workspace — 산업별 활용</title>
+  <meta name="description" content="수출·제조, 게임·콘텐츠, 금융·자산운용 산업의 잠재 활용 기업과 세부 업종을 살펴보고, 각 산업의 샘플 업무를 체험하세요. 실제 고객·제휴 관계를 의미하지 않습니다.">
+  <link rel="preload" href="assets/fonts-v13/SUIT-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="product.css">
+  <link rel="stylesheet" href="industries.css">
+  <link rel="stylesheet" href="public-type-v13.css">
+  <script src="industries.js" defer></script>
+<script src="public-ui-v13.js" defer></script></head>
+<body class="industries-page">
+  <a class="skip" href="#main">본문으로 이동</a>
+  <header class="product-nav koda-public-nav industry-wrap"><a class="brand-lockup" href="index.html" aria-label="KODA Workspace 홈"><img src="assets/koda.svg" width="117" height="26" alt="KODA"><span>Workspace</span></a><nav aria-label="주 메뉴"><a href="industries.html">산업별 활용</a><a href="index.html#tasks">확인 업무</a><a href="research.html">서비스 원리</a><a href="brand.html">브랜드</a></nav><details class="brand-mobile-menu"><summary>메뉴 <span aria-hidden="true">＋</span></summary><div><a href="index.html">홈</a><a href="industries.html">산업별 활용</a><a href="index.html#tasks">확인 업무</a><a href="research.html">서비스 원리</a><a href="brand.html">브랜드</a><a href="verification.html">받은 자료 확인</a><a href="index.html#films">30초 영상</a><a href="workspace.html">워크스페이스 열기</a></div></details><a class="nav-open" href="workspace.html">워크스페이스 열기 <span aria-hidden="true">↗</span></a></header>
+
+  <main id="main">
+    <section class="industry-intro industry-wrap" aria-labelledby="industry-title">
+      <div><p class="industry-eyebrow">산업별 활용</p><h1 id="industry-title">산업별 잠재 기업</h1></div>
+      <div class="industry-intro-aside"><p>기업의 업종과 공개 자료를 바탕으로 새로운 업무 활용안을 탐색합니다.</p></div>
+    </section>
+
+    
+
+    <section class="industry-explorer" aria-labelledby="explorer-title" data-industry-explorer aria-busy="false">
+      <div class="industry-wrap">
+        <div class="industry-explorer-heading"><div><h2 id="explorer-title">업종별 기업 탐색</h2></div><p class="industry-relationship">잠재 활용 기업 · 실제 고객·제휴 관계 아님</p></div>
+        <div class="industry-sector-tabs" role="tablist" aria-label="탐색할 산업">
+          <button type="button" id="sector-tab-manufacturing" role="tab" aria-selected="true" aria-controls="industry-sector-panel" tabindex="0" data-sector="manufacturing" disabled><span>수출·제조</span><span class="industry-sector-count" data-sector-count="manufacturing">—</span></button>
+          <button type="button" id="sector-tab-content" role="tab" aria-selected="false" aria-controls="industry-sector-panel" tabindex="-1" data-sector="content" disabled><span>게임·콘텐츠</span><span class="industry-sector-count" data-sector-count="content">—</span></button>
+          <button type="button" id="sector-tab-finance" role="tab" aria-selected="false" aria-controls="industry-sector-panel" tabindex="-1" data-sector="finance" disabled><span>금융·자산운용</span><span class="industry-sector-count" data-sector-count="finance">—</span></button>
+        </div>
+
+        <div id="industry-sector-panel" role="tabpanel" aria-labelledby="sector-tab-manufacturing" tabindex="0">
+          <div class="industry-directory-heading"><div><h3 data-directory-title>잠재 활용 기업</h3><p data-directory-summary>기업 자료를 불러오고 있습니다.</p></div><form class="industry-search" role="search" novalidate><label for="industry-query">기업·세부 업종 검색</label><div><input type="search" id="industry-query" placeholder="기업명 또는 세부 업종" autocomplete="off" spellcheck="false" disabled><button type="button" class="industry-search-clear" aria-label="검색어 지우기" hidden>×</button></div></form></div>
+          <div class="industry-filter-group" hidden><p id="industry-filter-label">세부 업종</p><div class="industry-subindustries" role="group" aria-labelledby="industry-filter-label" data-subindustry-filters></div></div>
+
+          <div class="industry-carousel-head"><p id="industry-carousel-help">목록을 좌우로 넘겨 살펴보세요.<span class="industry-screenreader"> 목록에 초점을 두면 방향키, Home, End를 사용할 수 있습니다.</span></p><div class="industry-carousel-controls"><span class="industry-position" data-industry-position>—</span><button type="button" data-industry-prev aria-label="이전 기업 묶음 보기" disabled><span aria-hidden="true">←</span></button><button type="button" data-industry-next aria-label="다음 기업 묶음 보기" disabled><span aria-hidden="true">→</span></button></div></div>
+          <div class="industry-carousel" data-industry-carousel role="region" aria-label="산업별 잠재 활용 기업 목록" aria-describedby="industry-carousel-help" tabindex="0" hidden><ul class="industry-company-track" data-company-track></ul></div>
+          <div class="industry-scroll-progress" aria-hidden="true" hidden><span data-scroll-progress></span></div>
+          <div class="industry-data-message" data-industry-message><h4 data-message-title>기업 자료를 불러오고 있습니다.</h4><p data-message-copy>공식 자료에 근거한 기업 정보가 준비되면 산업별로 살펴볼 수 있습니다.</p><button type="button" data-industry-retry hidden>다시 불러오기</button></div>
+          <p class="industry-directory-note">기업의 세부 업종은 각 카드에 연결된 공개 자료를 기준으로 정리했습니다. 활용 장면은 이 프로젝트의 제안입니다.</p>
+          <p class="industry-screenreader" data-industry-live role="status" aria-live="polite" aria-atomic="true"></p>
+
+          <!-- CAPABILITY-STRIP START --><section class="industry-capability-strip" aria-label="공개 자료로 확인한 수탁 기반"><p><strong>86.6%</strong>수탁고 기준 국내 1위</p><a href="https://www.kodax.com/" target="_blank" rel="noopener noreferrer">2024년 하반기 · KODA 공개 기준 · 보관·지갑업자 전체 수탁고 대비 ↗</a><a href="https://www.pwc.com/kr/ko/press-room/2026/20260701.html" target="_blank" rel="noopener noreferrer">ISAE 3402 Type 2 · 삼일PwC 보고서 발행 ↗</a></section><!-- CAPABILITY-STRIP END --><div class="industry-showcase" data-sector-showcase="manufacturing">
+            <div class="industry-showcase-copy"><p class="industry-showcase-kicker" data-sector-kicker>산업별 업무 시연</p><h3 data-sector-headline>입금과 청구서를,<br>같은 근거로.</h3><p data-sector-description>거래 상대 주소·입금 기록·청구 정보를 대조하는 샘플 업무를 살펴보세요.</p><a href="workspace.html?client=export&amp;view=detail&amp;scenario=normal" data-sector-workspace>받은 대금 확인 시연 <span aria-hidden="true">↗</span></a></div>
+            <div class="industry-showcase-art" aria-hidden="true"><span class="industry-paper-back"></span><div class="industry-paper-front"><span>KODA WORKSPACE</span><strong data-sector-art-title>주소와 입금</strong><div class="industry-paper-rule"></div><p data-sector-art-facts>거래 상대 주소<br>입금 거래 정보<br>원자료의 확인 범위</p><span class="industry-paper-arrow">↳</span></div></div>
+            <p class="industry-showcase-scope">공개 합성자료 시연 · 원자료 대조와 후속 업무의 예시</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="industry-next industry-wrap" aria-labelledby="industry-next-title"><div><p class="industry-eyebrow">먼저, 확인할 수 있는 것부터</p><h2 id="industry-next-title">산업의 가능성은 넓게.<br>현재 확인 범위는 정확하게.</h2></div><div><p>이번 시연은 원자료의 서명·시점·대상을 대조하고, 받는 사람이 다시 검사하는 첫 사례입니다. 실제 KODA 발급, 지갑 소유권, 온체인 실행이나 금융보증은 확인하지 않습니다.</p><a href="research.html">서비스 원리와 현재 범위 <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+
+  <footer class="industry-footer industry-wrap"><a href="index.html"><img src="assets/koda.svg" width="95" height="21" alt="KODA"><span>Workspace</span></a><p>KODA × 인하대학교 산학프로젝트<br>공개 합성자료 기반 프로토타입 · 실제 자산을 이동하지 않습니다.</p><a href="verification.html">받은 자료 확인하기 ↗</a></footer>
+  <noscript><p class="industry-noscript industry-wrap">산업별 기업 목록을 탐색하려면 JavaScript가 필요합니다. 기업 목록을 확인하지 않은 상태에서 실제 고객이나 제휴 기업으로 표시하지 않습니다. <a href="workspace.html">공개 합성자료 업무 시연 열기</a></p></noscript>
+</body>
+</html>

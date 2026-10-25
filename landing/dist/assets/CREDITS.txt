@@ -26,3 +26,8 @@ Original custody-core brand illustration: created for this project with the buil
 Custody-object motion: Higgsfield Seedance 2.5, generated from the project's original custody-core illustration. Generation job: dee90777-90c4-4c5a-8e1c-38a3adfdd321. The generated clip contains no narration or soundtrack.
 
 
+
+
+Public display typography v13: SUIT Variable2.040, SUNN, SIL Open Font License1.1. Pinned source https://github.com/sun-typeface/SUIT/tree/55118d981336d8fce005eb62888c12c0568ef7b0 ; original font assets/fonts-v13/SUIT-Variable.woff2 ; license assets/fonts-v13/SUIT-OFL-1.1.txt. SUIT supplies2,668 Hangul syllables; the display stack falls back to Pretendard for remaining characters. Earlier IBM Plex font files/notices are retained.
+
+Industry prospect research v13:300 real companies classified from official company, exchange and association sources. These are potential use-case examples, not a KODA customer/partner roster, adoption statement, financial recommendation or eligibility determination. Individual source URLs are in assets/prospect-companies-v13.json. Proposed use cases are original project analysis. No third-party logos or screenshots are distributed.
