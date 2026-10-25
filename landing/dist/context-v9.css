@@ -5,7 +5,7 @@
 .context-v9 .wrap{width:calc(100% - 96px);max-width:1200px;margin-inline:auto}
 .context-main{min-width:0}
 .context-v9 h1,.context-v9 h2,.context-v9 h3,.context-v9 p,.context-v9 figure{margin:0}
-.context-v9 h1,.context-v9 h2,.context-v9 h3{font-weight:550;letter-spacing:-.045em;word-break:keep-all;overflow-wrap:anywhere}
+.context-v9 h1,.context-v9 h2,.context-v9 h3{font-family:var(--display);font-weight:500;letter-spacing:-.025em;word-break:keep-all;overflow-wrap:anywhere}
 .context-v9 a{color:inherit;text-underline-offset:5px}
 .context-v9 a:focus-visible,.context-v9 summary:focus-visible{outline:3px solid var(--action);outline-offset:5px;border-radius:2px}
 .context-v9 .product-nav{position:relative;z-index:2;min-height:88px;background:var(--surface)}
@@ -26,7 +26,7 @@
 .context-brand-hero{position:relative;min-height:925px;padding-block:64px 68px}
 .context-brand-copy{position:relative;z-index:1}
 .context-brand-copy>.context-kicker{color:var(--ink)}
-.context-brand-copy h1{max-width:1130px;font-size:clamp(64px,7vw,96px);font-weight:650;line-height:1.08;margin-top:31px;letter-spacing:-.065em}
+.context-brand-copy h1{max-width:1130px;font-size:clamp(64px,7vw,96px);font-weight:500;line-height:1.12;margin-top:31px;letter-spacing:-.03em}
 .context-brand-copy h1 em{color:var(--ink);font-style:normal}
 .context-brand-copy .context-lead{position:relative;z-index:3;max-width:440px;margin-top:47px;font-size:18px;color:var(--ink)}
 .context-brand-copy .context-actions{position:relative;z-index:3;max-width:420px;align-items:flex-start;flex-direction:column;gap:10px;margin-top:28px}
@@ -97,7 +97,7 @@
 .context-v9 .product-footer p{max-width:850px;margin-top:7px}
 /* Research: thesis, a shared source, two requests, then the actual work and evidence. */
 .context-intro{padding-block:78px 72px}
-.context-display{max-width:1100px;font-size:clamp(48px,6.2vw,84px);font-weight:650!important;line-height:1.13;margin-top:26px!important;letter-spacing:-.06em!important}
+.context-display{max-width:1100px;font-size:clamp(48px,6.2vw,84px);font-weight:500!important;line-height:1.13;margin-top:26px!important;letter-spacing:-.025em!important}
 .context-intro .context-lead{max-width:670px;margin-top:32px;margin-left:auto}
 .context-intro .context-actions{justify-content:flex-end}
 .context-research .context-actions{margin-bottom:0}

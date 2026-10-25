@@ -20,7 +20,8 @@ Product icons: Tabler Icons, pinned commit a4ce1404bc6d24d3c365afe7b258d6bf6f48d
 
 Film music: Suno v6, KODA — 확인은 정확하게. Source: https://suno.com/song/4da01209-cfbf-41e5-a0e1-730781176813 . Volume, brief volume reductions at visual verification cues, and fades edited for the 30-second film; no additional samples or sound effects. Full music attribution: AUDIO-CREDITS.txt.
 
-Current Korean product/video font: Pretendard Variable v1.3.9, Copyright (c)2021 Kil Hyung-jin. SIL Open Font License1.1. Source: https://github.com/orioncactus/pretendard/tree/5c41199ea0024a9e0b2cb31735265056e5472d76 . Full notice: licenses/Pretendard-OFL.txt.
+Korean UI/body and film font: Pretendard Variable v1.3.9, Copyright (c)2021 Kil Hyung-jin. SIL Open Font License1.1. Source: https://github.com/orioncactus/pretendard/tree/5c41199ea0024a9e0b2cb31735265056e5472d76 . Full notice: licenses/Pretendard-OFL.txt.
+Brand headings: IBM Plex Sans KR, official @ibm/plex-sans-kr package 1.1.0 (font Version 1.003), IBM Corp. SIL Open Font License 1.1. Copyright 2018 IBM Corp. All rights reserved. Package license: Copyright © 2017 IBM Corp. with Reserved Font Name "Plex". Unmodified Regular 400, Medium 500 and SemiBold 600 WOFF2 files are self-hosted. Source: https://github.com/IBM/plex/tree/1da12f02587b630c07e92692d21492d722f53614 . Full copyright and license notice: fonts-v11/IBM-Plex-OFL-1.1.txt.
 Original custody-core brand illustration: created for this project with the built-in image_gen tool. No Circle or Apple logo, product photograph or artwork is reproduced. The original KODA logo is unchanged.
 Custody-object motion: Higgsfield Seedance 2.5, generated from the project's original custody-core illustration. Generation job: dee90777-90c4-4c5a-8e1c-38a3adfdd321. The generated clip contains no narration or soundtrack.
 

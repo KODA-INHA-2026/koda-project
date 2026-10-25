@@ -1,0 +1,64 @@
+/* Brand poster first; evidence and operational tools follow in their own space. */
+.brand-first h1,.brand-first h2,.brand-first h3{font-family:var(--display);font-weight:500;letter-spacing:-.025em}
+.brand-first .koda-topbar{min-height:84px}
+.brand-first .koda-topbar nav{gap:21px}
+.brand-first .koda-topbar nav a{font-size:13px}
+.brand-mobile-menu{display:none}
+.brand-opening{padding:0 24px;background:var(--surface)}
+.brand-poster{position:relative;isolation:isolate;min-height:650px;max-width:1440px;margin:auto;overflow:hidden;background:#0A1712;color:var(--surface)}
+.brand-keyvisual{position:absolute;inset:0;z-index:-1;display:block;overflow:hidden}
+.brand-keyvisual img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.brand-content{width:56%;min-height:650px;padding:64px 0 92px clamp(40px,6.7vw,100px);font-family:var(--display)}
+.opening-kicker{font:500 12px/1.5 var(--sans);letter-spacing:.13em;color:var(--brand)}
+.brand-content h1{font-size:clamp(54px,5.3vw,78px);line-height:1.18;letter-spacing:-.025em;margin:28px 0 22px;font-weight:500}
+.brand-intro{font-size:17px;line-height:1.85;font-weight:400;color:#DCE6E0}
+.brand-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:32px;font-family:var(--sans)}
+.brand-actions a{display:inline-flex;align-items:center;min-height:48px;gap:23px;font-size:14px;font-weight:500;text-decoration:none}
+.brand-enter{background:var(--brand);color:var(--ink);padding:12px 21px;border-radius:4px}
+.brand-enter:hover{background:var(--surface)}
+.brand-watch{color:var(--surface);gap:10px!important}
+.brand-watch:hover{text-decoration:underline}
+.brand-play{display:grid;place-items:center;width:31px;height:31px;border:1px solid #82968C;border-radius:50%;font-size:9px;padding-left:2px}
+.brand-scroll{position:absolute;bottom:25px;left:clamp(40px,6.7vw,100px);display:flex;align-items:center;gap:40px;min-height:44px;color:#DCE6E0;font-size:12px;text-decoration:none}
+.brand-scroll:hover{color:var(--brand)}
+.brand-poster a:focus-visible{outline-color:var(--brand)}
+.brand-functions{display:grid;grid-template-columns:1.08fr 1fr;gap:100px;padding-block:112px 105px;scroll-margin-top:30px}
+.brand-function-heading h2{font-size:clamp(30px,3.2vw,44px);line-height:1.42;margin-top:21px}
+.brand-function-list article{display:flex;gap:28px;padding:27px 0;border-bottom:1px solid var(--line)}
+.brand-function-list article:first-child{padding-top:0}
+.brand-feature-symbol{font-size:31px;line-height:1.15;color:var(--action);width:34px;flex-shrink:0}
+.brand-function-list h3{font-size:21px;line-height:1.5}
+.brand-function-list p{font-size:15px;line-height:1.85;color:var(--muted);margin-top:11px}
+.brand-first .folio-stage{padding-block:70px 30px;background:var(--paper)}
+.brand-first .desk-intro h2{font-size:clamp(36px,4vw,55px);line-height:1.3;margin-top:18px}
+.brand-first .home-section-heading h2,.brand-first .home-handoff h2{line-height:1.4}
+.brand-first .folio-scene-copy h2{font-weight:500;letter-spacing:-.025em}
+.brand-first .brand-closing{min-height:0;padding:95px 0}
+.brand-first .brand-closing h2{font-weight:500}
+@media(max-width:1150px){.brand-first .koda-topbar nav{gap:15px}.brand-first .koda-topbar nav a{font-size:12px}.brand-content{padding-left:48px}.brand-scroll{left:48px}.brand-content h1{font-size:64px}.brand-actions{gap:10px 18px}.brand-functions{gap:60px}}
+@media(max-width:950px){.brand-first .koda-topbar nav{display:none}.brand-mobile-menu{display:block;margin-left:auto;position:relative}.brand-mobile-menu summary{list-style:none;display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;font-size:13px}.brand-mobile-menu summary::-webkit-details-marker{display:none}.brand-mobile-menu>div{position:absolute;right:0;top:52px;width:220px;padding:10px 18px;background:var(--surface);border:1px solid var(--line);box-shadow:0 15px 35px #10201B14;display:flex;flex-direction:column;z-index:30}.brand-mobile-menu a{display:flex;align-items:center;min-height:44px;font-size:14px;text-decoration:none}.brand-first .koda-topbar .nav-open{margin-left:0}.brand-content h1{font-size:55px}.brand-content{width:60%;padding-left:38px}.brand-scroll{left:38px}.brand-intro{font-size:16px}.brand-actions{flex-direction:column;align-items:flex-start;gap:8px}.brand-functions{gap:40px}.brand-function-heading h2{font-size:33px}}
+@media(max-width:760px){
+ .brand-first .koda-topbar{min-height:76px;flex-wrap:nowrap;padding-block:10px;gap:6px}
+ .brand-first .koda-topbar .brand-lockup{gap:9px}.brand-first .koda-topbar .brand-lockup img{width:87px}.brand-first .koda-topbar .brand-lockup>span{font-size:11px;padding-left:9px}
+ .brand-first .koda-topbar .nav-open{display:none}
+ .brand-opening{padding:0 10px}
+ .brand-poster{display:flex;flex-direction:column;min-height:0}
+ .brand-content{width:100%;min-height:0;padding:33px 24px 0;order:0}
+ .opening-kicker{font-size:11px;letter-spacing:.12em}
+ .brand-content h1{font-size:44px;line-height:1.2;margin:20px 0 18px}
+ .brand-intro{font-size:15px;line-height:1.8}
+ .brand-actions{flex-direction:row;align-items:center;gap:11px 17px;margin-top:24px}
+ .brand-actions a{font-size:12px;gap:16px;min-height:46px}.brand-enter{padding:11px 15px}.brand-play{width:27px;height:27px}
+ .brand-keyvisual{position:relative;inset:auto;z-index:0;order:1;height:265px;margin-top:15px}
+ .brand-keyvisual img{object-position:right 65%}
+ .brand-scroll{position:relative;left:auto;bottom:auto;order:2;padding:0 24px;min-height:47px;font-size:11px;border-top:1px solid #4A5E53;background:#0A1712;gap:30px}
+ .brand-functions{grid-template-columns:1fr;gap:35px;padding-block:64px 59px;scroll-margin-top:20px}
+ .brand-function-heading h2{font-size:31px;line-height:1.45;margin-top:18px}
+ .brand-function-list article{gap:19px;padding-block:22px}.brand-feature-symbol{font-size:27px;width:29px}.brand-function-list h3{font-size:19px}.brand-function-list p{font-size:14px;margin-top:9px}.brand-function-list p br{display:none}
+ .brand-first .folio-stage{padding-block:43px 20px}.brand-first .desk-intro h2{font-size:32px;line-height:1.4;margin-top:15px}
+ .brand-first .desk-primary{margin-top:16px}
+ .brand-first .brand-closing{padding-block:62px}.brand-first .brand-closing h2{font-size:32px;line-height:1.4}
+}
+@media(max-width:380px){.brand-content{padding-inline:22px}.brand-content h1{font-size:40px}.brand-actions{gap:6px 12px}.brand-actions a{font-size:11px}.brand-enter{padding-inline:13px}.brand-keyvisual{height:240px}.brand-first .koda-topbar .brand-lockup>span{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.brand-first *{scroll-behavior:auto!important}}
+@media(forced-colors:active){.brand-enter,.brand-play,.brand-mobile-menu>div{border:1px solid ButtonText}.brand-keyvisual{opacity:.25}.brand-content,.brand-scroll{background:Canvas;color:CanvasText}}

@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-25.5",
+  "version": "2026-10-25.11",
   "source": "koda-motion-20261021/design/koda-tokens.json",
   "colors": {
     "ink": "#10201B",
@@ -16,6 +16,7 @@
     "danger": "#B42318"
   },
   "fonts": {
+    "display": "IBM Plex Sans KR",
     "sans": "Pretendard Variable",
     "mono": "IBM Plex Mono"
   },

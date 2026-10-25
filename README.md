@@ -5,7 +5,7 @@
 
 ## 현재 상태
 
-- 현재 웹 UI는 v10입니다. 녹색 원자료 열람면과 요청·주소 대조를 중심으로 홈, 법인 작업공간, 받은 자료 확인 화면을 구성하며 검증 코어와 업무 진행 조건은 유지했습니다.
+- 현재 웹 UI는 v11입니다. 홈은 브랜드 이미지, KODA 기능, 세 기업의 실무 흐름 순서로 구성합니다. 원자료·주소 대조와 법인 작업공간, 받은 자료 확인의 검증 코어와 업무 진행 조건은 유지했습니다.
 - 주소·발급처·서명·유효시간·거래 대상을 확인하고, 받은 파일을 다시 검사하는 웹 프로토타입입니다.
 - 수출 제조의 받은 대금 확인, 게임·콘텐츠의 정산 주소 확인과 두 명 승인, 자산운용의 감사 자료 준비를 제공합니다.
 - 합성 자료의 ECDSA P-256/SHA-256 서명 검증은 실제 WebCrypto로 실행합니다. 발급처는 `산학프로젝트 샘플 발급키`입니다.
@@ -64,7 +64,9 @@ npm run dev
 
 `npm install`은 `landing/package-lock.json`에 고정된 패키지를 설치합니다. `media:fetch`는 이미지·폰트·30초 영상을 공개 웹에서 내려받아 SHA-256을 확인합니다. 미디어 없이도 소스 빌드와 도메인 테스트는 가능하지만 화면과 전체 정적 자산 검사는 미디어가 필요합니다. 영상·이미지 바이너리는 Git에 포함하지 않습니다.
 
-공개 영상은 기존 `koda-concept-demo-30s-v7.mp4` 한 편입니다. UI의 v10 표시는 영상 파일 버전과 별개입니다.
+공개 영상은 기존 `koda-concept-demo-30s-v7.mp4` 한 편입니다. UI의 v11 표시는 영상 파일 버전과 별개입니다.
+
+브랜드 제목은 자체 호스팅 IBM Plex Sans KR을, 한국어 본문과 업무 UI는 Pretendard Variable을 사용합니다. 정확한 주소·거래 ID는 IBM Plex Mono로 표시합니다. 글꼴의 SIL Open Font License 고지는 `landing/dist/assets/fonts-v11/IBM-Plex-OFL-1.1.txt`, `landing/dist/assets/IBMPlex-OFL.txt`, `landing/dist/assets/licenses/Pretendard-OFL.txt`에 보존합니다.
 
 ```sh
 npm test
@@ -78,7 +80,7 @@ npm run media:verify
 
 | 작업 | 파일 |
 | --- | --- |
-| 홈 레이아웃·스타일 | `landing/dist/index.html`, `landing/dist/home.css` |
+| 홈 레이아웃·스타일 | `landing/dist/index.html`, `landing/dist/home.css`, `landing/dist/brand-v11.css` |
 | 홈 원자료·주소 대조·모션 | `landing/dist/home-folio.js`, `landing/build-motion.mjs`, `landing/motion-source.js`, `landing/dist/home-assurance.js` |
 | 업무 콘솔·상태 전환 | `landing/dist/workspace.html`, `landing/dist/blueprint.js`, `landing/dist/workspace-v6.css` |
 | 공통 검증 입력·결과 표현 | `landing/dist/assurance-ui.js`, `landing/dist/assurance-ui.css` |

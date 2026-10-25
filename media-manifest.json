@@ -8,10 +8,40 @@
       "sha256": "e5db0d4645a89ff6fb9ba975395a897841baec2dafa1b594bfb5a4d09e2a740e"
     },
     {
+      "path": "landing/dist/assets/fonts-v11/IBMPlexSansKR-Medium.woff2",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/fonts-v11/IBMPlexSansKR-Medium.woff2",
+      "bytes": 439816,
+      "sha256": "c00dcd8a9c32a6b6ab8c6b3119e68b3d7aa6eba6f4441d5493019cc019dcdd1e"
+    },
+    {
+      "path": "landing/dist/assets/fonts-v11/IBMPlexSansKR-Regular.woff2",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/fonts-v11/IBMPlexSansKR-Regular.woff2",
+      "bytes": 438540,
+      "sha256": "055a35664c3c3965161c92292504c5633ba9604ec904edc1ed799bf2a436276d"
+    },
+    {
+      "path": "landing/dist/assets/fonts-v11/IBMPlexSansKR-SemiBold.woff2",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/fonts-v11/IBMPlexSansKR-SemiBold.woff2",
+      "bytes": 434484,
+      "sha256": "5ad7db28ba74d59fe14c260205c62ddb701320f4f098d8a45ef2757bebc29666"
+    },
+    {
       "path": "landing/dist/assets/ibm-plex-mono-latin-400-normal.woff2",
       "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/ibm-plex-mono-latin-400-normal.woff2",
       "bytes": 14708,
       "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
+    },
+    {
+      "path": "landing/dist/assets/koda-brand-v11-1920.webp",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/koda-brand-v11-1920.webp",
+      "bytes": 178148,
+      "sha256": "71eb47b6e8c77c1ade51d9c5b2ae83badece73ed4d8c449c2f22658643c94e77"
+    },
+    {
+      "path": "landing/dist/assets/koda-brand-v11-960.webp",
+      "url": "https://koda-inha-demo-oct28.insiapark.chatgpt.site/assets/koda-brand-v11-960.webp",
+      "bytes": 45358,
+      "sha256": "cff793aae0bb28cf9c7c1de90a71048e0b1506e517ed16940754cebf06a3ef07"
     },
     {
       "path": "landing/dist/assets/koda-concept-demo-30s-v7-poster.jpg",

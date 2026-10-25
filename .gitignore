@@ -26,5 +26,5 @@ landing/dist/assets/*.png
 landing/dist/assets/*.jpg
 landing/dist/assets/*.jpeg
 landing/dist/assets/*.webp
-landing/dist/assets/*.woff2
+landing/dist/assets/**/*.woff2
 *.download

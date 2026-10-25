@@ -3,12 +3,20 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const assetsRoot=path.join(root,'landing','dist','assets');
 const manifest=JSON.parse(await fs.readFile(path.join(root,'media-manifest.json'),'utf8'));
 const verifyOnly=process.argv.includes('--verify');
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 for(const item of manifest.assets){
-  if(!/^landing\/dist\/assets\/[a-zA-Z0-9._-]+$/.test(item.path)||!/^[a-f0-9]{64}$/.test(item.sha256))throw Error('Invalid media manifest entry');
-  const target=path.join(root,item.path);
+  if(typeof item.path!=='string'||!/^landing\/dist\/assets\/(?:[a-zA-Z0-9._-]+\/)*[a-zA-Z0-9._-]+$/.test(item.path)||item.path.split('/').some(part=>part==='.'||part==='..')||!/^[a-f0-9]{64}$/.test(item.sha256))throw Error('Invalid media manifest entry');
+  const target=path.resolve(root,item.path);
+  if(!target.startsWith(assetsRoot+path.sep))throw Error('Media path escapes public assets');
+  let current=root;
+  for(const part of item.path.split('/')){
+    current=path.join(current,part);
+    try{if((await fs.lstat(current)).isSymbolicLink())throw Error('Linked media path is not allowed');}
+    catch(error){if(error.code==='ENOENT')break;throw error;}
+  }
   let cached;try{cached=await fs.readFile(target);}catch{}
   if(cached&&cached.length===item.bytes&&digest(cached)===item.sha256){console.log(`Verified ${item.path}`);continue;}
   if(verifyOnly)throw Error(`Missing or changed media: ${item.path}. Run npm run media:fetch.`);

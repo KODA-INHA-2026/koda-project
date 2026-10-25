@@ -1,5 +1,15 @@
 // Motion belongs to a deliberate change of task or result, never to a timer.
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+const mobileMenu = document.querySelector('.brand-mobile-menu');
+mobileMenu?.addEventListener('click', event => {
+  if (event.target.closest('a')) mobileMenu.open = false;
+});
+mobileMenu?.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && mobileMenu.open) {
+    mobileMenu.open = false;
+    mobileMenu.querySelector('summary')?.focus();
+  }
+});
 const groups = new Map();
 const ease = 'cubic-bezier(.22,1,.36,1)';
 const scriptURL = document.currentScript?.src || document.baseURI;

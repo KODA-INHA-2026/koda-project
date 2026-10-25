@@ -19,6 +19,7 @@
   --type-micro: 12px;
   --type-code: 13px;
   --type-body-leading: 1.65;
+  --display: "IBM Plex Sans KR", sans-serif;
   --sans: "Pretendard Variable", sans-serif;
   --mono: "IBM Plex Mono", monospace;
   --radius: 8px;

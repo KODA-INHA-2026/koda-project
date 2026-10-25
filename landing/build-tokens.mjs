@@ -6,7 +6,8 @@ const tokens = JSON.parse(fs.readFileSync(fs.existsSync(shared)?shared:snapshot,
 fs.writeFileSync(snapshot,JSON.stringify(tokens,null,2)+'\n');
 const colors = Object.entries(tokens.colors).map(([k,v]) => `  --${k}: ${v};`).join('\n');
 const typography = Object.entries(tokens.typography || {}).map(([k,v]) => `  --type-${k}: ${v};`).join('\n');
-fs.writeFileSync(new URL('dist/tokens.css', import.meta.url), `/* Generated from shared design/visual-tokens.json */\n:root {\n${colors}\n${typography}\n  --sans: "${tokens.fonts.sans}", sans-serif;\n  --mono: "${tokens.fonts.mono}", monospace;\n  --radius: ${tokens.radius};\n  --feedback: ${tokens.motion.feedback};\n}\n`);
+const display = tokens.fonts.display || tokens.fonts.sans;
+fs.writeFileSync(new URL('dist/tokens.css', import.meta.url), `/* Generated from shared design/visual-tokens.json */\n:root {\n${colors}\n${typography}\n  --display: "${display}", sans-serif;\n  --sans: "${tokens.fonts.sans}", sans-serif;\n  --mono: "${tokens.fonts.mono}", monospace;\n  --radius: ${tokens.radius};\n  --feedback: ${tokens.motion.feedback};\n}\n`);
 const fixtures=JSON.parse(fs.readFileSync(new URL('dist/assets/demo-fixtures.json',import.meta.url),'utf8'));
 fs.writeFileSync(new URL('dist/fixtures.js',import.meta.url),`/* Generated from assets/demo-fixtures.json */\nwindow.KODA_DEMO_FIXTURES = ${JSON.stringify(fixtures)};\n`);
 const commercialCases=JSON.parse(fs.readFileSync(new URL('dist/assets/commercial-cases.json',import.meta.url),'utf8'));

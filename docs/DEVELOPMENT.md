@@ -2,7 +2,9 @@
 
 앱은 정적 HTML/CSS/JavaScript로 구성됩니다. `npm run build`로 공유 토큰·문구·모션을 생성하고 `npm run dev`로 실행합니다. `landing/dist`가 웹 루트입니다. 서버는 로컬 파일만 제공하며 금융 데이터·계정·지갑을 연결하지 않습니다.
 
-현재 UI는 v10이며 홈의 녹색 원자료 열람면과 전체 주소 대조, 법인 업무의 요청·결과 배치, 받은 자료 수신 화면을 제공합니다. 홈의 자료 전환은 `landing/dist/home-folio.js`가 담당합니다. 기존 `assurance-core.js`의 서명·주소·거래 검증과 업무 진행 조건을 유지합니다. 공개 영상은 v7의 단일 30초 파일을 그대로 사용합니다.
+현재 UI는 v11이며 홈을 브랜드 이미지 → KODA 기능 → 세 기업의 실무 흐름 순서로 구성합니다. 원자료·전체 주소 대조와 법인 업무의 요청·결과 배치, 받은 자료 수신 화면을 제공합니다. 홈의 자료 전환은 `landing/dist/home-folio.js`, 브랜드 첫 화면의 스타일은 `landing/dist/brand-v11.css`가 담당합니다. 기존 `assurance-core.js`의 서명·주소·거래 검증과 업무 진행 조건을 유지합니다. 공개 영상은 v7의 단일 30초 파일을 그대로 사용합니다.
+
+브랜드 제목은 자체 호스팅 IBM Plex Sans KR Regular 400·Medium 500·SemiBold 600을 사용하며, 한국어 본문·업무 UI의 Pretendard Variable과 정확한 식별자의 IBM Plex Mono는 유지합니다. 글꼴 파일과 OFL 고지를 함께 전달하고 크기·행간·weight는 공유 토큰과 스타일에서 조정합니다.
 
 ## 데이터와 화면
 
