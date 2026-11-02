@@ -20,8 +20,8 @@ export const CUSTODY_TYPE = '고객별 분리 보관 (가상)';
 export const counterpartyCode = (name: string) => ({ 'A사': 'CP-01', 'B사': 'CP-02' } as Record<string, string>)[name] ?? 'CP-??';
 export const txTail = (ref: string) => '…' + ref.slice(-4);
 
-/** 역할별 열람 기준 v0.3 · 범위표, 화면 위 열람 범위 띠, 열람본 검증은 이 표를 직접 읽어요.
- *  증빙 본문(Experience.tsx Document)은 역할별로 직접 그리므로, 표를 바꾸면 Document도 함께 고치고 tests/proof/demo.spec.ts의 누출 검사를 돌려야 해요. */
+/** 역할별 열람 기준 v0.3 · 화면의 칸(Experience.tsx FieldGrid, TxBlock), 범위표, 열람본 검증이 모두 이 표의 수준(level)을 읽어요.
+ *  일부(partial) 칸에 보여 줄 형태만 Experience.tsx FIELD_VIEW에 따로 적어요. 표를 바꾸면 tests/proof/demo.spec.ts 누출 검사를 돌려요. */
 export type Viewer = 'issuer' | 'finance' | 'accounting' | 'auditor' | 'public';
 export type Level = 'full' | 'partial' | 'hidden';
 export const viewers: { id: Viewer; label: string }[] = [
@@ -37,7 +37,7 @@ export const policy: { key: PolicyKey; label: string; why: string; rules: Record
   { key: 'movement', label: '거래 일자 · 자산 · 수량', why: '재무는 매입 내역과 한 건씩 대조하고, 회계는 증감 합계로 결산해요', rules: { issuer: ['full', '전체'], finance: ['full', '12건 전체'], accounting: ['partial', '자산별 증감 합계'], auditor: ['full', '전체'], public: ['hidden', '담지 않음'] } },
   { key: 'counterparty', label: '거래 상대방', why: '재무는 승인 자료의 거래처 코드로 맞추면 충분해요. 이름은 필요한 사람만 봐요', rules: { issuer: ['full', '전체'], finance: ['partial', '거래처 코드'], accounting: ['hidden', '가림'], auditor: ['full', '전체'], public: ['hidden', '담지 않음'] } },
   { key: 'txref', label: '거래 식별자 (Tx)', why: 'Tx 전체가 보이면 탐색기에서 상대방 주소와 잔고가 드러나요', rules: { issuer: ['full', '전체'], finance: ['partial', '끝 4자리'], accounting: ['hidden', '가림'], auditor: ['full', '전체'], public: ['hidden', '담지 않음'] } },
-  { key: 'wallet', label: '보관 지갑 주소', why: '주소 일부만 보여도 정확한 잔고와 합쳐지면 지갑을 특정할 수 있어요. 감사인은 체인 잔고와 대조해요', rules: { issuer: ['full', '전체'], finance: ['partial', '지갑 이름 · 끝 4자리'], accounting: ['hidden', '지갑 이름만'], auditor: ['full', '전체'], public: ['hidden', '담지 않음'] } },
+  { key: 'wallet', label: '보관 지갑 주소', why: '주소 일부만 보여도 정확한 잔고와 합쳐지면 지갑을 특정할 수 있어요. 감사인은 체인 잔고와 대조해요', rules: { issuer: ['full', '전체'], finance: ['partial', '지갑 이름 · 끝 4자리'], accounting: ['partial', '지갑 이름만'], auditor: ['full', '전체'], public: ['hidden', '담지 않음'] } },
   { key: 'proof', label: '문서 지문 · 발행자 DID · 기록 시각', why: '누구나 원본 여부를 확인할 수 있어야 해요', rules: { issuer: ['full', '전체'], finance: ['full', '전체'], accounting: ['full', '전체'], auditor: ['full', '전체'], public: ['full', '이것만 공개'] } },
 ];
 export const levelOf = (viewer: Viewer, key: PolicyKey): Level => policy.find(p => p.key === key)!.rules[viewer][0];

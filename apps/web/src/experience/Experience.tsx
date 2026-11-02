@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { assets, scenes, transactions, policy, viewers, WALLET, PRICE_BASIS, CUSTODY_TYPE, counterpartyCode, txTail, LEVEL_NAME, type Viewer, type PolicyKey } from './data';
+import { assets, scenes, transactions, policy, viewers, WALLET, PRICE_BASIS, CUSTODY_TYPE, counterpartyCode, txTail, LEVEL_NAME, levelOf, type Viewer, type PolicyKey, type Level } from './data';
 import { RECORDED_FIELD_ROOT, verifyPackage, viewPackage } from './disclosure';
 import { useExperience, type ExperienceState } from './useExperience';
 import { BLOCK, ISSUER, RECORDED_AT, saveFile, shortHash } from '../proof/model';
@@ -34,34 +34,66 @@ function movementTotals() {
     return { code: a.code, plus: '+' + f(plus), minus: '−' + f(minus), net: (plus - minus >= 0 ? '+' : '−') + f(Math.abs(plus - minus)) };
   });
 }
-const STRIP_KEYS: PolicyKey[] = ['movement','counterparty','txref','wallet'];
-const STRIP_LABEL: Partial<Record<PolicyKey,string>> = { movement: '거래 내역', counterparty: '거래 상대방', txref: '거래 식별자', wallet: '지갑 주소' };
-/** 이 화면에서 민감 항목 4개가 어떻게 보이는지 기준표에서 바로 그려요. 역할을 넘길 때 차이가 한눈에 보여요. */
-function ScopeStrip({viewer}:{viewer:Viewer}) {
-  const label = viewers.find(v=>v.id===viewer)!.label;
-  return <div className="xp-scope-strip" role="group" aria-label={`${label} 화면의 열람 범위`}>
-    <span className="xp-scope-strip-title">{label} 화면에서</span>
-    {STRIP_KEYS.map(key=>{const [level,how]=policy.find(p=>p.key===key)!.rules[viewer];return <span key={key} className={'xp-scope-chip lv-'+level}><i className="xp-lv" aria-hidden="true"/><b>{STRIP_LABEL[key]}</b>{level==='full'?'전체':how}{level!=='full'&&<span className="xp-sr"> ({LEVEL_NAME[level]})</span>}</span>;})}
+/** 가림 막대: 값 자리에 그대로 놓여 "여기 무언가 있지만 이 역할에는 안 보인다"를 보여 줘요. */
+function Redact({label='가림',wide=false}:{label?:string;wide?:boolean}) {
+  return <span className={'xp-redact'+(wide?' wide':'')} role="img" aria-label={label}><Icon name="lock" size={13}/><span aria-hidden="true">{label}</span></span>;
+}
+function Partial({children}:{children:ReactNode}) {
+  return <span className="xp-partial">{children}<span className="xp-sr"> (일부만 표시)</span></span>;
+}
+function Cell({level,full,partial,mono=false}:{level:Level;full:ReactNode;partial:ReactNode;mono?:boolean}) {
+  return level==='full' ? <span className={mono?'xp-mono':undefined}>{full}</span> : level==='partial' ? <Partial>{partial}</Partial> : <Redact/>;
+}
+/** 민감 칸 다섯 개. 수준은 기준표(policy)에서 읽고, 일부 칸에 보여 줄 형태만 여기 적어요. */
+const FIELD_VIEW: {key:PolicyKey;label:string;full:string;partial:(v:Viewer)=>string;mono?:boolean}[] = [
+  {key:'counterparty',label:'거래 상대방',full:'OTC 거래상대 A사 · B사',partial:()=>'거래처 코드 CP-01 · CP-02'},
+  {key:'txref',label:'거래 식별자 (Tx)',full:'4f1a…a21c 외 11건',partial:()=>'끝 4자리 · …a21c 외 11건',mono:true},
+  {key:'wallet',label:'보관 지갑',full:WALLET,partial:v=>v==='finance'?`BTC 보관 지갑 1 · ${txTail(WALLET)}`:'BTC 보관 지갑 1',mono:true},
+  {key:'custody',label:'보관 형태',full:CUSTODY_TYPE,partial:()=>CUSTODY_TYPE},
+  {key:'price',label:'평가 기준가',full:PRICE_BASIS,partial:()=>PRICE_BASIS},
+];
+function FieldGrid({viewer}:{viewer:Viewer}) {
+  return <dl className="xp-field-grid">{FIELD_VIEW.map(f=>{const level=levelOf(viewer,f.key);return <div key={f.key} className={'lv-'+level}><dt>{f.label}</dt><dd><Cell level={level} full={f.full} partial={f.partial(viewer)} mono={f.mono}/></dd></div>;})}</dl>;
+}
+/** 3분기 거래: 건별(전체·일부 칸) 또는 자산별 합계(개별 거래 가림). */
+function TxBlock({viewer}:{viewer:Viewer}) {
+  const [all,setAll]=useState(false);
+  const movement=levelOf(viewer,'movement'), party=levelOf(viewer,'counterparty'), ref=levelOf(viewer,'txref');
+  if (movement!=='full') return <div className="xp-tx">
+    <h3>3분기 거래 · 자산별 합계만</h3>
+    <Redact wide label="개별 거래 12건 · 합계로만 제공"/>
+    <div className="xp-table-wrap"><table className="xp-scope xp-tx-table"><caption className="xp-sr">3분기 자산별 증감, 거래 12건 합계</caption><thead><tr><th>자산</th><th>증가</th><th>감소</th><th>순증감</th></tr></thead><tbody>{movementTotals().map(t=><tr key={t.code}><td>{t.code}</td><td>{t.plus}</td><td>{t.minus}</td><td>{t.net}</td></tr>)}</tbody></table></div>
+  </div>;
+  const rows=all?transactions:transactions.slice(0,4);
+  return <div className="xp-tx">
+    <h3>3분기 거래 12건</h3>
+    <div className="xp-table-wrap"><table className="xp-scope xp-tx-table"><caption className="xp-sr">3분기 거래 12건</caption><thead><tr><th>거래일</th><th>{party==='full'?'상대방':'거래처'}</th><th>수량</th><th>Tx</th></tr></thead><tbody>{rows.map(([date,name,amount,tx],i)=><tr key={i}><td>{date}</td><td><Cell level={party} full={name} partial={counterpartyCode(name)}/></td><td>{amount}</td><td><Cell level={ref} full={tx} partial={txTail(tx)} mono/></td></tr>)}</tbody></table></div>
+    <button className="xp-tx-more" aria-expanded={all} onClick={()=>setAll(!all)}>{all?'4건만 보기':'12건 모두 보기'}</button>
   </div>;
 }
-/** 같은 원본을 역할 기준표(data.ts policy)에 맞춰 보여줘요. 가린 칸도 어떻게 가렸는지 화면에 드러내요. */
+/** 같은 원본을 역할 기준표(data.ts policy)에 맞춰 보여줘요. 배치는 모든 역할이 같고 칸의 상태만 달라요. */
 function Document({viewer,full=false}:{viewer:Viewer;full?:boolean}) {
   const masked = viewer === 'finance' || viewer === 'accounting';
+  const original = viewer === 'issuer' && !full;
   return <>
-    <div className="xp-document-heading"><span><Icon name="file"/> 3분기 잔고 증명서</span><span className={'xp-badge '+(masked?'muted':'')}>{masked?(viewer==='finance'?'재무 열람본 · 일부 가림':'회계 열람본 · 일부 가림'):'KODA 발행 원본'}</span></div>
-    {viewer!=='issuer'&&<ScopeStrip viewer={viewer}/>}
+    <div className="xp-document-heading"><span><Icon name="file"/> 3분기 잔고 증명서 <small className="xp-docno">KP-2026-0930-0417</small></span><span className={'xp-badge '+(masked?'muted':'')}>{masked?(viewer==='finance'?'재무 열람본':'회계 열람본'):'KODA 발행 원본'}</span></div>
     <div className="xp-balance"><span>총 보관 자산 평가액</span><strong>5,241,768,000<span>원</span></strong><p>2026년 9월 30일 기준 · 3종의 자산</p></div>
     <AssetTable/>
-    {viewer === 'finance' ? <>
-      <div className="xp-original-fields xp-view-fields"><div><span>문서번호 · 평가 기준가</span><strong>KP-2026-0930-0417 · {PRICE_BASIS}</strong></div><div><span>보관 지갑 <em className="xp-mask-tag">끝 4자리</em></span><strong>BTC 보관 지갑 1 · <code>{txTail(WALLET)}</code></strong></div><div><span>보관 형태</span><strong>{CUSTODY_TYPE}</strong></div></div>
-      <details className="xp-transactions xp-view-transactions"><summary>3분기 거래 12건 보기 <em className="xp-mask-tag">거래처 코드 · Tx 끝 4자리</em></summary><div className="xp-table-wrap"><table className="xp-scope"><caption className="xp-sr">3분기 거래 12건, 거래처 코드와 Tx 끝 4자리로 표시</caption><thead><tr><th>거래일</th><th>거래처</th><th>수량</th><th>Tx</th></tr></thead><tbody>{transactions.map(([date,party,amount,ref],i)=><tr key={i}><td>{date}</td><td>{counterpartyCode(party)}</td><td>{amount}</td><td><code>{txTail(ref)}</code></td></tr>)}</tbody></table></div></details>
-      <div className="xp-privacy"><Icon name="lock"/><div><strong>대조에 필요한 정보만 보여요</strong><p>지갑 주소는 끝 4자리만, 거래 상대방은 거래처 코드로 보여요. 상대방 이름과 Tx 전체는 가려져 있어요.</p></div></div>
-    </> : viewer === 'accounting' ? <>
-      <div className="xp-original-fields xp-view-fields"><div><span>문서번호 · 평가 기준가</span><strong>KP-2026-0930-0417 · {PRICE_BASIS}</strong></div><div><span>보관 형태</span><strong>{CUSTODY_TYPE}</strong></div><div><span>보관 지갑 <em className="xp-mask-tag">주소 가림</em></span><strong>BTC 보관 지갑 1</strong></div></div>
-      <div className="xp-table-wrap xp-view-totals"><table className="xp-scope"><caption>3분기 자산별 증감 · 거래 12건 합계</caption><thead><tr><th>자산</th><th>증가</th><th>감소</th><th>순증감</th></tr></thead><tbody>{movementTotals().map(t=><tr key={t.code}><td>{t.code}</td><td>{t.plus}</td><td>{t.minus}</td><td>{t.net}</td></tr>)}</tbody></table></div>
-      <div className="xp-privacy"><Icon name="lock"/><div><strong>결산에 필요한 정보만 보여요</strong><p>거래 상대방 · 거래 식별자(Tx) · 지갑 주소는 가려져 있어요. 개별 거래는 자산별 합계로 보여요.</p></div></div>
-    </> : full ? <div className="xp-original-fields"><div><span>BTC 보관 지갑</span><code>{WALLET}</code></div><div><span>거래 상대방</span><strong>OTC 거래상대 A사 · B사</strong></div><div><span>보관 형태 · 평가 기준가</span><strong>{CUSTODY_TYPE} · {PRICE_BASIS}</strong></div></div> : <div className="xp-document-meta"><span>고객사 <b>㈜가온테크</b></span><span>3분기 거래 <b>12건</b></span><span>발행 예정일 <b>2026.10.01</b></span></div>}
+    {original ? <div className="xp-document-meta"><span>고객사 <b>㈜가온테크</b></span><span>3분기 거래 <b>12건</b></span><span>발행 예정일 <b>2026.10.01</b></span></div> : <>
+      <FieldGrid viewer={viewer}/>
+      <TxBlock viewer={viewer}/>
+      {masked&&<p className="xp-mask-legend"><span className="xp-partial">초록</span> 일부만 보이는 칸 <Redact/> 이 역할에는 가린 칸, 값 대신 칸별 지문만 받아요</p>}
+    </>}
   </>;
+}
+const PREVIEW: Viewer[] = ['finance','accounting','auditor'];
+/** 시연용: 같은 문서를 역할별로 바로 바꿔 보여 줘요. */
+function RolePreview({initial}:{initial:Viewer}) {
+  const [v,setV]=useState<Viewer>(PREVIEW.includes(initial)?initial:'finance');
+  return <div className="xp-role-preview">
+    <div className="xp-role-tabs" role="tablist" aria-label="미리볼 역할">{PREVIEW.map(id=><button key={id} role="tab" aria-selected={v===id} className={v===id?'on':undefined} onClick={()=>setV(id)}>{viewers.find(x=>x.id===id)!.label}</button>)}</div>
+    <div role="tabpanel" className="xp-role-doc" key={v}><FieldGrid viewer={v}/><TxBlock viewer={v}/></div>
+  </div>;
 }
 function ScopeTable() {
   return <div className="xp-table-wrap"><table className="xp-scope xp-scope-matrix"><thead><tr><th>정보</th>{viewers.map(v=><th key={v.id}>{v.label}</th>)}</tr></thead><tbody>{policy.map(row=><tr key={row.key}><th scope="row"><strong>{row.label}</strong><small>{row.why}</small></th>{viewers.map(v=>{const [level,how]=row.rules[v.id];return <td key={v.id} className={'lv-'+level}><i className="xp-lv" aria-hidden="true"/><span className="xp-sr">{LEVEL_NAME[level]}: </span>{how}</td>;})}</tr>)}</tbody></table></div>;
@@ -179,7 +211,7 @@ export default function Experience() {
     <input ref={d.input} className="xp-hidden" type="file" accept="application/pdf,.pdf" aria-label="검사할 PDF 파일" onChange={e=>{const file=e.target.files?.[0];if(file)d.chooseFile(file);e.target.value='';}}/>
     {modal&&<Modal wide={modal==='scope'} title={{record:'공개 블록체인 기록',scope:'역할별 열람 범위',document:'3분기 잔고 증명서',history:'활동 기록'}[modal]} close={()=>setModal(null)}>
       {modal==='record'&&<><p className="xp-modal-description">로그인 없이 지문·블록 번호·발행자 DID로 조회해요. 시연용 모의 기록이에요.</p><form className="xp-search" onSubmit={e=>{e.preventDefault();setSearched(true);}}><input value={query} onChange={e=>{setQuery(e.target.value);setSearched(false);}} aria-label="문서 지문, 블록 번호, 발행자 DID" placeholder="문서 지문, 블록 번호, 발행자 DID"/><button className="xp-button primary">조회</button></form>{searched&&(found?<div className="xp-record-detail"><span className="xp-badge">찾은 기록 1건 · 모의</span><dl><dt>문서 지문</dt><dd><code>{d.manifest?.hash}</code></dd><dt>블록 번호</dt><dd>#{BLOCK}</dd><dt>항목 지문 묶음</dt><dd><code>{RECORDED_FIELD_ROOT}</code></dd><dt>발행자 DID</dt><dd><code>{ISSUER}</code></dd><dt>기록 시각</dt><dd>{RECORDED_AT}</dd></dl></div>:<p className="xp-empty" role="status">일치하는 기록이 없어요.</p>)}<div className="xp-privacy"><Icon name="lock"/><p>법인명, 잔고, 지갑 주소, 거래 상대방은 공개 기록에 담기지 않아요.</p></div></>}
-      {modal==='scope'&&<><p className="xp-modal-description">같은 원본에서 역할마다 업무에 필요한 칸만 보여줘요. 기준은 고객사가 역할별로 정하고, 실제 서비스에서는 KODA 서버가 허용된 칸만 내려보내요. 시연용 권한 설정이에요.</p><ScopeTable/><p className="xp-modal-description xp-lv-legend"><span className="lv-full"><i className="xp-lv"/>전체</span><span className="lv-partial"><i className="xp-lv"/>일부</span><span className="lv-hidden"><i className="xp-lv"/>가림</span> 재무는 거래를 한 건씩 대조하고, 회계는 합계와 평가 근거로 결산해요. 감사인은 열람 기간 동안 모든 항목을 봐요.</p></>}
+      {modal==='scope'&&<><p className="xp-modal-description">같은 원본을 역할마다 다른 칸만 가려서 보여줘요. 역할을 눌러 바로 비교해 보세요. 기준은 고객사가 정하고, 실제 서비스에서는 KODA 서버가 허용된 칸만 내려보내요.</p><RolePreview initial={(['finance','finance','accounting','accounting','auditor','auditor'] as Viewer[])[d.scene]!}/><details className="xp-scope-details"><summary>전체 기준표 보기 · 항목 9개 × 열람 주체 5개</summary><ScopeTable/><p className="xp-modal-description xp-lv-legend"><span className="lv-full"><i className="xp-lv"/>전체</span><span className="lv-partial"><i className="xp-lv"/>일부</span><span className="lv-hidden"><i className="xp-lv"/>가림</span> 감사인은 열람 기간 동안 모든 항목을 봐요.</p></details></>}
       {modal==='document'&&<><Document viewer="auditor" full/><details className="xp-transactions"><summary>3분기 거래 12건 보기</summary><table className="xp-scope"><thead><tr><th>거래일</th><th>상대방</th><th>수량</th><th>Tx</th></tr></thead><tbody>{transactions.map((row,i)=><tr key={i}>{row.map((v,j)=><td key={j}>{v}</td>)}</tr>)}</tbody></table></details><p className="xp-modal-description">문서 KP-2026-0930-0417 · 발행자 {ISSUER}<br/>평가 기준가 2026.09.30 23:59 KST · 출처와 거래는 가상 데이터</p></>}
       {modal==='history'&&<>{d.records.length?<ol className="xp-history">{d.records.map((r,i)=><li key={i}><Icon name="check"/><div><strong>{r.action}</strong><p>{r.actor} · {r.time} · 모의 처리</p></div></li>)}</ol>:<p className="xp-empty">아직 수행한 작업이 없어요. 화면의 버튼으로 첫 작업을 시작해 보세요.</p>}</>}
     </Modal>}
