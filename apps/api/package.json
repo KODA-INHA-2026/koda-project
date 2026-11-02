@@ -1,0 +1,16 @@
+{
+  "name": "@koda/api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@fastify/cookie": "11.1.5",
+    "@koda/protocol": "0.1.0",
+    "@koda/chain": "0.1.0",
+    "fastify": "5.12.7"
+  }
+}

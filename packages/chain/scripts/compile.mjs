@@ -1,0 +1,11 @@
+import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import solc from 'solc';
+const source = readFileSync(new URL('../contracts/AnchorRegistry.sol', import.meta.url), 'utf8');
+const result = JSON.parse(solc.compile(JSON.stringify({ language: 'Solidity', sources: { 'AnchorRegistry.sol': { content: source } }, settings: { optimizer: { enabled: true, runs: 200 }, evmVersion: 'cancun', outputSelection: { '*': { '*': ['abi', 'evm.bytecode.object'] } } } })));
+const errors = (result.errors ?? []).filter(e => e.severity === 'error');
+if (errors.length) throw new Error(errors.map(e => e.formattedMessage).join('\n'));
+const contract = result.contracts['AnchorRegistry.sol'].AnchorRegistry;
+const dir = new URL('../artifacts/', import.meta.url);
+mkdirSync(dir, { recursive: true });
+writeFileSync(new URL('AnchorRegistry.json', dir), JSON.stringify({ abi: contract.abi, bytecode: '0x' + contract.evm.bytecode.object, compiler: solc.version() }, null, 2));
+console.log('AnchorRegistry compiled with pinned local solc (no remote compiler download).');

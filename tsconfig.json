@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "allowImportingTsExtensions": true, "types": ["node"] },
+  "include": ["apps/api/src/**/*.ts", "packages/protocol/src/**/*.ts", "packages/chain/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts", "playwright.config.ts"],
+  "exclude": ["node_modules", "**/dist", "tempo", "local-design"]
+}

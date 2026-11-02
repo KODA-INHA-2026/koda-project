@@ -1,0 +1,55 @@
+{
+  "name": "koda-custody-demo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": "24.16.0",
+    "npm": ">=11 <12"
+  },
+  "packageManager": "npm@11.13.0",
+  "scripts": {
+    "chain:start": "node scripts/service.mjs start",
+    "chain:stop": "node scripts/service.mjs stop",
+    "build:protocol": "npm run build -w @koda/protocol && npm run build -w @koda/chain",
+    "check": "npm run build:protocol && tsc --noEmit && npm run check -w @koda/web",
+    "build": "npm run build:protocol && npm run build -w @koda/api && npm run build -w @koda/web && npm run build -w @koda/chain && node scripts/check-boundaries.mjs",
+    "dev:web": "npm run dev -w @koda/web",
+    "dev:api": "tsx apps/api/src/main.ts",
+    "dev": "node scripts/dev.mjs",
+    "chain:dev": "node scripts/chain-dev.mjs",
+    "demo:prepare": "npm run build:protocol && npm run build -w @koda/chain && tsx scripts/prepare.ts",
+    "demo:verify": "tsx scripts/verify.ts",
+    "demo:files": "tsx scripts/evidence-files.ts",
+    "test": "npm run build:protocol && tsx --test tests/protocol.test.ts tests/api.test.ts tests/verification.test.ts tests/grants.test.ts tests/issuer.test.ts tests/v03.test.ts tests/prd-pdf.test.ts tests/internal-roles.test.ts",
+    "test:chain": "npm run build -w @koda/chain && tsx --test tests/chain.test.ts",
+    "test:browser": "playwright test",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "demo:prepare:mock": "npm run build:protocol && tsx scripts/prepare-mock.ts",
+    "test:browser:prd": "playwright test tests/browser/prd-demo.spec.ts tests/browser/prd-access.spec.ts tests/browser/prd-verification-scene.spec.ts",
+    "dev:mock": "node scripts/dev-mock.mjs",
+    "dev:proof": "npm run dev -w @koda/web -- --host localhost --port 5186",
+    "test:proof": "playwright test --config playwright.proof.config.ts",
+    "demo:backup": "node scripts/proof/capture.mjs",
+    "demo:proof-files": "npm run build:protocol && tsx scripts/proof/create-files.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "hardhat": "3.21.2",
+    "solc": "0.8.28",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vite": "7.3.7",
+    "zod": "4.6.6"
+  },
+  "overrides": {
+    "tmp": "0.2.7"
+  }
+}

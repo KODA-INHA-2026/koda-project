@@ -1,0 +1,11 @@
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
+const root=fileURLToPath(new URL('../',import.meta.url));
+process.chdir(root);
+process.env.KODA_RECORD_MODE='MOCK';
+process.env.KODA_CLICK_DEMO='1';
+process.env.KODA_DATA_DIR??=resolve(root,'.demo/prd-v03-20261102/internal-roles');
+process.env.KODA_WEB_PORT??='5186';
+process.env.KODA_API_PORT??='3016';
+process.env.KODA_ORIGIN??='http://localhost:'+process.env.KODA_WEB_PORT;
+await import('./dev.mjs');

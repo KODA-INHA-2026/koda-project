@@ -1,0 +1,18 @@
+import { defineControls } from 'tempo-sdk/assets';
+import type { Demo } from './useDemo';
+import { BLOCK, ISSUER, RECORDED_AT, shortHash } from './model';
+export function Explorer({ demo: d }: { demo: Demo }) {
+  return <div className="ex">
+    <div className="bar"><span className="logo">KODA <i>Proof</i></span><span className="env">모의 데이터</span><span className="tnav"><button className="on">체인 기록 조회</button></span><span className="sp" /><span className="lbl">공개 · 로그인 없음</span></div>
+    <form className="search" onSubmit={e => { e.preventDefault(); d.search(); }}><label className="box"><input aria-label="문서 지문, 블록 번호, 발행자 DID" value={d.query} onChange={e => d.setQuery(e.target.value)} placeholder="문서 지문, 블록 번호, 발행자 DID" /><span>SHA-256 / 블록 / DID</span></label><button className="btn" type="submit">조회</button><span className="ipin">1</span></form>
+    <div className="exg"><div className="exl"><div className="h1" style={{ fontSize: 24 }}>찾은 기록 {d.found ? '1' : '0'}건</div><p className="lead">원문은 없고, 지문과 기록 시각만 남습니다.</p>
+      {d.found ? <table className="rows" style={{ marginTop: 18 }}><thead><tr><th>블록</th><th>기록 시각</th><th>문서 지문</th><th>발행자</th></tr></thead><tbody><tr className="cur"><td className="mono">#{BLOCK}</td><td className="mono">2026-10-01 10:02:19</td><td className="mono">{shortHash(d.manifest?.hash ?? '')}</td><td>KODA</td></tr></tbody></table> : <div className="search-empty" role="status">일치하는 모의 기록이 없습니다.<br /><span>지문·블록 번호·발행자 DID를 확인해 주세요.</span><button className="text-action" onClick={() => { d.setQuery(d.manifest?.hash ?? ''); }}>시연 지문 넣기</button></div>}
+      <div className="lbl" style={{ marginTop: 22 }}>이 화면에 일부러 두지 않은 것</div><div className="chk" style={{ marginTop: 6 }}><div className="row"><span className="ic o" /><span><b>최근 기록 목록</b><span className="sub">발행 건수와 주기가 드러나지 않게, 찾은 기록 하나만 보여준다</span></span></div><div className="row"><span className="ic o" /><span><b>고객사 이름</b><span className="sub">체인에 없으므로 조회 화면에도 없다</span></span></div></div>
+      <div className="note" style={{ marginTop: 16 }}>원본 파일이나 지문을 가진 사람은 <b>누구나</b>, KODA에 묻지 않고 확인합니다.<br /><span className="lbl">이 데모는 브라우저의 모의 기록을 조회합니다.</span></div>
+    </div><div className="exr">{d.found ? <><div className="lbl">기록 상세 · 블록 #{BLOCK} <span style={{ color: 'var(--faint)' }}>(시연용 모의 기록)</span></div><div className="h1" style={{ fontSize: 22, marginTop: 6 }}>이 지문은 10월 1일에 기록됐다</div><dl className="fl" style={{ gridTemplateColumns: '86px 1fr', marginTop: 12, fontSize: 12.5 }}><dt>문서 지문</dt><dd className="mono full-hash">{d.manifest?.hash}</dd><dt>기록 시각</dt><dd className="mono">{RECORDED_AT}</dd><dt>발행자</dt><dd className="mono" style={{ fontSize: 11.5 }}>{ISSUER}</dd></dl></> : <><div className="lbl">기록 상세</div><div className="h1" style={{ fontSize: 22, marginTop: 6 }}>조회할 기록을 지정해 주세요</div></>}
+      <div className="two"><div><div className="lbl" style={{ marginBottom: 4 }}>체인에 담긴 것<span className="ipin">2</span></div><ul><li>문서 지문</li><li>기록 시각</li><li>발행자 서명(DID)</li></ul></div><div><div className="lbl" style={{ marginBottom: 4 }}>담기지 않은 것</div><ul className="no"><li>법인명 · 문서번호</li><li>자산 · 수량 · 평가액</li><li>지갑 주소 · 거래 상대방</li></ul></div></div>
+      <div style={{ marginTop: 12 }}><button className="btn ghost" disabled={Boolean(d.busy)} onClick={() => d.publicInput.current?.click()}>원본 파일로 직접 대조<span className="ipin">3</span></button><div className="lbl" style={{ marginTop: 5 }}>브라우저에서 지문만 계산 · 파일은 서버로 보내지 않습니다.</div>{d.publicResult && <p className="local-result" role="status">{d.publicResult}</p>}</div>
+    </div></div>
+  </div>;
+}
+defineControls(Explorer, { demo: false });

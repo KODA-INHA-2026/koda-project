@@ -1,0 +1,16 @@
+{
+  "paths": {
+    "canvases": "./designs"
+  },
+  "scripts": {
+    "install": "cd .. && npm install && cd tempo && npm install",
+    "start": "npm run dev"
+  },
+  "apps": [
+    {
+      "appDir": "apps/web",
+      "start": "npm run dev -- --host localhost --port 5186",
+      "url": "http://localhost:5186"
+    }
+  ]
+}

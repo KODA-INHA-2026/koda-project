@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "major": 4,
+  "appRoot": "../apps/web",
+  "roots": [],
+  "owner": "./globals.css",
+  "globals": "./globals.css",
+  "config": null,
+  "sources": [
+    "../apps/web/src",
+    "./designs"
+  ],
+  "legacyRoots": []
+}
