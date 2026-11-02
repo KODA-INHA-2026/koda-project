@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { assets, scenes, transactions, policy, viewers, WALLET, PRICE_BASIS, CUSTODY_TYPE, counterpartyCode, txTail, type Viewer } from './data';
+import { assets, scenes, transactions, policy, viewers, WALLET, PRICE_BASIS, CUSTODY_TYPE, counterpartyCode, txTail, LEVEL_NAME, type Viewer, type PolicyKey } from './data';
 import { RECORDED_FIELD_ROOT, verifyPackage, viewPackage } from './disclosure';
 import { useExperience, type ExperienceState } from './useExperience';
 import { BLOCK, ISSUER, RECORDED_AT, saveFile, shortHash } from '../proof/model';
@@ -34,16 +34,27 @@ function movementTotals() {
     return { code: a.code, plus: '+' + f(plus), minus: '−' + f(minus), net: (plus - minus >= 0 ? '+' : '−') + f(Math.abs(plus - minus)) };
   });
 }
+const STRIP_KEYS: PolicyKey[] = ['movement','counterparty','txref','wallet'];
+const STRIP_LABEL: Partial<Record<PolicyKey,string>> = { movement: '거래 내역', counterparty: '거래 상대방', txref: '거래 식별자', wallet: '지갑 주소' };
+/** 이 화면에서 민감 항목 4개가 어떻게 보이는지 기준표에서 바로 그려요. 역할을 넘길 때 차이가 한눈에 보여요. */
+function ScopeStrip({viewer}:{viewer:Viewer}) {
+  const label = viewers.find(v=>v.id===viewer)!.label;
+  return <div className="xp-scope-strip" role="group" aria-label={`${label} 화면의 열람 범위`}>
+    <span className="xp-scope-strip-title">{label} 화면에서</span>
+    {STRIP_KEYS.map(key=>{const [level,how]=policy.find(p=>p.key===key)!.rules[viewer];return <span key={key} className={'xp-scope-chip lv-'+level}><i className="xp-lv" aria-hidden="true"/><b>{STRIP_LABEL[key]}</b>{level==='full'?'전체':how}{level!=='full'&&<span className="xp-sr"> ({LEVEL_NAME[level]})</span>}</span>;})}
+  </div>;
+}
 /** 같은 원본을 역할 기준표(data.ts policy)에 맞춰 보여줘요. 가린 칸도 어떻게 가렸는지 화면에 드러내요. */
 function Document({viewer,full=false}:{viewer:Viewer;full?:boolean}) {
   const masked = viewer === 'finance' || viewer === 'accounting';
   return <>
     <div className="xp-document-heading"><span><Icon name="file"/> 3분기 잔고 증명서</span><span className={'xp-badge '+(masked?'muted':'')}>{masked?(viewer==='finance'?'재무 열람본 · 일부 가림':'회계 열람본 · 일부 가림'):'KODA 발행 원본'}</span></div>
+    {viewer!=='issuer'&&<ScopeStrip viewer={viewer}/>}
     <div className="xp-balance"><span>총 보관 자산 평가액</span><strong>5,241,768,000<span>원</span></strong><p>2026년 9월 30일 기준 · 3종의 자산</p></div>
     <AssetTable/>
     {viewer === 'finance' ? <>
       <div className="xp-original-fields xp-view-fields"><div><span>문서번호 · 평가 기준가</span><strong>KP-2026-0930-0417 · {PRICE_BASIS}</strong></div><div><span>보관 지갑 <em className="xp-mask-tag">끝 4자리</em></span><strong>BTC 보관 지갑 1 · <code>{txTail(WALLET)}</code></strong></div><div><span>보관 형태</span><strong>{CUSTODY_TYPE}</strong></div></div>
-      <details className="xp-transactions xp-view-transactions"><summary>3분기 거래 12건 보기 <em className="xp-mask-tag">거래처 코드 · Tx 끝 4자리</em></summary><div className="xp-table-wrap"><table className="xp-scope"><thead><tr><th>거래일</th><th>거래처</th><th>수량</th><th>Tx</th></tr></thead><tbody>{transactions.map(([date,party,amount,ref],i)=><tr key={i}><td>{date}</td><td>{counterpartyCode(party)}</td><td>{amount}</td><td><code>{txTail(ref)}</code></td></tr>)}</tbody></table></div></details>
+      <details className="xp-transactions xp-view-transactions"><summary>3분기 거래 12건 보기 <em className="xp-mask-tag">거래처 코드 · Tx 끝 4자리</em></summary><div className="xp-table-wrap"><table className="xp-scope"><caption className="xp-sr">3분기 거래 12건, 거래처 코드와 Tx 끝 4자리로 표시</caption><thead><tr><th>거래일</th><th>거래처</th><th>수량</th><th>Tx</th></tr></thead><tbody>{transactions.map(([date,party,amount,ref],i)=><tr key={i}><td>{date}</td><td>{counterpartyCode(party)}</td><td>{amount}</td><td><code>{txTail(ref)}</code></td></tr>)}</tbody></table></div></details>
       <div className="xp-privacy"><Icon name="lock"/><div><strong>대조에 필요한 정보만 보여요</strong><p>지갑 주소는 끝 4자리만, 거래 상대방은 거래처 코드로 보여요. 상대방 이름과 Tx 전체는 가려져 있어요.</p></div></div>
     </> : viewer === 'accounting' ? <>
       <div className="xp-original-fields xp-view-fields"><div><span>문서번호 · 평가 기준가</span><strong>KP-2026-0930-0417 · {PRICE_BASIS}</strong></div><div><span>보관 형태</span><strong>{CUSTODY_TYPE}</strong></div><div><span>보관 지갑 <em className="xp-mask-tag">주소 가림</em></span><strong>BTC 보관 지갑 1</strong></div></div>
@@ -53,7 +64,7 @@ function Document({viewer,full=false}:{viewer:Viewer;full?:boolean}) {
   </>;
 }
 function ScopeTable() {
-  return <div className="xp-table-wrap"><table className="xp-scope xp-scope-matrix"><thead><tr><th>정보</th>{viewers.map(v=><th key={v.id}>{v.label}</th>)}</tr></thead><tbody>{policy.map(row=><tr key={row.key}><td><strong>{row.label}</strong><small>{row.why}</small></td>{viewers.map(v=>{const [level,how]=row.rules[v.id];return <td key={v.id} className={'lv-'+level}><i className="xp-lv" aria-hidden="true"/>{how}</td>;})}</tr>)}</tbody></table></div>;
+  return <div className="xp-table-wrap"><table className="xp-scope xp-scope-matrix"><thead><tr><th>정보</th>{viewers.map(v=><th key={v.id}>{v.label}</th>)}</tr></thead><tbody>{policy.map(row=><tr key={row.key}><th scope="row"><strong>{row.label}</strong><small>{row.why}</small></th>{viewers.map(v=>{const [level,how]=row.rules[v.id];return <td key={v.id} className={'lv-'+level}><i className="xp-lv" aria-hidden="true"/><span className="xp-sr">{LEVEL_NAME[level]}: </span>{how}</td>;})}</tr>)}</tbody></table></div>;
 }
 function DisclosureCheck({viewer}:{viewer:Viewer}) {
   const [state,setState]=useState<'idle'|'busy'|{ok:boolean;shown:number;hidden:number;root:string}|{error:string}>('idle');
@@ -65,9 +76,9 @@ function DisclosureCheck({viewer}:{viewer:Viewer}) {
   }
   return <div className="xp-disclosure">
     <strong>이 열람본도 원본에서 나왔을까요?</strong>
-    <p>가린 칸은 값 대신 칸별 지문만 받아요. 그래도 발행 기록에 남긴 항목 지문 묶음을 다시 만들 수 있어요.</p>
+    <p>가린 칸은 값 대신 칸별 지문만 받아요. 그래도 발행 기록에 남긴 항목 지문 묶음을 다시 만들 수 있어요.</p><p className="xp-disclosure-note">시연에서는 솔트를 고정값으로 두고 열람본도 이 브라우저에서 만들어요. 그래서 날짜나 거래처처럼 후보가 적은 값은 대입해 맞힐 수 있어요. 실제 서비스는 칸마다 무작위 솔트를 KODA가 보관하고, 보이는 칸의 솔트만 건네요.</p>
     {typeof state==='object' ? ('error' in state ? <p className="xp-disclosure-result bad" role="status">{state.error}</p> : <div className={'xp-disclosure-result '+(state.ok?'ok':'bad')} role="status"><Icon name={state.ok?'check':'close'} size={17}/><span>{state.ok?`값을 받은 ${state.shown}칸과 지문만 받은 ${state.hidden}칸으로 다시 만든 묶음이 발행 기록과 같아요`:tampered?'BTC 수량 하나를 바꾸자 묶음이 발행 기록과 달라졌어요':'발행 기록과 달라요. 열람본을 다시 받아 주세요'}</span></div>) : <button className="xp-disclosure-button" disabled={state==='busy'} onClick={()=>void check()}>{state==='busy'?'확인하고 있어요':'열람본 검증하기'}</button>}
-    {typeof state==='object' && !('error' in state) && <><div className={'xp-hash-pair'+(state.ok?'':' mismatch')}><span>다시 만든 묶음 · 기록 {shortHash(RECORDED_FIELD_ROOT)}</span><code>{shortHash(state.root)}</code></div><button className="xp-disclosure-link" onClick={()=>void check(!tampered)}>{tampered?'원래 열람본으로 다시 검증':'값 하나를 바꿔서 검증해 보기'}</button><p className="xp-disclosure-note">시연에서는 솔트를 고정값으로 둬요. 실제 서비스는 칸마다 무작위 솔트를 KODA가 보관하고, 보이는 칸의 솔트만 건네요.</p></>}
+    {typeof state==='object' && !('error' in state) && <><div className={'xp-hash-pair'+(state.ok?'':' mismatch')}><span>다시 만든 묶음 · 기록 {shortHash(RECORDED_FIELD_ROOT)}</span><code>{shortHash(state.root)}</code></div><button className="xp-disclosure-link" onClick={()=>void check(!tampered)}>{tampered?'원래 열람본으로 다시 검증':'값 하나를 바꿔서 검증해 보기'}</button></>}
   </div>;
 }
 function ChainDiagram({d}:{d:ExperienceState}) {
@@ -113,7 +124,7 @@ function Backend({d,openRecord}:{d:ExperienceState;openRecord:()=>void}) {
   </aside>;
 }
 export default function Experience() {
-  const d=useExperience(); const s=scenes[d.scene]!; const fieldRoot=RECORDED_FIELD_ROOT;
+  const d=useExperience(); const s=scenes[d.scene]!;
   const workspaceBody=useRef<HTMLDivElement>(null);
   const pointerNavigation=useRef(false);
   const previousScene=useRef(d.scene);
@@ -130,7 +141,7 @@ export default function Experience() {
   const [query,setQuery]=useState(''); const [searched,setSearched]=useState(false);
   const openRecord=()=>{setQuery(d.manifest?.hash??'');setSearched(false);setModal('record');};
   const normalized=query.trim().replace(/[,#\s]/g,'');
-  const found=Boolean(d.manifest&&[d.manifest.hash,fieldRoot,'21904118',ISSUER].includes(normalized));
+  const found=Boolean(d.manifest&&[d.manifest.hash,RECORDED_FIELD_ROOT,'21904118',ISSUER].includes(normalized));
   const locked=d.scene>=4&&d.expired;
   const resultRef=useRef<HTMLDivElement>(null);
   useEffect(()=>{if(d.result){resultRef.current?.focus({preventScroll:true});resultRef.current?.scrollIntoView({block:'nearest',behavior:'instant'});}},[d.result]);
@@ -167,7 +178,7 @@ export default function Experience() {
     <footer className="xp-footer"><span>KODA × INHA <b>2026</b></span><span>가상 법인·모의 데이터로 체험하는 데모</span><span>{String(d.scene+1).padStart(2,'0')} / 06 <button disabled={d.busy||d.scene===0} onClick={()=>d.go(d.scene-1)} aria-label="이전 장면">←</button><button disabled={d.busy||d.scene===5} onClick={()=>d.go(d.scene+1)} aria-label="다음 장면">→</button></span></footer>
     <input ref={d.input} className="xp-hidden" type="file" accept="application/pdf,.pdf" aria-label="검사할 PDF 파일" onChange={e=>{const file=e.target.files?.[0];if(file)d.chooseFile(file);e.target.value='';}}/>
     {modal&&<Modal wide={modal==='scope'} title={{record:'공개 블록체인 기록',scope:'역할별 열람 범위',document:'3분기 잔고 증명서',history:'활동 기록'}[modal]} close={()=>setModal(null)}>
-      {modal==='record'&&<><p className="xp-modal-description">로그인 없이 지문·블록 번호·발행자 DID로 조회해요. 시연용 모의 기록이에요.</p><form className="xp-search" onSubmit={e=>{e.preventDefault();setSearched(true);}}><input value={query} onChange={e=>{setQuery(e.target.value);setSearched(false);}} aria-label="문서 지문, 블록 번호, 발행자 DID" placeholder="문서 지문, 블록 번호, 발행자 DID"/><button className="xp-button primary">조회</button></form>{searched&&(found?<div className="xp-record-detail"><span className="xp-badge">찾은 기록 1건 · 모의</span><dl><dt>문서 지문</dt><dd><code>{d.manifest?.hash}</code></dd><dt>블록 번호</dt><dd>#{BLOCK}</dd><dt>항목 지문 묶음</dt><dd><code>{fieldRoot}</code></dd><dt>발행자 DID</dt><dd><code>{ISSUER}</code></dd><dt>기록 시각</dt><dd>{RECORDED_AT}</dd></dl></div>:<p className="xp-empty" role="status">일치하는 기록이 없어요.</p>)}<div className="xp-privacy"><Icon name="lock"/><p>법인명, 잔고, 지갑 주소, 거래 상대방은 공개 기록에 담기지 않아요.</p></div></>}
+      {modal==='record'&&<><p className="xp-modal-description">로그인 없이 지문·블록 번호·발행자 DID로 조회해요. 시연용 모의 기록이에요.</p><form className="xp-search" onSubmit={e=>{e.preventDefault();setSearched(true);}}><input value={query} onChange={e=>{setQuery(e.target.value);setSearched(false);}} aria-label="문서 지문, 블록 번호, 발행자 DID" placeholder="문서 지문, 블록 번호, 발행자 DID"/><button className="xp-button primary">조회</button></form>{searched&&(found?<div className="xp-record-detail"><span className="xp-badge">찾은 기록 1건 · 모의</span><dl><dt>문서 지문</dt><dd><code>{d.manifest?.hash}</code></dd><dt>블록 번호</dt><dd>#{BLOCK}</dd><dt>항목 지문 묶음</dt><dd><code>{RECORDED_FIELD_ROOT}</code></dd><dt>발행자 DID</dt><dd><code>{ISSUER}</code></dd><dt>기록 시각</dt><dd>{RECORDED_AT}</dd></dl></div>:<p className="xp-empty" role="status">일치하는 기록이 없어요.</p>)}<div className="xp-privacy"><Icon name="lock"/><p>법인명, 잔고, 지갑 주소, 거래 상대방은 공개 기록에 담기지 않아요.</p></div></>}
       {modal==='scope'&&<><p className="xp-modal-description">같은 원본에서 역할마다 업무에 필요한 칸만 보여줘요. 기준은 고객사가 역할별로 정하고, 실제 서비스에서는 KODA 서버가 허용된 칸만 내려보내요. 시연용 권한 설정이에요.</p><ScopeTable/><p className="xp-modal-description xp-lv-legend"><span className="lv-full"><i className="xp-lv"/>전체</span><span className="lv-partial"><i className="xp-lv"/>일부</span><span className="lv-hidden"><i className="xp-lv"/>가림</span> 재무는 거래를 한 건씩 대조하고, 회계는 합계와 평가 근거로 결산해요. 감사인은 열람 기간 동안 모든 항목을 봐요.</p></>}
       {modal==='document'&&<><Document viewer="auditor" full/><details className="xp-transactions"><summary>3분기 거래 12건 보기</summary><table className="xp-scope"><thead><tr><th>거래일</th><th>상대방</th><th>수량</th><th>Tx</th></tr></thead><tbody>{transactions.map((row,i)=><tr key={i}>{row.map((v,j)=><td key={j}>{v}</td>)}</tr>)}</tbody></table></details><p className="xp-modal-description">문서 KP-2026-0930-0417 · 발행자 {ISSUER}<br/>평가 기준가 2026.09.30 23:59 KST · 출처와 거래는 가상 데이터</p></>}
       {modal==='history'&&<>{d.records.length?<ol className="xp-history">{d.records.map((r,i)=><li key={i}><Icon name="check"/><div><strong>{r.action}</strong><p>{r.actor} · {r.time} · 모의 처리</p></div></li>)}</ol>:<p className="xp-empty">아직 수행한 작업이 없어요. 화면의 버튼으로 첫 작업을 시작해 보세요.</p>}</>}

@@ -98,30 +98,34 @@ test('mobile layout remains readable without body overflow and keyboard navigati
 
 test('v0.3 masking: each role sees only its policy fields and the redacted view verifies against the field bundle', async ({page}) => {
   const wallet='bc1q8f2kv7dm3n0w4h6ys5tqe2rj9pl0c3gu5ax9tz';
+  const fullTx=['4f1a…a21c','0x9b…07de','0x12…e9f0','77c0…3b51','2ab1…a001','0x41…0012','bc21…a003','0x51…0014','cd31…a005','0x61…0016','0x71…0017','ef41…a008'];
+  const names=['OTC 거래상대','A사','B사'];
+  const pageText=async()=>{ // workspace + side panel + scope modal: every place a value could leak
+    await page.getByRole('button',{name:'역할별 열람 범위'}).click();
+    const text=await page.locator('body').innerText();
+    await page.keyboard.press('Escape');
+    return text;
+  };
   await scene(page,'재무 대조');
-  const finance=workspace(page);
-  await finance.locator('.xp-view-transactions summary').click();
-  await expect(finance).toContainText('BTC 보관 지갑 1 · …x9tz');
-  await expect(finance).toContainText('시연용 가상 기준가');
-  await expect(finance).toContainText('CP-01');
-  await expect(finance).toContainText('…a21c');
-  for (const secret of [wallet,'OTC 거래상대','A사','4f1a…a21c']) await expect(finance).not.toContainText(secret);
+  await page.locator('.xp-view-transactions summary').click();
   await page.getByRole('button',{name:'열람본 검증하기'}).click();
   await expect(page.locator('.xp-disclosure-result.ok')).toContainText('발행 기록과 같아요');
+  const finance=await pageText();
+  for (const shown of ['BTC 보관 지갑 1 · …x9tz','CP-01','CP-02','시연용 가상 기준가',...fullTx.map(t=>'…'+t.slice(-4))]) expect(finance).toContain(shown);
+  for (const secret of [wallet,'bc1q8f2k',...names,...fullTx]) expect(finance).not.toContain(secret);
   await page.getByRole('button',{name:'값 하나를 바꿔서 검증해 보기'}).click();
   await expect(page.locator('.xp-disclosure-result.bad')).toContainText('달라졌어요');
   await scene(page,'회계 결산');
-  const accounting=workspace(page);
-  await expect(accounting).toContainText('시연용 가상 기준가');
-  await expect(accounting).toContainText('자산별 증감');
-  for (const secret of [wallet,'x9tz','CP-01','A사','a21c']) await expect(accounting).not.toContainText(secret);
   await page.getByRole('button',{name:'열람본 검증하기'}).click();
   await expect(page.locator('.xp-disclosure-result.ok')).toBeVisible();
+  const accounting=await pageText();
+  for (const shown of ['시연용 가상 기준가','자산별 증감','BTC 보관 지갑 1']) expect(accounting).toContain(shown);
+  for (const secret of [wallet,'bc1q8f2k','x9tz','CP-01','CP-02',...names,...fullTx,...fullTx.map(t=>t.slice(-4))]) expect(accounting).not.toContain(secret);
   await scene(page,'원본 검증');
   await expect(workspace(page)).toContainText(wallet);
   await page.getByRole('button',{name:'역할별 열람 범위'}).click();
-  await expect(page.getByRole('dialog')).toContainText('공개 기록');
   await expect(page.getByRole('dialog').locator('tbody tr')).toHaveCount(9);
+  await expect(page.getByRole('dialog').getByRole('rowheader')).toHaveCount(9);
 });
 
 test('field bundle recorded at issuance matches the demo data (no circular verification)', async () => {

@@ -1,4 +1,4 @@
-import { assets, transactions, WALLET, PRICE_BASIS, CUSTODY_TYPE, levelOf, type Viewer } from './data';
+import { assets, transactions, WALLET, PRICE_BASIS, CUSTODY_TYPE, levelOf, type Viewer, type PolicyKey } from './data';
 import { ISSUER } from '../proof/model';
 
 /*
@@ -12,7 +12,7 @@ import { ISSUER } from '../proof/model';
 /** 모의 발행 기록에 남긴 항목 지문 묶음. 발행 데이터가 바뀌면 이 값과 달라져 검증이 실패한다(테스트로 고정). */
 export const RECORDED_FIELD_ROOT = 'e9acebc95f0a70cd0582d6e0879fec6fb5666f70640c454cf5645a01065c5a93';
 const DOMAIN = 'KODA-FIELD-DISCLOSURE-DEMO-v1';
-type Field = { field: string; group: string; value: string };
+type Field = { field: string; group: PolicyKey; value: string };
 export type Disclosed = { field: string; value: string; salt: string };
 export type Withheld = { field: string; digest: string };
 export type ViewPackage = { viewer: Viewer; disclosed: Disclosed[]; withheld: Withheld[] };
@@ -21,14 +21,14 @@ export const fields: Field[] = [
   { field: 'customer', group: 'basic', value: '㈜가온테크' },
   { field: 'document', group: 'basic', value: 'KP-2026-0930-0417' },
   { field: 'asOf', group: 'basic', value: '2026-09-30 23:59:59 KST' },
-  ...assets.flatMap(a => [
+  ...assets.flatMap((a): Field[] => [
     { field: `asset.${a.code}.quantity`, group: 'assets', value: a.amount },
     { field: `asset.${a.code}.valuation`, group: 'assets', value: a.value },
   ]),
   { field: 'price', group: 'price', value: PRICE_BASIS },
   { field: 'custody', group: 'custody', value: CUSTODY_TYPE },
   { field: 'wallet.BTC', group: 'wallet', value: WALLET },
-  ...transactions.flatMap(([date, party, amount, ref], i) => [
+  ...transactions.flatMap(([date, party, amount, ref], i): Field[] => [
     { field: `tx.${i + 1}.date`, group: 'movement', value: date },
     { field: `tx.${i + 1}.amount`, group: 'movement', value: amount },
     { field: `tx.${i + 1}.counterparty`, group: 'counterparty', value: party },
