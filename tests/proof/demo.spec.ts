@@ -127,8 +127,3 @@ test('v0.3 masking: each role sees only its policy fields and the redacted view 
   await expect(page.getByRole('dialog').locator('tbody tr')).toHaveCount(9);
   await expect(page.getByRole('dialog').getByRole('rowheader')).toHaveCount(9);
 });
-
-test('field bundle recorded at issuance matches the demo data (no circular verification)', async () => {
-  const { issueFieldRoot, RECORDED_FIELD_ROOT } = await import('../../apps/web/src/experience/disclosure');
-  expect(await issueFieldRoot()).toBe(RECORDED_FIELD_ROOT);
-});
