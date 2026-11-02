@@ -1,0 +1,147 @@
+{
+  "hash": "d61818dabd32b579b0a23d0befd5bb78c8695fdb20a8a1c3bcdd4f29c25a30cf",
+  "changedHash": "4997a42fd31cdb203dfe55afe06985aee72421a01c583792e1b428fb680f39f7",
+  "copyHash": "ba038e4f1e6bbe7fd98cf4906b27e8ee8262f772b8bbdf7f54f163f4b70f0de5",
+  "entries": [
+    {
+      "field": "demo",
+      "label": "데이터",
+      "value": "교육용 가상 데이터 · 실제 잔고 증명 아님"
+    },
+    {
+      "field": "document",
+      "label": "문서번호",
+      "value": "KP-2026-0930-0417"
+    },
+    {
+      "field": "customer",
+      "label": "법인명",
+      "value": "㈜가온테크 (가상 상장법인)"
+    },
+    {
+      "field": "date",
+      "label": "잔고 기준일",
+      "value": "2026-09-30 23:59:59 KST"
+    },
+    {
+      "field": "issued",
+      "label": "발행 시각",
+      "value": "2026-10-01 10:02:19 KST"
+    },
+    {
+      "field": "issuer",
+      "label": "모의 서명자 DID",
+      "value": "did:koda:issuer:koda-ops"
+    },
+    {
+      "field": "wallet",
+      "label": "BTC 보관 지갑 (가상·체크섬 무효)",
+      "value": "bc1q8f2kv7dm3n0w4h6ys5tqe2rj9pl0c3gu5ax9tz"
+    },
+    {
+      "field": "counterparty",
+      "label": "거래 상대방",
+      "value": "OTC 거래상대 A사, B사 (가상)"
+    },
+    {
+      "field": "btc.quantity",
+      "label": "BTC 수량",
+      "value": "12.4500"
+    },
+    {
+      "field": "btc.valuation",
+      "label": "BTC 평가액 (KRW)",
+      "value": "1942110000"
+    },
+    {
+      "field": "eth.quantity",
+      "label": "ETH 수량",
+      "value": "310.2000"
+    },
+    {
+      "field": "eth.valuation",
+      "label": "ETH 평가액 (KRW)",
+      "value": "1563408000"
+    },
+    {
+      "field": "usdc.quantity",
+      "label": "USDC 수량",
+      "value": "1250000.00"
+    },
+    {
+      "field": "usdc.valuation",
+      "label": "USDC 평가액 (KRW)",
+      "value": "1736250000"
+    },
+    {
+      "field": "price",
+      "label": "기준가 시점·출처",
+      "value": "2026-09-30 23:59 KST · 시연용 가상 기준가"
+    },
+    {
+      "field": "count",
+      "label": "3분기 거래",
+      "value": "12건"
+    },
+    {
+      "field": "tx.0",
+      "label": "가상 거래 1",
+      "value": "07-14 · A사 · +2.0000 BTC · 4f1a…a21c"
+    },
+    {
+      "field": "tx.1",
+      "label": "가상 거래 2",
+      "value": "08-02 · B사 · −80.00 ETH · 0x9b…07de"
+    },
+    {
+      "field": "tx.2",
+      "label": "가상 거래 3",
+      "value": "08-29 · A사 · +500,000 USDC · 0x12…e9f0"
+    },
+    {
+      "field": "tx.3",
+      "label": "가상 거래 4",
+      "value": "09-17 · B사 · +0.4500 BTC · 77c0…3b51"
+    },
+    {
+      "field": "tx.4",
+      "label": "가상 거래 5",
+      "value": "07-03 · A사 · +1.0000 BTC · 2ab1…a001"
+    },
+    {
+      "field": "tx.5",
+      "label": "가상 거래 6",
+      "value": "07-21 · B사 · +50.00 ETH · 0x41…0012"
+    },
+    {
+      "field": "tx.6",
+      "label": "가상 거래 7",
+      "value": "08-05 · A사 · −0.5000 BTC · bc21…a003"
+    },
+    {
+      "field": "tx.7",
+      "label": "가상 거래 8",
+      "value": "08-14 · B사 · +200,000 USDC · 0x51…0014"
+    },
+    {
+      "field": "tx.8",
+      "label": "가상 거래 9",
+      "value": "08-20 · A사 · +0.2500 BTC · cd31…a005"
+    },
+    {
+      "field": "tx.9",
+      "label": "가상 거래 10",
+      "value": "09-02 · B사 · +40.20 ETH · 0x61…0016"
+    },
+    {
+      "field": "tx.10",
+      "label": "가상 거래 11",
+      "value": "09-11 · A사 · −100,000 USDC · 0x71…0017"
+    },
+    {
+      "field": "tx.11",
+      "label": "가상 거래 12",
+      "value": "09-28 · B사 · +0.2500 BTC · ef41…a008"
+    }
+  ]
+}
