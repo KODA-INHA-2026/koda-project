@@ -1,0 +1,6 @@
+{
+  "version": "draft-20261103",
+  "sourceCommit": "23d0e996d64c2e31f0cf0c11e93a1946aeb327bc",
+  "base": "/koda-project/draft-20261103/",
+  "description": "Mint UI, role flow and isometric issuance/verification; simulated DID and chain"
+}
