@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./mask": {
+      "types": "./dist/mask.d.ts",
+      "default": "./dist/mask.js"
     }
   },
   "scripts": {

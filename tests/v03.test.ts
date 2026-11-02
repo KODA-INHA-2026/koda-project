@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { canonicalJson, parseCanonical, validatePayload, evidenceFile, parseEvidenceFile, inspectEvidenceFile, MAX_EVIDENCE_FILE_BYTES, type AuditEnvelopeDTO, type EvidencePayload } from '@koda/protocol';
+import { maskAddress, canonicalJson, parseCanonical, validatePayload, evidenceFile, parseEvidenceFile, inspectEvidenceFile, MAX_EVIDENCE_FILE_BYTES, type AuditEnvelopeDTO, type EvidencePayload } from '@koda/protocol';
 import { workflowFixture } from './workflow-fixture.js';
 
 async function issued() {
@@ -24,7 +24,7 @@ test('v0.3 T-03/04/09/18: v2 issuance and M-01 allowlist, source restricted, imm
     for (const headers of [f.finance, await f.login('auditor-b'), await f.login('finance-b')]) assert.equal((await f.app.inject({ url: '/api/issuer' + f.path + '/source', headers })).statusCode,403);
     const r = await f.app.inject({ url: '/api/finance' + f.path, headers: f.finance }); assert.equal(r.statusCode,200);
     const body = r.json(); assert.equal(body.movementCount,12); assert.equal(body.commitment, JSON.parse(f.envelope.statementCanonical).commitment); assert.equal(body.anchor.txHash,f.envelope.anchorLocator.txHash);
-    for (const a of p.assets) { assert.equal(body.assets.find((x:{code:string}) => x.code===a.code).custodyAddressMasked, a.custodyAddress.slice(0,4)+'…'+a.custodyAddress.slice(-4)); assert.equal(r.body.includes(a.custodyAddress.slice(4,-4)),false); }
+    for (const a of p.assets) { assert.equal(body.assets.find((x:{code:string}) => x.code===a.code).custodyAddressMasked, maskAddress(a.custodyAddress)); assert.equal(r.body.includes(a.custodyAddress.slice(4,-4)),false); }
     for (const secret of [f.envelope.salt,f.envelope.payloadCanonical,...p.movements.flatMap(m=>[m.id,m.counterpartyName!,m.counterpartyAddress,m.transactionReference])]) assert.ok(!r.body.includes(secret));
     assert.doesNotMatch(r.body, /"(payloadCanonical|salt|signature|custodyAddress|movements|counterpartyAddress)"/);
     assert.throws(()=>f.db.prepare('UPDATE evidence_versions SET payloadCanonical=? WHERE evidenceId=?').run('{}',p.evidenceId),/Immutable/);
