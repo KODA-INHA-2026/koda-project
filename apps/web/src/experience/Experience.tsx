@@ -6,6 +6,7 @@ import { BLOCK, ISSUER, RECORDED_AT, saveFile, shortHash } from '../proof/model'
 import './experience.css';
 import { IssueRecordFigure } from './IssueRecordFigure';
 import { VerificationFigure } from './VerificationFigure';
+import { DisclosureFigure } from './DisclosureFigure';
 
 function Icon({name, size=22}:{name:'check'|'arrow'|'lock'|'file'|'chain'|'shield'|'close'|'refresh';size?:number}) {
   const paths = {check:<path d="m5 12 4 4L19 6"/>,arrow:<path d="M5 12h14m-6-6 6 6-6 6"/>,lock:<><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></>,file:<><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Zm0 0v6h6M8 13h8m-8 4h5"/></>,chain:<><path d="m10 13 4-4m-5 7-2 2a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 0 2-2a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0" transform="translate(1 0)"/></>,shield:<><path d="m12 3 8 3v6c0 4-8 9-8 9s-8-5-8-9V6Z"/><path d="m8 12 3 3 5-6"/></>,close:<path d="m6 6 12 12M6 18 18 6"/>,refresh:<><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></>};
@@ -106,7 +107,9 @@ function DisclosureCheck({viewer}:{viewer:Viewer}) {
     try { setState(await verifyPackage(await viewPackage(viewer, tamper))); }
     catch (e) { setState({error: e instanceof Error ? e.message : '검증하지 못했어요.'}); }
   }
+  const figure=state==='busy'?'busy':typeof state==='object'&&!('error' in state)?(state.ok?'ok':'bad'):typeof state==='object'?'bad':'idle';
   return <div className="xp-disclosure">
+    <DisclosureFigure state={figure}/>
     <strong>이 열람본도 원본에서 나왔을까요?</strong>
     <p>가린 칸은 값 대신 칸별 지문만 받아요. 그래도 발행 기록에 남긴 항목 지문 묶음을 다시 만들 수 있어요.</p><p className="xp-disclosure-note">시연에서는 솔트를 고정값으로 두고 열람본도 이 브라우저에서 만들어요. 그래서 날짜나 거래처처럼 후보가 적은 값은 대입해 맞힐 수 있어요. 실제 서비스는 칸마다 무작위 솔트를 KODA가 보관하고, 보이는 칸의 솔트만 건네요.</p>
     {typeof state==='object' ? ('error' in state ? <p className="xp-disclosure-result bad" role="status">{state.error}</p> : <div className={'xp-disclosure-result '+(state.ok?'ok':'bad')} role="status"><Icon name={state.ok?'check':'close'} size={17}/><span>{state.ok?`값을 받은 ${state.shown}칸과 지문만 받은 ${state.hidden}칸으로 다시 만든 묶음이 발행 기록과 같아요`:tampered?'BTC 수량 하나를 바꾸자 묶음이 발행 기록과 달라졌어요':'발행 기록과 달라요. 열람본을 다시 받아 주세요'}</span></div>) : <button className="xp-disclosure-button" disabled={state==='busy'} onClick={()=>void check()}>{state==='busy'?'확인하고 있어요':'열람본 검증하기'}</button>}
@@ -149,7 +152,7 @@ function Backend({d,openRecord}:{d:ExperienceState;openRecord:()=>void}) {
     })}</ol>
     <div className={'xp-chain-card '+(hasChain?'':'offchain')}>
       <div className="xp-chain-title"><Icon name={hasChain?'chain':'shield'}/><b>{hasChain?'블록체인 · 문서 지문':'KODA · 원본 보관소'}</b></div>
-      {hasChain ? <><ChainDiagram d={d}/><div className="xp-hash-pair"><span>발행 원본 지문</span><code>{shortHash(d.manifest?.hash??'')}</code></div>{d.scene===5 && d.result && <div className={'xp-hash-pair '+(mismatch?'mismatch':'')}><span>선택한 파일 지문</span><code>{shortHash(d.result.hash)}</code></div>}<p className="xp-chain-note">{mismatch?'지문이 달라요. 내용 비교 결과를 함께 확인하세요.':'문서 내용은 올리지 않고, 지문과 발행 정보만 남겨요.'}</p></> : <><div className="xp-vault"><Icon name="lock" size={30}/><div><strong>원본은 KODA에</strong><span>{d.scene===3?'감사인에게는 열람 권한만':'담당자에게는 필요한 정보만'}</span></div></div>{(d.scene===1||d.scene===2)&&<DisclosureCheck key={d.scene} viewer={d.scene===1?'finance':'accounting'}/>}<p className="xp-chain-note">이 단계는 체인에 새로 기록하지 않아요.</p></>}
+      {hasChain ? <><ChainDiagram d={d}/><div className="xp-hash-pair"><span>발행 원본 지문</span><code>{shortHash(d.manifest?.hash??'')}</code></div>{d.scene===5 && d.result && <div className={'xp-hash-pair '+(mismatch?'mismatch':'')}><span>선택한 파일 지문</span><code>{shortHash(d.result.hash)}</code></div>}<p className="xp-chain-note">{mismatch?'지문이 달라요. 내용 비교 결과를 함께 확인하세요.':'문서 내용은 올리지 않고, 지문과 발행 정보만 남겨요.'}</p></> : <>{d.scene===3&&<div className="xp-vault"><Icon name="lock" size={30}/><div><strong>원본은 KODA에</strong><span>{d.scene===3?'감사인에게는 열람 권한만':'담당자에게는 필요한 정보만'}</span></div></div>}{(d.scene===1||d.scene===2)&&<DisclosureCheck key={d.scene} viewer={d.scene===1?'finance':'accounting'}/>}<p className="xp-chain-note">이 단계는 체인에 새로 기록하지 않아요.</p></>}
       <button className="xp-dark-link" onClick={openRecord}>공개 기록 살펴보기 <Icon name="arrow" size={17}/></button>
     </div>
     <p className="xp-backend-foot">지문 계산은 실제로, DID·권한·체인 기록은 모의로 동작해요.</p>
