@@ -42,7 +42,7 @@ export function useDemo() {
   }
   useEffect(() => {
     let active = true;
-    fetch('/proof-files/manifest.json').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then((m: FileManifest) => { if (active) { setManifest(m); setQuery(m.hash); setFileHash(m.changedHash); } }).catch(() => { if (active) setNotice('시연 파일을 불러오지 못했습니다. 페이지를 새로고침해 주세요.'); });
+    fetch(import.meta.env.BASE_URL + 'proof-files/manifest.json').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then((m: FileManifest) => { if (active) { setManifest(m); setQuery(m.hash); setFileHash(m.changedHash); } }).catch(() => { if (active) setNotice('시연 파일을 불러오지 못했습니다. 페이지를 새로고침해 주세요.'); });
     return () => { active = false; operation.current++; };
   }, []);
   useEffect(() => {
@@ -90,7 +90,7 @@ export function useDemo() {
     if (busy) return;
     setBusy('원본 지문 확인 중');
     try {
-      const response = await fetch('/proof-files/original.pdf'); if (!response.ok) throw new Error('원본 파일을 불러오지 못했습니다.');
+      const response = await fetch(import.meta.env.BASE_URL + 'proof-files/original.pdf'); if (!response.ok) throw new Error('원본 파일을 불러오지 못했습니다.');
       const hash = await sha256(new Uint8Array(await response.arrayBuffer()));
       if (hash !== manifest.hash) throw new Error('원본과 모의 기록의 지문이 다릅니다.');
       record('원본 검증', '통과 · SHA-256 일치 · DID 서명·권한·체인 기록은 모의'); go(5);
@@ -111,7 +111,7 @@ export function useDemo() {
       if (result !== 'match') {
         try {
           const { readSupportedPdf } = await import('@koda/protocol');
-          const fontResponse = await fetch('/fonts/PretendardVariable.ttf'); if (!fontResponse.ok) throw new Error();
+          const fontResponse = await fetch(import.meta.env.BASE_URL + 'fonts/PretendardVariable.ttf'); if (!fontResponse.ok) throw new Error();
           const actual = readSupportedPdf(bytes, new Uint8Array(await fontResponse.arrayBuffer()), manifest.entries);
           changes = actual.flatMap((entry, index) => entry.value !== manifest.entries[index]?.value ? [{ field: entry.field, label: entry.label, before: manifest.entries[index]!.value, after: entry.value }] : []);
           result = changes.length ? 'changed' : 'copy';
@@ -124,7 +124,7 @@ export function useDemo() {
   }
   async function sample(kind: 'original' | 'modified' | 'resaved', download = false) {
     try {
-      const response = await fetch(`/proof-files/${kind}.pdf`); if (!response.ok) throw new Error();
+      const response = await fetch(`${import.meta.env.BASE_URL}proof-files/${kind}.pdf`); if (!response.ok) throw new Error();
       const bytes = await response.arrayBuffer();
       const name = kind === 'original' ? '3Q_잔고증명_원본.pdf' : kind === 'modified' ? '3Q_잔고증명_최종(수정).pdf' : '3Q_잔고증명_재저장.pdf';
       if (download) saveFile(name, bytes, 'application/pdf'); else await inspectFile(new File([bytes], name, { type: 'application/pdf' }));

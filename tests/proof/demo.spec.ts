@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 const fixture = 'apps/web/public/proof-files/';
 const stage = (page: Page) => page.locator('.stage');
 async function scene(page: Page, id: string) { await page.getByRole('button', { name: new RegExp('^'+id+' ') }).click(); }
-test.beforeEach(async ({ page }) => { await page.goto('/'); await expect(page.locator('.stage')).toBeVisible(); });
+test.beforeEach(async ({ page }) => { await page.goto('./'); await expect(page.locator('.stage')).toBeVisible(); });
 
 test('seven scenes connect through real actions, with masked finance and whole auditor view', async ({ page }) => {
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));

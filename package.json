@@ -34,7 +34,9 @@
     "dev:proof": "npm run dev -w @koda/web -- --host localhost --port 5186",
     "test:proof": "playwright test --config playwright.proof.config.ts",
     "demo:backup": "node scripts/proof/capture.mjs",
-    "demo:proof-files": "npm run build:protocol && tsx scripts/proof/create-files.ts"
+    "demo:proof-files": "npm run build:protocol && tsx scripts/proof/create-files.ts",
+    "build:proof": "npm run build:protocol && npm run build -w @koda/web",
+    "build:proof:pages": "npm run build:protocol && npm run build -w @koda/web -- --base=/koda-project/"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
