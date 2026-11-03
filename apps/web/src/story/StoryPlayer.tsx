@@ -53,7 +53,7 @@ function Fit({ children, deps }: { children: ReactNode; deps: unknown[] }) {
     const measure = () => {
       const o = outer.current, i = inner.current; if (!o || !i) return;
       const natural = i.scrollHeight, room = o.clientHeight;
-      setScale(natural > room && room > 0 ? Math.max(0.6, room / natural) : 1);
+      setScale(natural > room && room > 0 ? Math.max(0.5, room / natural) : 1);
     };
     measure();
     const ro = new ResizeObserver(measure); if (outer.current) ro.observe(outer.current); if (inner.current) ro.observe(inner.current);
@@ -96,15 +96,20 @@ export function StoryPlayer({ onExit, initialCase, autoStart }: { onExit: () => 
   }, [b, c]);
   // 자동 진행
   const duration = useMemo(() => ({ intro: 3200, issue: 4600, inside1: 4600, inside2: 4600, grant: 3800, external: 1800 + c.external.length * 1000 + 1400, tamper: 10500, close: 0 }), [c]);
+  // 일시정지 후 다시 재생하면 장면의 남은 시간부터 이어 간다.
+  const remain = useRef({ key: '', ms: 0 });
   useEffect(() => {
     if (!playing || b === 'close') return;
-    const t = setTimeout(() => setBeat(i => Math.min(i + 1, BEATS.length - 1)), duration[b]);
-    return () => clearTimeout(t);
-  }, [playing, b, duration]);
+    const key = `${caseIndex}:${beat}`;
+    if (remain.current.key !== key) remain.current = { key, ms: duration[b] };
+    const start = performance.now();
+    const t = setTimeout(() => setBeat(i => Math.min(i + 1, BEATS.length - 1)), remain.current.ms);
+    return () => { clearTimeout(t); remain.current.ms = Math.max(0, remain.current.ms - (performance.now() - start)); };
+  }, [playing, b, beat, caseIndex, duration]);
 
   const go = useCallback((i: number) => setBeat(Math.max(0, Math.min(BEATS.length - 1, i))), []);
-  const restart = useCallback(() => { setBeat(0); setPlaying(true); }, []);
-  const pick = useCallback((i: number) => { setCaseIndex(i); setBeat(0); setPlaying(true); }, []);
+  const restart = useCallback(() => { remain.current.key = ''; setBeat(0); setPlaying(true); }, []);
+  const pick = useCallback((i: number) => { remain.current.key = ''; setCaseIndex(i); setBeat(0); setPlaying(true); }, []);
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLElement && e.target.closest('input,select,textarea')) return;
