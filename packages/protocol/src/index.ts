@@ -102,3 +102,4 @@ export * from './internal.js';
 
 export const accountingSummarySchema = {type:'object',additionalProperties:false,properties:{...financeSummarySchema.properties,internalGrant:internalGrantSchema,
   journal:{type:'array',items:{type:'object',additionalProperties:false,properties:{occurredAt:text,asset:text,quantity:text},required:['occurredAt','asset','quantity']}}},required:[...financeSummarySchema.required,'internalGrant','journal']};
+export { maskAddress } from './mask.js';

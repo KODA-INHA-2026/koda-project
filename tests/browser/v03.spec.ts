@@ -5,7 +5,7 @@ import { promisify } from 'node:util';
 import { resolve } from 'node:path';
 import { authenticate, logout } from './helpers.js';
 import { testDataDir } from '../../scripts/test-environment.js';
-import { canonicalJson, evidenceFile } from '@koda/protocol';
+import { canonicalJson, evidenceFile, maskAddress } from '@koda/protocol';
 
 const docPath='/evidence/KODA-20260930-GAON/versions/1';
 async function screenshot(page: Page, name: string) { if (name.startsWith('s07-')) await page.locator('.file-inspection .verification-result>strong').scrollIntoViewIfNeeded(); else if (name.startsWith('s03-') || name.startsWith('s05-')) await page.evaluate(() => window.scrollTo(0,0)); mkdirSync(testDataDir+'/screenshots/v03',{recursive:true}); await page.screenshot({path:testDataDir+'/screenshots/v03/'+name+'.png',fullPage:false}); }
@@ -35,7 +35,7 @@ test('v0.3 S-01–S-07 / M-01 / R / AC-01–12 / T-09,15–18: actual issuance, 
   expect(finance.movementCount).toBe(12); expect(finance.assets.map((a:{quantity:string})=>a.quantity)).toEqual(['12.4500','310.2000','1250000.00']);
   expect(finance.assets.map((a:{valuationAmount:string})=>a.valuationAmount)).toEqual(['1245000000','930600000','1750000000']);
   const html=await page.content(), safe=JSON.stringify(finance);
-  for(const asset of originalPayload.assets){ expect(finance.assets.find((a:{code:string})=>a.code===asset.code).custodyAddressMasked).toBe(asset.custodyAddress.slice(0,4)+'…'+asset.custodyAddress.slice(-4)); expect(html+safe).not.toContain(asset.custodyAddress.slice(4,-4)); }
+  for(const asset of originalPayload.assets){ expect(finance.assets.find((a:{code:string})=>a.code===asset.code).custodyAddressMasked).toBe(maskAddress(asset.custodyAddress)); expect(html+safe).not.toContain(asset.custodyAddress.slice(4,-4)); }
   for(const privateValue of [source.salt,source.signature,source.payloadCanonical,...originalPayload.movements.flatMap((m:{id:string;counterpartyAddress:string;transactionReference:string;counterpartyName:string})=>[m.id,m.counterpartyAddress,m.transactionReference,m.counterpartyName])]) expect(html+safe).not.toContain(privateValue);
   await expect(page.getByRole('button',{name:'원본 내려받기 없음'})).toBeDisabled();
   for(const width of [1280,1440,390]){await page.setViewportSize({width,height:900});await fits(page);await screenshot(page,'s03-'+width);}

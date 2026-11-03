@@ -52,7 +52,7 @@ test('T-01 / T-09: migration repeatable; finance DTO excludes all private data',
       assert.equal(res.statusCode, 200); assert.equal(res.headers['cache-control'], 'no-store');
       assert.equal(res.body.includes(hidden), false);
       assert.equal(res.body.includes('"custodyAddress"'), false);
-      assert.match(res.body, /12.50000000/); assert.match(res.body, /HIDD…RESS/); assert.match(res.body, /movementCount/);
+      assert.match(res.body, /12.50000000/); assert.match(res.body, /"…RESS"/); assert.match(res.body, /movementCount/);
     }
     assert.throws(() => f.db.prepare('UPDATE evidence_versions SET salt=?').run('changed'), /Immutable/);
   } finally { await f.close(); }

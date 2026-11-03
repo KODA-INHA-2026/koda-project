@@ -95,3 +95,41 @@ test('mobile layout remains readable without body overflow and keyboard navigati
   await page.getByLabel('열람 만료일').focus(); await page.keyboard.press('ArrowLeft');
   await expect(page.getByRole('heading',{name:'감사인에게 열람 권한을 보내요'})).toBeVisible();
 });
+
+test('v0.3 masking: each role sees only its policy fields and the redacted view verifies against the field bundle', async ({page}) => {
+  const wallet='bc1q8f2kv7dm3n0w4h6ys5tqe2rj9pl0c3gu5ax9tz';
+  const fullTx=['4f1a…a21c','0x9b…07de','0x12…e9f0','77c0…3b51','2ab1…a001','0x41…0012','bc21…a003','0x51…0014','cd31…a005','0x61…0016','0x71…0017','ef41…a008'];
+  const names=['OTC 거래상대','A사','B사'];
+  const pageText=async()=>{ // workspace + side panel + scope modal: every place a value could leak
+    await page.getByRole('button',{name:'역할별 열람 범위'}).click();
+    const text=await page.locator('body').innerText();
+    await page.keyboard.press('Escape');
+    return text;
+  };
+  await scene(page,'재무 대조');
+  await workspace(page).getByRole('button',{name:'12건 모두 보기'}).click();
+  await page.getByRole('button',{name:'열람본 검증하기'}).click();
+  await expect(page.locator('.xp-disclosure-result.ok')).toContainText('발행 기록과 같아요');
+  const finance=await pageText();
+  for (const shown of ['BTC 보관 지갑 1 · …x9tz','CP-01','CP-02','시연용 가상 기준가','재무 열람본',...fullTx.map(t=>'…'+t.slice(-4))]) expect(finance).toContain(shown);
+  for (const secret of [wallet,'bc1q8f2k',...names,...fullTx]) expect(finance).not.toContain(secret);
+  await page.getByRole('button',{name:'값 하나를 바꿔서 검증해 보기'}).click();
+  await expect(page.locator('.xp-disclosure-result.bad')).toContainText('달라졌어요');
+  await scene(page,'회계 결산');
+  await page.getByRole('button',{name:'열람본 검증하기'}).click();
+  await expect(page.locator('.xp-disclosure-result.ok')).toBeVisible();
+  const accounting=await pageText();
+  for (const shown of ['시연용 가상 기준가','자산별 합계','개별 거래 12건 · 합계로만 제공','BTC 보관 지갑 1','회계 열람본']) expect(accounting).toContain(shown);
+  for (const secret of [wallet,'bc1q8f2k','x9tz','CP-01','CP-02',...names,...fullTx,...fullTx.map(t=>t.slice(-4))]) expect(accounting).not.toContain(secret);
+  await scene(page,'원본 검증');
+  await expect(workspace(page)).toContainText(wallet);
+  await page.getByRole('button',{name:'역할별 열람 범위'}).click();
+  const dialog=page.getByRole('dialog');
+  await expect(dialog.getByRole('tab',{name:'외부 감사인'})).toHaveAttribute('aria-selected','true');
+  await dialog.getByRole('tab',{name:'회계 담당자'}).click();
+  await expect(dialog.getByRole('tabpanel')).toContainText('개별 거래 12건 · 합계로만 제공');
+  await expect(dialog.getByRole('tabpanel')).not.toContainText(wallet);
+  await dialog.getByText('전체 기준표 보기').click();
+  await expect(dialog.locator('.xp-scope-matrix tbody tr')).toHaveCount(9);
+  await expect(dialog.locator('.xp-scope-matrix').getByRole('rowheader')).toHaveCount(9);
+});

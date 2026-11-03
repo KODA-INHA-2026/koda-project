@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createPrivateKey, sign, randomUUID } from 'node:crypto';
-import { fromBase64Url, fileSha256, createSupportedPdf, pdfEntries, inspectPdf, verifySourceProof, MAX_PDF_BYTES } from '@koda/protocol';
+import { maskAddress, fromBase64Url, fileSha256, createSupportedPdf, pdfEntries, inspectPdf, verifySourceProof, MAX_PDF_BYTES } from '@koda/protocol';
 import { openDatabase, insertPrincipal } from '../apps/api/src/repositories/database.js';
 import { migrateSourceFiles, MockAnchorAdapter, sourceFile } from '../apps/api/src/services/source-file.js';
 import { newIdentity } from '../apps/api/src/crypto/keys.js';
@@ -29,7 +29,7 @@ test('PRD T03–07,09–11,13–14: real issuance, fixed PDF proof, MOCK, allowl
   const source=sourceFile(f.db,p.evidenceId,1),originalPayload=JSON.parse(String(f.db.prepare('SELECT payloadCanonical FROM evidence_versions').get()!.payloadCanonical));const record=await f.adapter.read(source.proof.fileHash);
   assert.equal(await fileSha256(source.bytes),source.proof.fileHash);assert.equal(source.proof.byteLength,source.bytes.length);assert.ok(source.bytes.length<MAX_PDF_BYTES);assert.ok(record);assert.equal(f.db.prepare('SELECT COUNT(*) n FROM anchor_records').get()!.n,0);
   const first=Buffer.from(source.bytes);await issue();await f.app.issuerIdle();assert.deepEqual(Buffer.from(sourceFile(f.db,p.evidenceId,1).bytes),first);assert.throws(()=>f.db.prepare('UPDATE source_files SET bytes=?').run(new Uint8Array([1])));
-  const summaryResponse=await f.app.inject({url:`/api/finance/evidence/${p.evidenceId}/versions/1`,headers:finance});assert.equal(summaryResponse.statusCode,200);const summary=summaryResponse.json();assert.equal(summary.assets[0].quantity,'12.4500');assert.equal(summary.movementCount,12);assert.equal(summary.fileHash,source.proof.fileHash);assert.ok(summary.valuationQuotedAt);assert.equal(summary.assets[0].custodyAddressMasked,originalPayload.assets[0].custodyAddress.slice(0,4)+'…'+originalPayload.assets[0].custodyAddress.slice(-4));
+  const summaryResponse=await f.app.inject({url:`/api/finance/evidence/${p.evidenceId}/versions/1`,headers:finance});assert.equal(summaryResponse.statusCode,200);const summary=summaryResponse.json();assert.equal(summary.assets[0].quantity,'12.4500');assert.equal(summary.movementCount,12);assert.equal(summary.fileHash,source.proof.fileHash);assert.ok(summary.valuationQuotedAt);assert.equal(summary.assets[0].custodyAddressMasked,maskAddress(originalPayload.assets[0].custodyAddress));
   for(const value of [originalPayload.assets[0].custodyAddress,originalPayload.movements[0].transactionReference,originalPayload.movements[0].counterpartyAddress,source.proof.signature])assert.ok(!summaryResponse.body.includes(value));for(const key of ['salt','payloadCanonical','sourceProof','movements'])assert.ok(!(key in summary));
   assert.equal((await f.app.inject({url:base+'/file',headers:finance})).statusCode,403);assert.equal((await f.app.inject({url:`/api/finance/evidence/${p.evidenceId}/versions/1`,headers:foreign})).statusCode,404);
   const grantRequest={auditorDid:f.people.get('auditor-b')!.did,idempotencyKey:randomUUID()};const grantUrl=`/api/evidence/${p.evidenceId}/versions/1/grants`;
