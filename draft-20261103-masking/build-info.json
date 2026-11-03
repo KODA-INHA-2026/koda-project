@@ -1,0 +1,6 @@
+{
+  "version": "draft-20261103-masking",
+  "sourceCommit": "b96c35d082420ca55c0f9bed6673c317870ca83e",
+  "base": "/koda-project/draft-20261103-masking/",
+  "description": "Masking v0.3 redesign: same document, different redaction; verifiable redacted views; demo-day performance"
+}
