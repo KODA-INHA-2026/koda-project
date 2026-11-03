@@ -19,7 +19,7 @@ function Cross() { return <svg width="15" height="15" viewBox="0 0 24 24" fill="
 
 function Cell({ level, value, shown }: { level: Level; value: string; shown?: string }) {
   if (level === 'full') return <span className="st-val">{value}</span>;
-  if (level === 'partial') return <span className="st-partial">{shown ?? '일부'}<span className="st-sr"> (일부만 표시)</span></span>;
+  if (level === 'partial') return <span className="st-partial"><i>일부</i>{shown ?? '일부만 표시'}</span>;
   return <span className="st-redact" role="img" aria-label="가림"><Lock/><span aria-hidden="true">가림</span></span>;
 }
 function rule(c: StoryCase, viewer: ViewerId, f: StoryField, who?: StoryRole) {
@@ -34,14 +34,16 @@ function cardFields(c: StoryCase) {
   const picked = (c.cardKeys ?? []).map(k => c.fields.find(f => f.key === k)).filter((f): f is StoryField => Boolean(f));
   return (picked.length ? picked : c.fields).slice(0, 6);
 }
-/** 외부 카드: 보이는 민감 칸 2개 + 가려진 칸이 있으면 1개(무엇이 가려지는지 보이도록). */
+/** 외부 카드(최대 4줄): 직무에 꼭 필요한 칸 + 보이는 민감 칸 + 가려진 칸 1개(무엇이 가려지는지 보이도록). */
 function externalFields(c: StoryCase, who: StoryRole) {
-  const sensitive = c.fields.filter(f => f.sensitive);
+  const base = (who.show ?? []).map(k => c.fields.find(f => f.key === k)).filter((f): f is StoryField => Boolean(f));
+  const sensitive = c.fields.filter(f => f.sensitive && !base.includes(f));
   const shown = sensitive.filter(f => rule(c, 'external', f, who).level !== 'hidden');
   const others = c.external.filter(e => e !== who).map(e => e.own).filter(Boolean);
   const isHidden = (f: StoryField) => rule(c, 'external', f, who).level === 'hidden';
   const hidden = sensitive.find(f => isHidden(f) && others.includes(f.key)) ?? sensitive.find(isHidden);
-  return hidden ? [...shown.slice(0, 2), hidden] : shown.slice(0, 3);
+  const room = 4 - base.length;
+  return [...base, ...(hidden ? [...shown.slice(0, Math.max(1, room - 1)), hidden] : shown.slice(0, room))];
 }
 /** 무대가 화면보다 크면 비율을 유지한 채 줄여 한 화면에 들어오게 한다(발표장 화면 크기와 무관하게). */
 function Fit({ children, deps }: { children: ReactNode; deps: unknown[] }) {
@@ -115,7 +117,7 @@ export function StoryPlayer({ onExit, initialCase, autoStart }: { onExit: () => 
     return () => window.removeEventListener('keydown', key, true);
   }, [onExit]);
 
-  const caption = b === 'intro' ? c.headline : b === 'close' ? c.captions.close : c.captions[b];
+  const caption = b === 'intro' ? '버튼 하나로 발행부터 외부 검증, 변조 확인까지 이어서 보여 드려요.' : b === 'close' ? c.captions.close : c.captions[b];
   const focus = (col: 'koda' | 'inside' | 'external') => ({ intro: '', issue: 'koda', inside1: 'inside', inside2: 'inside', grant: 'inside external', external: 'external', tamper: '', close: '' }[b].includes(col));
   const checkedBy = [...(reached('inside1') ? [c.inside[0].title] : []), ...(reached('inside2') ? [c.inside[1].title] : []), ...c.external.slice(0, checked).map(e => e.org)];
   const block = BLOCKS[c.id];
@@ -136,17 +138,17 @@ export function StoryPlayer({ onExit, initialCase, autoStart }: { onExit: () => 
           <div className="st-doc"><b>{c.docTitle}</b><span>{c.docNo} · {c.asOf}</span>
             <dl>{c.fields.slice(0, 3).map(f => <div key={f.key}><dt>{f.label}</dt><dd><Cell level="full" value={f.value}/></dd></div>)}</dl>
           </div>
-          <Status on={reached('issue')} text={reached('issue') ? '서명하고 지문을 체인에 기록했어요' : '발행 준비'}/>
+          <Status on={reached('issue')} text={reached('issue') ? '서명하고 문서 지문을 블록체인에 남겼어요' : '발행 준비'}/>
         </article>
       </Column>
       <Column n="2" axis={c.company} title="고객사 내부" active={focus('inside')}>
         {(['inside1', 'inside2'] as const).map((v, i) => { const r = c.inside[i]!; const on = reached(v); return <article key={v} className={'st-card' + (on ? ' done' : '') + (b === v ? ' now' : '')}>
           <RoleHead title={r.title} org={r.org} job={r.job}/>
           <dl className="st-fields">{cardFields(c).map(f => { const x = rule(c, v, f); return <div key={f.key} className={'lv-' + x.level}><dt>{f.label}</dt><dd><Cell level={x.level} value={f.value} shown={x.shown}/></dd></div>; })}</dl>
-          <Status on={on} text={on ? '가린 열람본도 지문 묶음과 일치해요' : '열람 대기'}/>
+          <Status on={on} text={on ? '가린 화면도 같은 원본에서 나왔음을 확인했어요' : '열람 대기'}/>
         </article>; })}
       </Column>
-      <Column n="3" axis="외부" title="외부 검증" active={focus('external')}>
+      <Column n="3" axis="외부" title="검증 기관" active={focus('external')}>
         {c.external.map((r, i) => { const granted = reached('grant'); const ok = i < checked; return <article key={r.org} className={'st-card ext' + (granted ? '' : ' locked') + (ok ? ' done' : '')}>
           <RoleHead title={r.title} org={r.org} job={r.job}/>
           {granted ? <dl className="st-fields compact">{externalFields(c, r).map(f => { const x = rule(c, 'external', f, r); return <div key={f.key} className={'lv-' + x.level}><dt>{f.label}</dt><dd><Cell level={x.level} value={f.value} shown={x.shown}/></dd></div>; })}</dl> : <p className="st-locked"><Lock/> 아직 열람 권한이 없어요</p>}
@@ -181,7 +183,7 @@ function Status({ on, text }: { on: boolean; text: string }) {
 }
 function Lane({ c, record, on, block, checkedBy, total }: { c: StoryCase; record: { doc: string; bundle: string } | null; on: boolean; block: number; checkedBy: string[]; total: number }) {
   return <section className={'st-lane' + (on ? ' on' : '')} aria-label="공개 블록체인 기록">
-    <h2>공개 블록체인 기록 <span>세 축이 모두 같은 기록을 봐요 · 문서 내용은 올리지 않고 지문만 남겨요 · 모의 기록</span></h2>
+    <h2>공개 블록체인 기록 <span>세 축이 모두 같은 기록을 봐요 · 문서 내용은 올리지 않고 <b>지문</b>(원본에서 계산한 고유 값)만 남겨요</span><em className="st-mock">시연용 모의 기록</em></h2>
     <div className="st-chain">
       {[-2, -1].map(d => <div key={d} className="st-block old"><b>#{(block + d).toLocaleString('ko-KR')}</b><span>다른 기록</span></div>)}
       <div className="st-block mine"><b>#{block.toLocaleString('ko-KR')}</b><span>{c.company} · {c.docNo}</span>
@@ -198,16 +200,17 @@ function TamperScene({ c, record, tampered, block }: { c: StoryCase; record: { d
     <div className="st-tamper-head"><p>몇 달 뒤</p><h2>KODA 서버의 값 하나가 바뀐다면?</h2><span>{c.tamper.story}</span>
       <div className="st-change"><em>{f.label}</em><s>{f.value}</s><b>{c.tamper.to}</b><small>KODA 운영 DB에서 변경</small></div></div>
     <div className="st-compare">
-      <article className="st-world db"><h3>중앙 DB만 있을 때</h3>
+      <article className="st-world db"><h3>KODA 서버 기록만 있을 때</h3>
         <p className="st-flow">검증자 <i>→</i> KODA 서버에 물어봐요 <i>→</i> <b>{c.tamper.to}</b></p>
-        <p className="st-verdict warn"><Cross/>바뀐 값을 그대로 믿게 돼요</p>
-        <p className="st-note">검증자는 KODA 서버에만 물어볼 수 있어서, 언제 무엇이 바뀌었는지 밖에서는 알 수 없어요.</p></article>
+        <p className="st-verdict warn"><Cross/>예전 사본이 없으면 바뀐 값을 그대로 믿게 돼요</p>
+        <p className="st-note">비교할 기준이 KODA 서버의 답뿐이에요. 변경 이력(감사 로그)도 KODA가 관리하는 곳에 있어서, 밖에서는 언제 무엇이 바뀌었는지 확인할 근거가 없어요.</p></article>
       <article className="st-world chain"><h3>체인에 지문이 있을 때</h3>
         <dl><div><dt>지금 문서로 다시 계산</dt><dd className="bad">{tampered ? short(tampered) : '계산 중'}</dd></div><div><dt>#{block.toLocaleString('ko-KR')}에 남은 지문</dt><dd>{record ? short(record.doc) : '계산 중'}</dd></div></dl>
-        <p className="st-verdict ok"><Check/>바뀐 값이 바로 드러나요</p>
-        <p className="st-note">원본으로 다시 계산한 지문이 공개 블록체인 기록과 달라요. 이 기록은 KODA도 고칠 수 없어서 기관마다 각자 같은 기준으로 확인해요.</p></article>
+        <p className="st-verdict ok"><Check/>다시 계산해 대조하면 바뀐 값이 드러나요</p>
+        <p className="st-note">지금 문서로 다시 계산한 지문이 발행 때 블록체인에 남긴 지문과 달라요. 이 기록은 KODA도 고칠 수 없어서 기관마다 각자 같은 기준으로 확인해요.</p></article>
     </div>
-    <p className="st-honest">블록체인은 값이 맞는지 보증하지 않아요. 기록 뒤 바뀌었는지, 누가 언제 발행했는지를 누구나 확인하게 해요.</p>
+    <div className="st-honest"><p>외부 타임스탬프도 변경은 잡아내지만, 기관마다 사본과 영수증을 따로 받아 보관해야 해요. 블록체인은 여러 기관이 같은 기록 하나를 각자 열어 봐요.</p>
+      <p>블록체인은 값이 맞는지 보증하지 않아요. 발행 뒤 바뀌었는지, 누가 언제 발행했는지를 확인하게 해요.</p></div>
   </div>;
 }
 function CloseCard({ c, replay, next, exit }: { c: StoryCase; replay: () => void; next: () => void; exit: () => void }) {
@@ -215,8 +218,8 @@ function CloseCard({ c, replay, next, exit }: { c: StoryCase; replay: () => void
     <p className="st-kicker">{c.company} · 한 사례 끝</p>
     <h2>세 축이 같은 기록 하나로 이어졌어요</h2>
     <ol>
-      <li><b>여러 기관이 같은 기록을 각자 대조해요</b><span>{c.external.map(e => e.org).join(', ')}가 KODA 서버를 거치지 않고 확인해요.</span></li>
-      <li><b>한 번 기록된 지문은 발행자도 고칠 수 없어요</b><span>원본으로 다시 계산한 지문이 기록과 다르면 누구든 알아채요.</span></li>
+      <li><b>여러 기관이 같은 기록을 각자 대조해요</b><span>{c.external.map(e => e.org).join(', ')} 모두 KODA 서버를 거치지 않고 각자 확인해요.</span></li>
+      <li><b>한 번 기록된 지문은 발행자도 고칠 수 없어요</b><span>지금 문서로 다시 계산한 지문이 기록과 다르면, 대조하는 기관은 누구든 알아챌 수 있어요.</span></li>
       <li><b>원본은 공개하지 않고 지문만 올려요</b><span>역할마다 필요한 칸만 보이고, 가린 열람본도 원본에서 나왔는지 확인돼요.</span></li>
     </ol>
     <div className="st-close-actions"><button onClick={replay}>다시 보기</button><button className="primary" onClick={next}>다음 고객군 보기</button><button onClick={exit}>단계별로 보기</button></div>

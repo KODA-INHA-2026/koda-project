@@ -21,8 +21,11 @@ test('each customer group masks per role and partners see only their own share',
   await expect(orion).toContainText('8,000.00 USDC');
   await expect(orion).not.toContainText('6,000.00 USDC');
   await expect(orion.locator('.st-redact')).toHaveCount(1);
+  await expect(orion).toContainText('0x9e4b07c1'); // 자기 입금을 체인에서 찾을 Tx
   await expect(page.locator('.st-card.ext.done')).toHaveCount(3, { timeout: 6000 });
   await page.getByRole('button', { name: /한빛정밀/ }).click();
+  await beat(page, '외부 검증');
+  await expect(page.locator('.st-card.ext', { hasText: '새벽은행' })).toContainText('34,250,000원');
   await beat(page, '내부 결산');
   const accounting = page.locator('.st-card', { hasText: '회계 담당자' });
   await expect(accounting).not.toContainText('Northstar');

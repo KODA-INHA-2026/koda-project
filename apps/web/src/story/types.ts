@@ -18,6 +18,8 @@ export interface StoryRole {
   own?: string;
   /** 외부 검증자마다 열람 범위가 다를 때, 이 기관에만 적용할 규칙(views.external보다 우선). */
   override?: Record<string, ViewRule>;
+  /** 외부 카드에 먼저 올릴 칸(직무에 꼭 필요한 값). 민감하지 않은 칸도 올릴 수 있다. */
+  show?: string[];
 }
 
 export interface StoryField {
