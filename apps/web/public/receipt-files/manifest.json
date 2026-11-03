@@ -1,0 +1,92 @@
+{
+  "hash": "9e49f5b68235ce10f8eea1a8c6394a7b00a99eb50ed92e1198a2b5f21ff0b5e3",
+  "changedHash": "fa97b6b5fc5b26d48d35c2af58e5300be19bb11cbf5d6feef2cdc9979f556a05",
+  "copyHash": "f3634050daf3fc900f2951d8576d0d0a194b4573810d4a1e2c4fc2074b1d38be",
+  "entries": [
+    {
+      "field": "type",
+      "label": "문서 유형",
+      "value": "해외 대금 수취 증빙"
+    },
+    {
+      "field": "demo",
+      "label": "데이터",
+      "value": "교육용 가상 데이터 · 실제 수취 증명 아님"
+    },
+    {
+      "field": "document",
+      "label": "문서번호",
+      "value": "KP-2026-1028-0102"
+    },
+    {
+      "field": "customer",
+      "label": "법인명",
+      "value": "한빛정밀 (가상 수출기업)"
+    },
+    {
+      "field": "invoice",
+      "label": "청구서 번호",
+      "value": "DEMO-INV-1028"
+    },
+    {
+      "field": "invoice.source",
+      "label": "청구 정보 출처",
+      "value": "고객사 제공 청구 자료 (가상)"
+    },
+    {
+      "field": "invoice.amount",
+      "label": "청구 금액 (USDC)",
+      "value": "25100.00"
+    },
+    {
+      "field": "received.amount",
+      "label": "수취 금액 (USDC)",
+      "value": "25000.00"
+    },
+    {
+      "field": "difference.amount",
+      "label": "청구 대비 부족액 (USDC)",
+      "value": "100.00"
+    },
+    {
+      "field": "difference.status",
+      "label": "차이 확인 상태",
+      "value": "원인 확인 필요 · 수수료 또는 미수금으로 확정하지 않음"
+    },
+    {
+      "field": "receivedAt",
+      "label": "수취 시각",
+      "value": "2026-10-28 15:00 KST"
+    },
+    {
+      "field": "issuedAt",
+      "label": "발행 시각",
+      "value": "2026-10-28 15:05 KST"
+    },
+    {
+      "field": "issuer",
+      "label": "모의 서명자 DID",
+      "value": "did:koda:issuer:koda-ops"
+    },
+    {
+      "field": "counterparty",
+      "label": "거래처",
+      "value": "해외 거래처 A사 (가상)"
+    },
+    {
+      "field": "counterparty.code",
+      "label": "거래처 코드",
+      "value": "CP-07"
+    },
+    {
+      "field": "wallet",
+      "label": "수취 지갑 (가상 식별자)",
+      "value": "0xDEMO-HANBIT-RECEIPT-9b06"
+    },
+    {
+      "field": "transaction",
+      "label": "거래 식별자 (가상 Tx)",
+      "value": "0xDEMO-USDC-RECEIPT-f2c1"
+    }
+  ]
+}

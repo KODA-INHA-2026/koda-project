@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { sha256, type FileManifest, type FileResult } from '../proof/model';
 import { scenes } from './data';
+import { receipt } from './receipt';
 
 const initialScene = () => {
   const id = location.hash.slice(1);
@@ -28,7 +29,7 @@ export function useExperience() {
   const done = completed.includes(scene);
   useEffect(() => {
     const abort = new AbortController();
-    fetch(import.meta.env.BASE_URL+'proof-files/manifest.json', {signal:abort.signal}).then(r => { if(!r.ok) throw new Error(); return r.json(); }).then(setManifest).catch(e => { if(e.name !== 'AbortError') setError('시연 원본을 불러오지 못했어요. 새로고침해 주세요.'); });
+    fetch(import.meta.env.BASE_URL+'receipt-files/manifest.json', {signal:abort.signal}).then(r => { if(!r.ok) throw new Error(); return r.json(); }).then(setManifest).catch(e => { if(e.name !== 'AbortError') setError('시연 원본을 불러오지 못했어요. 새로고침해 주세요.'); });
     return () => { abort.abort(); operation.current++; };
   }, []);
   function go(index: number) {
@@ -66,8 +67,8 @@ export function useExperience() {
   }
   async function run() {
     if (busy || done) return;
-    if (scene === 1 && checks.some(c=>!c)) { setError('세 가지 자료를 확인한 뒤 체크해 주세요.'); return; }
-    if (scene === 3 && (!expires || expires < '2026-11-09')) { setError('시연일인 2026년 11월 9일 이후로 열람 기간을 정해 주세요.'); return; }
+    if (scene === 1 && checks.some(c=>!c)) { setError('대조 결과와 차이의 확인 필요 상태를 체크해 주세요.'); return; }
+    if (scene === 3 && (!expires || expires < receipt.grantStart)) { setError('시연일인 2026년 11월 3일 이후로 열람 기간을 정해 주세요.'); return; }
     if (scene >= 4 && expired) { setError('열람 기간이 끝났어요. 시연 권한을 복원해 주세요.'); return; }
     if (scene === 5 && !file) { setError('검사할 PDF를 먼저 선택해 주세요.'); return; }
     const id = ++operation.current;
@@ -81,7 +82,7 @@ export function useExperience() {
         if (operation.current !== id) return;
         if ((scene === 0 || scene === 4) && step === 2) {
           if (!manifest) throw new Error('시연 원본이 준비되지 않았어요. 잠시 후 다시 시도해 주세요.');
-          const response = await fetch(import.meta.env.BASE_URL+'proof-files/original.pdf');
+          const response = await fetch(import.meta.env.BASE_URL+'receipt-files/original.pdf');
           if (!response.ok || await sha256(new Uint8Array(await response.arrayBuffer())) !== manifest.hash) throw new Error('준비된 원본의 지문이 기준 기록과 달라요.');
         }
         if (scene === 5 && step === 3) {
@@ -102,10 +103,10 @@ export function useExperience() {
     const id = ++operation.current;
     setError(''); setActivity('sample');
     try {
-      const r = await fetch(`${import.meta.env.BASE_URL}proof-files/${kind}.pdf`); if(!r.ok) throw new Error();
+      const r = await fetch(`${import.meta.env.BASE_URL}receipt-files/${kind}.pdf`); if(!r.ok) throw new Error();
       const bytes = await r.arrayBuffer();
       if (operation.current !== id) return;
-      chooseFile(new File([bytes], {original:'잔고증명_원본.pdf',modified:'잔고증명_수정본.pdf',resaved:'잔고증명_재저장.pdf'}[kind],{type:'application/pdf'}));
+      chooseFile(new File([bytes], {original:'수취증빙_원본.pdf',modified:'수취증빙_수정본.pdf',resaved:'수취증빙_재저장.pdf'}[kind],{type:'application/pdf'}));
     } catch { if(operation.current === id) setError('시연 파일을 불러오지 못했어요. 다시 선택해 주세요.'); }
     finally { if(operation.current === id) setActivity('idle'); }
   }

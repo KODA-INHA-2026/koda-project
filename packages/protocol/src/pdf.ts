@@ -73,7 +73,9 @@ export function createSupportedPdf(entries: PdfEntry[], font: Uint8Array, salt: 
 }
 function serializePdf(lines: string[], font: Uint8Array, salt: string, revision: string): Uint8Array<ArrayBuffer> {
   if(!/^[A-Za-z0-9_-]{43}$/.test(salt)||!/^[A-Za-z0-9-]{1,64}$/.test(revision)||lines.length>500) throw new Error('지원 PDF 형식이 아닙니다.');
-  const title='KODA | 디지털 자산 잔고 증명서'; const note='모의 데이터 · 시연용 모의 체인 · 실제 기록 아님';
+  // Title is derived from the visible, compared document-type field so the
+  // strict reader can reconstruct the entire PDF without trusting metadata.
+  const title=lines.includes('문서 유형: 해외 대금 수취 증빙') ? 'KODA | 해외 대금 수취 증빙' : 'KODA | 디지털 자산 잔고 증명서'; const note='모의 데이터 · 시연용 모의 체인 · 실제 기록 아님';
   const disclaimer='발행 파일 동일성 확인용 · 실제 자산 또는 최초 입력값의 진실성을 증명하지 않습니다.';
   const pages=Array.from({length:Math.ceil(lines.length/36)},(_,i)=>lines.slice(i*36,(i+1)*36));
   const {glyph,width}=fontMetrics(font); const chars=[...new Set(Array.from([title,note,disclaimer,...lines,...pages.map((_,i)=>`${i+1} / ${pages.length}`)].join(''),c=>c.charCodeAt(0)))].sort((a,b)=>a-b);
