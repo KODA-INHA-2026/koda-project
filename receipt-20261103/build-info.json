@@ -1,0 +1,6 @@
+{
+  "version": "receipt-20261103",
+  "sourceCommit": "0445eed34109ace1eeeb1570dc31ad90fd4f3dba",
+  "base": "/koda-project/receipt-20261103/",
+  "description": "Synthetic overseas USDC receipt; role-specific views; simulated identity, permissions and blockchain"
+}
