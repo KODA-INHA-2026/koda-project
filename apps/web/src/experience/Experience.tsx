@@ -7,9 +7,10 @@ import './experience.css';
 import { IssueRecordFigure } from './IssueRecordFigure';
 import { VerificationFigure } from './VerificationFigure';
 import { DisclosureFigure } from './DisclosureFigure';
+import { StoryPlayer } from '../story/StoryPlayer';
 
-function Icon({name, size=22}:{name:'check'|'arrow'|'lock'|'file'|'chain'|'shield'|'close'|'refresh';size?:number}) {
-  const paths = {check:<path d="m5 12 4 4L19 6"/>,arrow:<path d="M5 12h14m-6-6 6 6-6 6"/>,lock:<><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></>,file:<><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Zm0 0v6h6M8 13h8m-8 4h5"/></>,chain:<><path d="m10 13 4-4m-5 7-2 2a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 0 2-2a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0" transform="translate(1 0)"/></>,shield:<><path d="m12 3 8 3v6c0 4-8 9-8 9s-8-5-8-9V6Z"/><path d="m8 12 3 3 5-6"/></>,close:<path d="m6 6 12 12M6 18 18 6"/>,refresh:<><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></>};
+function Icon({name, size=22}:{name:'check'|'arrow'|'lock'|'file'|'chain'|'shield'|'close'|'refresh'|'play'|'pause';size?:number}) {
+  const paths = {check:<path d="m5 12 4 4L19 6"/>,arrow:<path d="M5 12h14m-6-6 6 6-6 6"/>,lock:<><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></>,file:<><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Zm0 0v6h6M8 13h8m-8 4h5"/></>,chain:<><path d="m10 13 4-4m-5 7-2 2a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 0 2-2a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0" transform="translate(1 0)"/></>,shield:<><path d="m12 3 8 3v6c0 4-8 9-8 9s-8-5-8-9V6Z"/><path d="m8 12 3 3 5-6"/></>,close:<path d="m6 6 12 12M6 18 18 6"/>,refresh:<><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></>,play:<path d="M8 5.5v13l11-6.5Z"/>,pause:<path d="M8 5v14m8-14v14"/>};
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
 function Modal({title,close,children,wide=false}:{title:string;close:()=>void;children:ReactNode;wide?:boolean}) {
@@ -99,7 +100,9 @@ function RolePreview({initial}:{initial:Viewer}) {
 function ScopeTable() {
   return <div className="xp-table-wrap"><table className="xp-scope xp-scope-matrix"><thead><tr><th>정보</th>{viewers.map(v=><th key={v.id}>{v.label}</th>)}</tr></thead><tbody>{policy.map(row=><tr key={row.key}><th scope="row"><strong>{row.label}</strong><small>{row.why}</small></th>{viewers.map(v=>{const [level,how]=row.rules[v.id];return <td key={v.id} className={'lv-'+level}><i className="xp-lv" aria-hidden="true"/><span className="xp-sr">{LEVEL_NAME[level]}: </span>{how}</td>;})}</tr>)}</tbody></table></div>;
 }
-function DisclosureCheck({viewer}:{viewer:Viewer}) {
+function DisclosureCheck({viewer,tick=0}:{viewer:Viewer;tick?:number}) {
+  const mountedTick=useRef(tick);
+  useEffect(()=>{ if(tick!==mountedTick.current){ mountedTick.current=tick; void check(); } });
   const [state,setState]=useState<'idle'|'busy'|{ok:boolean;shown:number;hidden:number;root:string}|{error:string}>('idle');
   const [tampered,setTampered]=useState(false);
   async function check(tamper=false) {
@@ -134,7 +137,7 @@ function ChainDiagram({d}:{d:ExperienceState}) {
     <p className="xp-chain-status" role="status">{label}</p>
   </div>;
 }
-function Backend({d,openRecord}:{d:ExperienceState;openRecord:()=>void}) {
+function Backend({d,openRecord,verifyTick}:{d:ExperienceState;openRecord:()=>void;verifyTick:number}) {
   const panel=useRef<HTMLElement>(null);
   useEffect(()=>{panel.current?.scrollTo({top:0});},[d.scene]);
   const s=scenes[d.scene]!;
@@ -152,7 +155,7 @@ function Backend({d,openRecord}:{d:ExperienceState;openRecord:()=>void}) {
     })}</ol>
     <div className={'xp-chain-card '+(hasChain?'':'offchain')}>
       <div className="xp-chain-title"><Icon name={hasChain?'chain':'shield'}/><b>{hasChain?'블록체인 · 문서 지문':'KODA · 원본 보관소'}</b></div>
-      {hasChain ? <><ChainDiagram d={d}/><div className="xp-hash-pair"><span>발행 원본 지문</span><code>{shortHash(d.manifest?.hash??'')}</code></div>{d.scene===5 && d.result && <div className={'xp-hash-pair '+(mismatch?'mismatch':'')}><span>선택한 파일 지문</span><code>{shortHash(d.result.hash)}</code></div>}<p className="xp-chain-note">{mismatch?'지문이 달라요. 내용 비교 결과를 함께 확인하세요.':'문서 내용은 올리지 않고, 지문과 발행 정보만 남겨요.'}</p></> : <>{d.scene===3&&<div className="xp-vault"><Icon name="lock" size={30}/><div><strong>원본은 KODA에</strong><span>{d.scene===3?'감사인에게는 열람 권한만':'담당자에게는 필요한 정보만'}</span></div></div>}{(d.scene===1||d.scene===2)&&<DisclosureCheck key={d.scene} viewer={d.scene===1?'finance':'accounting'}/>}<p className="xp-chain-note">이 단계는 체인에 새로 기록하지 않아요.</p></>}
+      {hasChain ? <><ChainDiagram d={d}/><div className="xp-hash-pair"><span>발행 원본 지문</span><code>{shortHash(d.manifest?.hash??'')}</code></div>{d.scene===5 && d.result && <div className={'xp-hash-pair '+(mismatch?'mismatch':'')}><span>선택한 파일 지문</span><code>{shortHash(d.result.hash)}</code></div>}<p className="xp-chain-note">{mismatch?'지문이 달라요. 내용 비교 결과를 함께 확인하세요.':'문서 내용은 올리지 않고, 지문과 발행 정보만 남겨요.'}</p></> : <>{d.scene===3&&<div className="xp-vault"><Icon name="lock" size={30}/><div><strong>원본은 KODA에</strong><span>{d.scene===3?'감사인에게는 열람 권한만':'담당자에게는 필요한 정보만'}</span></div></div>}{(d.scene===1||d.scene===2)&&<DisclosureCheck key={d.scene} viewer={d.scene===1?'finance':'accounting'} tick={verifyTick}/>}<p className="xp-chain-note">이 단계는 체인에 새로 기록하지 않아요.</p></>}
       <button className="xp-dark-link" onClick={openRecord}>공개 기록 살펴보기 <Icon name="arrow" size={17}/></button>
     </div>
     <p className="xp-backend-foot">지문 계산은 실제로, DID·권한·체인 기록은 모의로 동작해요.</p>
@@ -172,6 +175,10 @@ export default function Experience() {
     return ()=>animation?.cancel();
   },[d.scene]);
   useEffect(()=>{ const heading=workspaceBody.current?.querySelector('h1'); heading?.setAttribute('tabindex','-1'); heading?.focus({preventScroll:true}); workspaceBody.current?.scrollTo({top:0}); },[d.scene]);
+  const verifyTick=0;
+  // 원클릭 스토리 시연: ?story=export|game|audit 로 고객군을 고르고, &auto=1 이면 바로 재생한다.
+  const params=new URLSearchParams(location.search);
+  const [story,setStory]=useState<{case:string|null;auto:boolean}|null>(()=>params.has('story')||params.has('auto')?{case:params.get('story'),auto:params.has('auto')}:null);
   const [modal,setModal]=useState<'record'|'scope'|'document'|'history'|null>(null);
   const [query,setQuery]=useState(''); const [searched,setSearched]=useState(false);
   const openRecord=()=>{setQuery(d.manifest?.hash??'');setSearched(false);setModal('record');};
@@ -182,9 +189,10 @@ export default function Experience() {
   useEffect(()=>{if(d.result){resultRef.current?.focus({preventScroll:true});resultRef.current?.scrollIntoView({block:'nearest',behavior:'instant'});}},[d.result]);
   const resultTitle=d.result?{match:'KODA가 발행한 원본과 같아요',changed:'검증 실패 · 원본과 내용이 달라요',copy:'원본 아님 · 재저장 사본 또는 열람본',unknown:'지문이 달라요. 내용은 비교할 수 없어요'}[d.result.kind]:'';
   function next(){if(d.scene===5)d.go(4);else d.go(d.scene+1);}
+  if(story) return <StoryPlayer initialCase={story.case} autoStart={story.auto} onExit={()=>setStory(null)}/>;
   return <div className="xp-root" onPointerDownCapture={()=>{pointerNavigation.current=true;}} onKeyDownCapture={()=>{pointerNavigation.current=false;}}>
     <a className="xp-skip" href="#workspace">업무 화면으로 이동</a>
-    <header className="xp-journey"><a className="xp-brand" href="#issue" onClick={e=>{e.preventDefault();d.go(0);}}>KODA<span>proof</span></a><nav aria-label="조직별 데모 흐름">{[{name:'KODA',steps:[0]},{name:'고객사',steps:[1,2,3]},{name:'외부 감사',steps:[4,5]}].map(g=><div className="xp-journey-group" key={g.name}><span className="xp-group-name">{g.name}</span><div>{g.steps.map(i=><button key={i} disabled={d.busy} className={(i===d.scene?'current ':'')+(d.completed.includes(i)?'done':'')+(i===5&&d.result&&d.result.kind!=='match'?' inspected-'+d.result.kind:'')} aria-current={i===d.scene?'step':undefined} onClick={()=>d.go(i)}><span>{d.completed.includes(i)?<Icon name={i===5&&d.result&&d.result.kind!=='match'?(d.result.kind==='changed'?'close':'file'):'check'} size={15}/>:i+1}</span>{scenes[i]!.label}</button>)}</div></div>)}</nav><button className="xp-icon-button xp-reset" onClick={d.reset} aria-label="처음부터 다시 시연" title="처음부터 다시 시연"><Icon name="refresh"/></button></header>
+    <header className="xp-journey"><a className="xp-brand" href="#issue" onClick={e=>{e.preventDefault();d.go(0);}}>KODA<span>proof</span></a><nav aria-label="조직별 데모 흐름">{[{name:'KODA',steps:[0]},{name:'고객사',steps:[1,2,3]},{name:'외부 감사',steps:[4,5]}].map(g=><div className="xp-journey-group" key={g.name}><span className="xp-group-name">{g.name}</span><div>{g.steps.map(i=><button key={i} disabled={d.busy} className={(i===d.scene?'current ':'')+(d.completed.includes(i)?'done':'')+(i===5&&d.result&&d.result.kind!=='match'?' inspected-'+d.result.kind:'')} aria-current={i===d.scene?'step':undefined} onClick={()=>d.go(i)}><span>{d.completed.includes(i)?<Icon name={i===5&&d.result&&d.result.kind!=='match'?(d.result.kind==='changed'?'close':'file'):'check'} size={15}/>:i+1}</span>{scenes[i]!.label}</button>)}</div></div>)}</nav><button className="xp-auto-start" onClick={()=>setStory({case:null,auto:true})} disabled={d.busy} title="고객군 하나의 증빙이 3축으로 흐르는 과정을 자동으로 보여줘요"><Icon name="play" size={18}/>원클릭 시연</button><button className="xp-icon-button xp-reset" onClick={d.reset} aria-label="처음부터 다시 시연" title="처음부터 다시 시연"><Icon name="refresh"/></button></header>
     <main className="xp-layout">
       <section className="xp-workspace" id="workspace" aria-label="사용자 업무 화면">
         <header className="xp-app-header"><div className="xp-org"><span className="xp-org-mark">{d.scene===0?'K':d.scene<4?'가':'한'}</span><strong>{s.org}</strong><span className="xp-app-divider"/><span>{d.scene===0?'증빙 관리':d.scene<4?'증빙함':'감사 업무'}</span></div><span className="xp-person"><span className="xp-person-dot"/>{s.role}</span></header>
@@ -208,7 +216,7 @@ export default function Experience() {
           <div className="xp-action-area"><span>{d.scene===1||d.scene===2?<><Icon name="lock" size={17}/> 원본 파일은 내려받지 않아요</>:d.scene===3?'열람 시작일 2026.11.09':d.scene===4?'원본의 지문과 발행 기록을 대조해요':d.scene===5?'PDF 최대 10 MB':'고객사 1곳에 증빙을 발행해요'}</span><button className="xp-button primary" disabled={d.busy||(!d.manifest)||(d.scene===1&&!d.done&&d.checks.some(v=>!v))||(d.scene===5&&!d.file&&!d.done)} aria-busy={d.busy} onClick={()=>d.done?next():void d.run()}>{d.busy?<><span className="xp-spinner"/>{d.processing?`${s.steps[Math.min(d.progress,2)]![1]} 중`:'파일을 불러오고 있어요'}</>:d.done?<>{d.scene===5?'KODA 원본 확인하기':s.next}<Icon name="arrow"/></>:d.failure?<><Icon name="refresh"/>다시 시도</>:s.action}</button></div>
         </div>}
       </section>
-      <Backend d={d} openRecord={openRecord}/>
+      <Backend d={d} openRecord={openRecord} verifyTick={verifyTick}/>
     </main>
     <footer className="xp-footer"><span>KODA × INHA <b>2026</b></span><span>가상 법인·모의 데이터로 체험하는 데모</span><span>{String(d.scene+1).padStart(2,'0')} / 06 <button disabled={d.busy||d.scene===0} onClick={()=>d.go(d.scene-1)} aria-label="이전 장면">←</button><button disabled={d.busy||d.scene===5} onClick={()=>d.go(d.scene+1)} aria-label="다음 장면">→</button></span></footer>
     <input ref={d.input} className="xp-hidden" type="file" accept="application/pdf,.pdf" aria-label="검사할 PDF 파일" onChange={e=>{const file=e.target.files?.[0];if(file)d.chooseFile(file);e.target.value='';}}/>
