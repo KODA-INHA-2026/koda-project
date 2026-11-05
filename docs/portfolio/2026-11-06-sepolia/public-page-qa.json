@@ -1,0 +1,42 @@
+{
+  "checkedAtUtc": "2026-11-05T21:24:04.885Z",
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/",
+  "sourceCommit": "b688772",
+  "pagesCommit": "994ebff7bb55028f89b5007318c9c0564a724cb2",
+  "original": "KODA\n블록체인 기반 문서 검증 기술 실증\n공개 체인 읽기 · 지갑 불필요\nKODA\n고객사\n제3자\nEthereum Sepolia 문서 검증정보를 쓰고 읽는 공유 인프라 · 고객 BTC의 위치가 아님\n07 · 제3자 독립 검증\n제출 PDF를 발급서명·확정 기록과 대조\n\n브라우저에서 PDF SHA-256과 EIP-712 서명자 주소를 계산하고, Ethereum RPC에서 거래·영수증·event·finalized records를 조회합니다.\n\n처리 위치 · 제3자 브라우저 + Ethereum 공개 RPC\nKODA\n제출 문서 검증\n제3자 시연 화면\nBTC 잔고 증명서\n\n검증할 PDF를 선택한 뒤 공개 체인 기록과 대조하세요.\n\n발급 원본\n100 BTC\n내용이 다른 파일\n120 BTC\n내 PDF 선택\nBTC잔고_원본.pdf\n공개 체인에서 대조하기\n검증 결과\n발급 원본과 일치해요\n\n제출 PDF가 발급 원본 및 확정된 체인 기록과 일치합니다.\n\n원본 기준의 시험 발급서명\n확인\n발급 당시 원본과 일치\n일치\n원본 기준과 차이\n없음\n문서 출처와 원본 동일성만 확인합니다. 실제 BTC 보유량이나 현재 유효성은 증명하지 않습니다.\nLOCAL · 제3자 브라우저\n파일 외부 전송 없음\n✓\nPDF·검증정보 형식 검사\nPDF 헤더·크기·bytes32·uint64·서명 길이 확인\n✓\n제출 PDF 전체 바이트 SHA-256\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n✓\nEIP-712 서명자 주소 복구\n복원 주소 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\n✓\n영수증의 DocumentRegistered 이벤트 해석·대조\nDocumentRegistered 값 일치\n✓\n제출·서명·체인 해시 최종 대조\nHfile = message.documentHash = records[documentId].documentHash\nRPC · Ethereum Sepolia\n읽기 전용 · JSON-RPC / eth_call\n✓\n배포 코드·고정 발급자 검증\n런타임 코드·배포 트랜잭션·고정 발급자 일치\n✓\neth_chainId 조회\nchainId 11155111\n✓\neth_getBlockByNumber(finalized)\nfinalized #12072046 · 0x7c34b7f68096ae07f3941b5a1fcc31abbc889e4ed06f51d73e779c71caa9c1f0\n✓\neth_getTransactionByHash · register 입력 대조\n등록 입력과 제출 검증정보 일치\n✓\neth_getTransactionReceipt 조회\nsuccess · block #12071362\n✓\neth_getBlockByNumber · 포함 블록 정식 체인 대조\n0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c\n✓\n등록 블록과 finalized 블록 높이 비교\n등록 블록이 finalized 범위에 포함\n✓\nviem readContract → eth_call authorizedIssuer()\n허용 발급자 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\n✓\nviem readContract → eth_call records(documentId)\nhash 0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842 · issuedAt 1793904567\nCOMPARE · 최종 판정\nmatch\nHfile · 제출 PDF\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n=\nHsigned · 서명된 message.documentHash\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n=\nHchain · finalized storage\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n거래 원문\n컨트랙트 원문\n전체 흐름\nPDF 발급\nSHA-256\nEIP-712\nregister()\nfinality\n보관·제출\n독립 검증\n발표자 실행 준비\n추가 실행 로그",
+  "altered": "KODA\n블록체인 기반 문서 검증 기술 실증\n공개 체인 읽기 · 지갑 불필요\nKODA\n고객사\n제3자\nEthereum Sepolia 문서 검증정보를 쓰고 읽는 공유 인프라 · 고객 BTC의 위치가 아님\n07 · 제3자 독립 검증\n제출 PDF를 발급서명·확정 기록과 대조\n\n브라우저에서 PDF SHA-256과 EIP-712 서명자 주소를 계산하고, Ethereum RPC에서 거래·영수증·event·finalized records를 조회합니다.\n\n처리 위치 · 제3자 브라우저 + Ethereum 공개 RPC\nKODA\n제출 문서 검증\n제3자 시연 화면\nBTC 잔고 증명서\n\n검증할 PDF를 선택한 뒤 공개 체인 기록과 대조하세요.\n\n발급 원본\n100 BTC\n내용이 다른 파일\n120 BTC\n내 PDF 선택\nBTC잔고_120BTC_변경본.pdf\n공개 체인에서 대조하기\n검증 결과\n제출한 파일이 발급 원본과 달라요\n\n제출 PDF가 발급 원본과 다릅니다.\n\n원본 기준의 시험 발급서명\n원본 서명 확인\n발급 당시 원본과 일치\n불일치\n원본 기준과 차이\n있음\n문서 출처와 원본 동일성만 확인합니다. 실제 BTC 보유량이나 현재 유효성은 증명하지 않습니다.\nLOCAL · 제3자 브라우저\n파일 외부 전송 없음\n✓\nPDF·검증정보 형식 검사\nPDF 헤더·크기·bytes32·uint64·서명 길이 확인\n✓\n제출 PDF 전체 바이트 SHA-256\n0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f\n✓\nEIP-712 서명자 주소 복구\n복원 주소 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\n✓\n영수증의 DocumentRegistered 이벤트 해석·대조\nDocumentRegistered 값 일치\n!\n제출·서명·체인 해시 최종 대조\n제출 PDF 해시만 발급서명·체인 기록과 불일치\nRPC · Ethereum Sepolia\n읽기 전용 · JSON-RPC / eth_call\n✓\n배포 코드·고정 발급자 검증\n런타임 코드·배포 트랜잭션·고정 발급자 일치\n✓\neth_chainId 조회\nchainId 11155111\n✓\neth_getBlockByNumber(finalized)\nfinalized #12072046 · 0x7c34b7f68096ae07f3941b5a1fcc31abbc889e4ed06f51d73e779c71caa9c1f0\n✓\neth_getTransactionByHash · register 입력 대조\n등록 입력과 제출 검증정보 일치\n✓\neth_getTransactionReceipt 조회\nsuccess · block #12071362\n✓\neth_getBlockByNumber · 포함 블록 정식 체인 대조\n0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c\n✓\n등록 블록과 finalized 블록 높이 비교\n등록 블록이 finalized 범위에 포함\n✓\nviem readContract → eth_call authorizedIssuer()\n허용 발급자 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\n✓\nviem readContract → eth_call records(documentId)\nhash 0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842 · issuedAt 1793904567\nCOMPARE · 최종 판정\nfile-mismatch\nHfile · 제출 PDF\n0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f\n≠\nHsigned · 서명된 message.documentHash\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n=\nHchain · finalized storage\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n거래 원문\n컨트랙트 원문\n전체 흐름\nPDF 발급\nSHA-256\nEIP-712\nregister()\nfinality\n보관·제출\n독립 검증\n발표자 실행 준비\n추가 실행 로그",
+  "scenes": [
+    {
+      "scene": "전체 흐름",
+      "heading": "BTC 잔고 증명서 발급부터 제3자 검증까지"
+    },
+    {
+      "scene": "PDF 발급",
+      "heading": "KODA가 BTC 잔고 증명서 PDF를 발급"
+    },
+    {
+      "scene": "SHA-256",
+      "heading": "최종 PDF 전체 바이트에 SHA-256 적용"
+    },
+    {
+      "scene": "EIP-712",
+      "heading": "EIP-712 구조화 데이터에 ECDSA 서명"
+    },
+    {
+      "scene": "register()",
+      "heading": "DocumentRegistry.register(...) 실행"
+    },
+    {
+      "scene": "finality",
+      "heading": "transaction receipt와 finalized 상태를 분리 확인"
+    },
+    {
+      "scene": "보관·제출",
+      "heading": "고객사가 원본 PDF를 보관하고 제3자에게 제출"
+    },
+    {
+      "scene": "독립 검증",
+      "heading": "제출 PDF를 발급서명·확정 기록과 대조"
+    }
+  ]
+}

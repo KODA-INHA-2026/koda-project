@@ -24,3 +24,13 @@
 공개 RPC의 장애·제한은 조회 실패로 표시한다. 운영 KODA 시스템 연동, 실물 BTC 잔고 보증, 외부 JSON 패키지 배포를 완료한 서비스가 아니다.
 
 배포 방식 참고: [GitHub Pages 브랜치 게시](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site), [Vite 하위 경로 배포](https://vite.dev/guide/static-deploy.html#github-pages).
+
+## 게시 완료와 공개 주소 검증
+
+- 구현 소스: [`b688772`](https://github.com/KODA-INHA-2026/koda-project/commit/b688772).
+- 정적 배포: [`994ebff`](https://github.com/KODA-INHA-2026/koda-project/commit/994ebff7bb55028f89b5007318c9c0564a724cb2).
+- [Pages 실행 #9](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42111175659): 2026-11-06 06:21:33 KST `success`. GitHub 파일 동기화에 약 4분이 걸렸으며 기존 경로의 변경은 없다.
+- 배포 전 live 테스트 21/21, 웹 TypeScript 검사와 배포용 빌드 통과. 단일 번들 500 kB 경고는 남아 있다.
+- 공개 HTTPS 주소를 Chrome에서 직접 열어 8개 장면 이동과 한글 PDF 복원을 확인했다.
+- 지갑 연결·새 서명·새 거래 없이 원본은 `match`, 120 BTC 변경본은 `file-mismatch`. 두 결과 모두 현재 조회한 finalized 블록 `12072046`에서 등록 기록을 대조했다.
+- [공개 페이지 관측 기록](public-page-qa.json), [게시 화면](public-page.jpg)을 보존했다. 외부 사용자의 파일 선택·모든 브라우저 조합을 새로 검수한 것은 아니다.
