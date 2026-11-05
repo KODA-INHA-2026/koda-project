@@ -1,0 +1,57 @@
+{
+  "capturedAtUtc": "2026-11-05T18:39:43.351Z",
+  "chainId": 11155111,
+  "network": "Ethereum Sepolia",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "contractAddress": "0xc13083047c0657ff576a972469d982b51e43dcb3",
+  "authorizedIssuer": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+  "deploymentTransaction": "0x2bf8e548990c8e391430c7f2f3344a955e912bf1efc915740617a8d51bb80de7",
+  "deploymentBlock": "12071288",
+  "deploymentBlockHash": "0x04333cb66c762f1988df53ee3d5b44dcfac2aa75fe3163b176612bb28375e8a2",
+  "deploymentBlockTimeUtc": "2026-11-05T18:34:24.000Z",
+  "latestBlock": "12071313",
+  "finalizedBlock": "12071228",
+  "finalizedBlockTimeUtc": "2026-11-05T18:22:00.000Z",
+  "gasUsed": "4292658",
+  "effectiveGasPriceWei": "1500000019",
+  "gasFeeWei": "6438987081560502",
+  "bytecodeKeccak256": "0x2a063cbf3a3b0d93bdd0412a5e09564c70138340b77d8048f0c4df124c8de008",
+  "sourceSha256": "5271a02774144231bb73020011d9da18c53fd03528c0b53cfff88357724bd159",
+  "compiler": {
+    "version": "0.8.28+commit.7893614a.Emscripten.clang",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "cancun"
+  },
+  "openZeppelinVersion": "5.6.1",
+  "checks": {
+    "transactionCreatesContract": true,
+    "zeroEthValue": true,
+    "creationCodeMatches": true,
+    "constructorIssuerMatches": true,
+    "deploymentSenderIsIssuer": true,
+    "runtimeCodeMatches": true,
+    "canonicalIncludedBlock": true,
+    "finalized": false
+  },
+  "receipt": {
+    "blockHash": "0x04333cb66c762f1988df53ee3d5b44dcfac2aa75fe3163b176612bb28375e8a2",
+    "blockNumber": "12071288",
+    "contractAddress": "0xc13083047c0657ff576a972469d982b51e43dcb3",
+    "cumulativeGasUsed": "5633772",
+    "effectiveGasPrice": "1500000019",
+    "from": "0x5994abf9b20319213c384a814f5c804fcf6bf9a7",
+    "gasUsed": "4292658",
+    "logs": [],
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "status": "success",
+    "to": null,
+    "transactionHash": "0x2bf8e548990c8e391430c7f2f3344a955e912bf1efc915740617a8d51bb80de7",
+    "transactionIndex": 7,
+    "type": "eip1559"
+  },
+  "explorerTransaction": "https://sepolia.etherscan.io/tx/0x2bf8e548990c8e391430c7f2f3344a955e912bf1efc915740617a8d51bb80de7",
+  "explorerContract": "https://sepolia.etherscan.io/address/0xc13083047c0657ff576a972469d982b51e43dcb3"
+}

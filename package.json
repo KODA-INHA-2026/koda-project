@@ -37,7 +37,12 @@
     "demo:receipt-files": "npm run build:protocol && node --import tsx scripts/proof/create-receipt-files.ts",
     "demo:proof-files": "npm run build:protocol && tsx scripts/proof/create-files.ts",
     "build:proof": "npm run build:protocol && npm run build -w @koda/web",
-    "build:proof:pages": "npm run build:protocol && npm run build -w @koda/web -- --base=/koda-project/"
+    "build:proof:pages": "npm run build:protocol && npm run build -w @koda/web -- --base=/koda-project/",
+    "live:compile": "node scripts/live/compile.mjs",
+    "live:dev": "npm run live:compile && vite apps/web --config apps/web/vite.live.config.ts",
+    "live:build": "npm run live:compile && tsc --noEmit -p apps/web/tsconfig.json && vite build apps/web --config apps/web/vite.live.config.ts",
+    "live:test": "npm run live:compile && tsx --test tests/live/*.test.ts",
+    "live:build:pages": "npm run live:build -- --base=/koda-project/sepolia-20261106/"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

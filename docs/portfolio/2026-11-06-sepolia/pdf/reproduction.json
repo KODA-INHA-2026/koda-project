@@ -1,0 +1,10 @@
+{
+  "createdAtUtc": "2026-11-05T18:56:22.494Z",
+  "method": "Deterministic reproduction from public registration documentId/issuedAt and the demo PDF generator, not a downloaded browser file.",
+  "registrationTransaction": "0x6c0d68e1f292a3ba9322e733291c0b2fb8da4fbbfe505d0466613438b0c2d1e8",
+  "originalSha256": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+  "registeredSha256": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+  "exactRegisteredHashMatch": true,
+  "alteredSha256": "0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f",
+  "customer": "한울테크홀딩스㈜ (historical registered fixture)"
+}

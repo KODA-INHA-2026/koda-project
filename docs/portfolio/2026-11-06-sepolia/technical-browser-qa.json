@@ -1,0 +1,279 @@
+{
+  "capturedAtUtc": "2026-11-05T20:20:33.244Z",
+  "url": "http://127.0.0.1:5190/live.html",
+  "original": {
+    "comparison": "COMPARE · 최종 판정matchHfile · 제출 PDF0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842=Hsigned · 서명된 message.documentHash0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842=Hchain · finalized storage0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+    "result": "검증 결과발급 원본과 일치해요제출 PDF가 발급 원본 및 확정된 체인 기록과 일치합니다.원본 기준의 시험 발급서명확인발급 당시 원본과 일치일치원본 기준과 차이없음",
+    "trace": [
+      {
+        "state": "is-done",
+        "text": "✓PDF·검증정보 형식 검사PDF 헤더·크기·bytes32·uint64·서명 길이 확인"
+      },
+      {
+        "state": "is-done",
+        "text": "✓제출 PDF 전체 바이트 SHA-2560x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842"
+      },
+      {
+        "state": "is-done",
+        "text": "✓EIP-712 서명자 주소 복구복원 주소 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+      },
+      {
+        "state": "is-done",
+        "text": "✓영수증의 DocumentRegistered 이벤트 해석·대조DocumentRegistered 값 일치"
+      },
+      {
+        "state": "is-done",
+        "text": "✓제출·서명·체인 해시 최종 대조Hfile = message.documentHash = records[documentId].documentHash"
+      },
+      {
+        "state": "is-done",
+        "text": "✓배포 코드·고정 발급자 검증런타임 코드·배포 트랜잭션·고정 발급자 일치"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_chainId 조회chainId 11155111"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getBlockByNumber(finalized)finalized #12071669 · 0x574ef71968bab2a6c075fa63a448346bba26344ca80543cb48546d335018bbd7"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getTransactionByHash · register 입력 대조등록 입력과 제출 검증정보 일치"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getTransactionReceipt 조회success · block #12071362"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getBlockByNumber · 포함 블록 정식 체인 대조0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c"
+      },
+      {
+        "state": "is-done",
+        "text": "✓등록 블록과 finalized 블록 높이 비교등록 블록이 finalized 범위에 포함"
+      },
+      {
+        "state": "is-done",
+        "text": "✓viem readContract → eth_call authorizedIssuer()허용 발급자 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+      },
+      {
+        "state": "is-done",
+        "text": "✓viem readContract → eth_call records(documentId)hash 0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842 · issuedAt 1793904567"
+      }
+    ]
+  },
+  "altered": {
+    "comparison": "COMPARE · 최종 판정file-mismatchHfile · 제출 PDF0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f≠Hsigned · 서명된 message.documentHash0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842=Hchain · finalized storage0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+    "result": "검증 결과제출한 파일이 발급 원본과 달라요제출 PDF가 발급 원본과 다릅니다.원본 기준의 시험 발급서명원본 서명 확인발급 당시 원본과 일치불일치원본 기준과 차이있음",
+    "trace": [
+      {
+        "state": "is-done",
+        "text": "✓PDF·검증정보 형식 검사PDF 헤더·크기·bytes32·uint64·서명 길이 확인"
+      },
+      {
+        "state": "is-done",
+        "text": "✓제출 PDF 전체 바이트 SHA-2560xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f"
+      },
+      {
+        "state": "is-done",
+        "text": "✓EIP-712 서명자 주소 복구복원 주소 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+      },
+      {
+        "state": "is-done",
+        "text": "✓영수증의 DocumentRegistered 이벤트 해석·대조DocumentRegistered 값 일치"
+      },
+      {
+        "state": "is-failed",
+        "text": "!제출·서명·체인 해시 최종 대조제출 PDF 해시만 발급서명·체인 기록과 불일치"
+      },
+      {
+        "state": "is-done",
+        "text": "✓배포 코드·고정 발급자 검증런타임 코드·배포 트랜잭션·고정 발급자 일치"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_chainId 조회chainId 11155111"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getBlockByNumber(finalized)finalized #12071669 · 0x574ef71968bab2a6c075fa63a448346bba26344ca80543cb48546d335018bbd7"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getTransactionByHash · register 입력 대조등록 입력과 제출 검증정보 일치"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getTransactionReceipt 조회success · block #12071362"
+      },
+      {
+        "state": "is-done",
+        "text": "✓eth_getBlockByNumber · 포함 블록 정식 체인 대조0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c"
+      },
+      {
+        "state": "is-done",
+        "text": "✓등록 블록과 finalized 블록 높이 비교등록 블록이 finalized 범위에 포함"
+      },
+      {
+        "state": "is-done",
+        "text": "✓viem readContract → eth_call authorizedIssuer()허용 발급자 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+      },
+      {
+        "state": "is-done",
+        "text": "✓viem readContract → eth_call records(documentId)hash 0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842 · issuedAt 1793904567"
+      }
+    ]
+  },
+  "mobile": [
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "BTC 잔고 증명서 발급부터 제3자 검증까지",
+      "viewport": 390
+    },
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "KODA가 BTC 잔고 증명서 PDF를 발급",
+      "viewport": 390
+    },
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "최종 PDF 전체 바이트에 SHA-256 적용",
+      "viewport": 390
+    },
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "EIP-712 구조화 데이터에 ECDSA 서명",
+      "viewport": 390
+    },
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "DocumentRegistry.register(...) 실행",
+      "viewport": 390
+    },
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "transaction receipt와 finalized 상태를 분리 확인",
+      "viewport": 390
+    },
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "고객사가 원본 PDF를 보관하고 제3자에게 제출",
+      "viewport": 390
+    },
+    {
+      "clipped": [],
+      "documentWidth": 375,
+      "infrastructureVisible": true,
+      "scene": "제출 PDF를 발급서명·확정 기록과 대조",
+      "viewport": 390
+    }
+  ],
+  "desktop": [
+    {
+      "documentWidth": 1263,
+      "scene": "BTC 잔고 증명서 발급부터 제3자 검증까지",
+      "viewport": 1278
+    },
+    {
+      "documentWidth": 1263,
+      "scene": "KODA가 BTC 잔고 증명서 PDF를 발급",
+      "viewport": 1278
+    },
+    {
+      "documentWidth": 1263,
+      "scene": "최종 PDF 전체 바이트에 SHA-256 적용",
+      "viewport": 1278
+    },
+    {
+      "documentWidth": 1263,
+      "scene": "EIP-712 구조화 데이터에 ECDSA 서명",
+      "viewport": 1278
+    },
+    {
+      "documentWidth": 1263,
+      "scene": "DocumentRegistry.register(...) 실행",
+      "viewport": 1278
+    },
+    {
+      "documentWidth": 1263,
+      "scene": "transaction receipt와 finalized 상태를 분리 확인",
+      "viewport": 1278
+    },
+    {
+      "documentWidth": 1263,
+      "scene": "고객사가 원본 PDF를 보관하고 제3자에게 제출",
+      "viewport": 1278
+    },
+    {
+      "documentWidth": 1263,
+      "scene": "제출 PDF를 발급서명·확정 기록과 대조",
+      "viewport": 1278
+    }
+  ],
+  "playback": {
+    "classes": "kp-root scene-contract mode-recorded is-paused",
+    "scene": "DocumentRegistry.register(...) 실행"
+  },
+  "keyboard": {
+    "activeControl": "다음 장면",
+    "scene": "transaction receipt와 finalized 상태를 분리 확인"
+  },
+  "consoleWarnings": [
+    {
+      "level": "warn",
+      "message": "MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added. Use emitter.setMaxListeners() to increase limit",
+      "timestamp": "2026-11-05T20:19:02.773Z",
+      "url": "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/scripts/contentscript.js"
+    },
+    {
+      "level": "warn",
+      "message": "MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 end listeners added. Use emitter.setMaxListeners() to increase limit",
+      "timestamp": "2026-11-05T20:19:02.773Z",
+      "url": "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/scripts/contentscript.js"
+    },
+    {
+      "level": "warn",
+      "message": "ObjectMultiplex - orphaned data for stream \"app-init-liveness\"",
+      "timestamp": "2026-11-05T20:19:02.773Z",
+      "url": "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/scripts/contentscript.js"
+    },
+    {
+      "level": "warn",
+      "message": "ObjectMultiplex - orphaned data for stream \"app-init-liveness\"",
+      "timestamp": "2026-11-05T20:19:02.773Z",
+      "url": "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/scripts/contentscript.js"
+    },
+    {
+      "level": "warn",
+      "message": "ObjectMultiplex - orphaned data for stream \"background-liveness\"",
+      "timestamp": "2026-11-05T20:19:02.773Z",
+      "url": "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/scripts/contentscript.js"
+    },
+    {
+      "level": "warn",
+      "message": "ObjectMultiplex - orphaned data for stream \"background-liveness\"",
+      "timestamp": "2026-11-05T20:19:02.773Z",
+      "url": "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/scripts/contentscript.js"
+    }
+  ],
+  "limitations": [
+    "Automated file chooser could not set local file because Chrome extension file URL permission is disabled; no permission changed.",
+    "Reduced motion CSS and manual controls reviewed in code; OS preference and screen-reader session not exercised.",
+    "No new wallet signature or transaction requested. Historical registered record was queried."
+  ]
+}
