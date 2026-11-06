@@ -23,7 +23,7 @@ const TRACE_LABELS: Record<VerificationTraceId, string> = {
   input: '제출 PDF 형식 확인',
   sha256: '제출 PDF 해시 계산',
   signature: '발급서명 복구',
-  'chain-id': 'Sepolia 연결 확인',
+  'chain-id': '조회 체인 ID 확인',
   'finalized-block': '확정 블록 조회',
   'transaction-input': '등록 거래 조회',
   receipt: '거래 영수증 조회',

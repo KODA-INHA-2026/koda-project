@@ -2,6 +2,7 @@
 
 ## Source of truth
 - Status: Active. Last refreshed: 2026-11-06.
+- Refinement baseline: the user accepted the architecture-led version as the draft to improve. Primary architecture and narrative labels use Ethereum, the planned document registry chain. Identify Sepolia separately as the actual test execution environment; preserve the real chain ID, RPC, wallet checks and explorer destinations. Never imply that existing test transactions were executed on Ethereum mainnet.
 - Surface: `/live.html`, the BTC document verification presentation and working Sepolia verifier.
 - Latest user correction (2026-11-06, after first publication): the dense technical version is tiring and loses the point. Keep the overall architecture visible beside a focused scene, activate the current actor/location/data path, and make the blockchain's role and added value visible through operations. Technical names and long hashes alone do not explain the system.
 - Authority: user's latest directions, the revised 윤다현 proposal, CEO/COO scope. Older USDC demos are not functional or visual authority.
@@ -72,6 +73,7 @@
 ## Content voice
 - Use concise accurate Korean labels for responsibility and purpose; retain precise technical language for computation and implementation. Prefer “SHA-256 해시 계산”, “EIP-712 구조화 데이터 서명”, “register(...)”, “eth_call”, “ECDSA 서명자 복구” over replacing these with only metaphors such as “문서 지문”.
 - Technical labels stay accurate: SHA-256, EIP-712 / ECDSA secp256k1, Solidity / EVM, JSON-RPC / eth_call / finalized.
+- Network wording: primary map/block labels say Ethereum; an execution note says Sepolia testnet. Real block numbers and explorer links are test execution evidence. The signed domain remains chainId 11155111 and is shown accurately in technical details.
 - Three checks: issued by the configured issuer; matches issuance original; no difference relative to that original. Test issuer ≠ official KODA identity. Do not imply all intermediate edits or current validity are proven.
 - New fictional customer: 인하테크홀딩스㈜. The already registered historical PDF remains 한울테크홀딩스㈜; changing it would change its hash.
 

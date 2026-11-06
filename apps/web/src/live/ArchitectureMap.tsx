@@ -65,7 +65,7 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
       <g className={`kam-chain${ethereumActive ? ' is-active' : ''}`} transform="translate(42 225)">
         <rect className="kam-chain-boundary" width="336" height="128" rx="4" />
         <text className="kam-kicker" x="16" y="25">공개 검증 인프라</text>
-        <text className="kam-chain-title" x="16" y="50">Ethereum Sepolia</text>
+        <text className="kam-chain-title" x="16" y="50">Ethereum</text>
         <text className="kam-chain-sub" x="16" y="70">고객 BTC가 올라가는 체인이 아님</text>
         <text className="kam-block-label" x="260" y="20" textAnchor="middle">블록 구조 · 개념도</text>
         <g className="kam-blocks" transform="translate(194 24)"><rect x="0" y="8" width="36" height="36" /><path d="M36 26h12" /><rect x="48" y="8" width="36" height="36" /><path d="M84 26h12" /><rect x="96" y="8" width="36" height="36" /></g>
