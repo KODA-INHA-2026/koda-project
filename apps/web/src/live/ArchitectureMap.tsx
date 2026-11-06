@@ -10,26 +10,41 @@ export interface ArchitectureMapProps {
   trace?: VerificationTraceEvent[];
   result?: VerificationResult;
   receiptBlock?: string;
+  review?: { label: string; detail: string; stepId: string; state?: string };
 }
 
 function actorClass(active: boolean) { return `kam-actor${active ? ' is-active' : ''}`; }
 function pathClass(active: boolean, complete = false) { return `kam-path${active ? ' is-active' : ''}${complete ? ' is-complete' : ''}`; }
 
+const REVIEW_CHAIN_STEPS = new Set([
+  'deployment-validation', 'chain-id', 'finalized-block', 'transaction-input', 'receipt',
+  'canonical-block', 'registration-event', 'finality', 'authorized-issuer', 'record',
+]);
+
 export function ArchitectureMap(props: ArchitectureMapProps) {
-  const state = architectureMapState(props);
+  const currentState = architectureMapState(props);
+  const reviewStopped = props.review && ['failure', 'pending', 'stopped'].includes(props.review.state ?? '');
+  const state = props.review ? {
+    focus: REVIEW_CHAIN_STEPS.has(props.review.stepId)
+      ? reviewStopped ? 'query' as const : 'response' as const
+      : 'third-party' as const,
+    label: `처리 기록 다시 보기 · ${props.review.label}`,
+    detail: props.review.detail,
+    chainReadComplete: false,
+  } : currentState;
   const resultComplete = props.scene === 'verify' && state.chainReadComplete;
   const kodaActive = ['koda', 'write'].includes(state.focus);
   const customerActive = state.focus === 'handoff';
   const thirdActive = ['third-party', 'query', 'response'].includes(state.focus);
   const ethereumActive = ['ethereum', 'write', 'query', 'response'].includes(state.focus);
 
-  return <aside className="kam" aria-label={`전체 아키텍처. 현재 위치: ${state.label}. ${state.detail}`}>
+  return <aside className={`kam${props.review ? ' is-review' : ''}`} aria-label={`전체 아키텍처. 현재 위치: ${state.label}. ${state.detail}`}>
     <header className="kam-current">
-      <span>전체 구조에서 현재 위치</span>
+      <span>{props.review ? '실행한 처리 기록' : '전체 구조에서 현재 위치'}</span>
       <strong>{state.label}</strong>
       <p>{state.detail}</p>
     </header>
-    <svg className="kam-diagram" viewBox="0 0 420 390" role="img" aria-labelledby="kam-title kam-desc">
+    <svg className="kam-diagram" viewBox="0 0 420 435" role="img" aria-labelledby="kam-title kam-desc">
       <title id="kam-title">KODA 문서 검증 전체 아키텍처</title>
       <desc id="kam-desc">KODA가 만든 PDF는 고객사를 거쳐 제3자에게 전달되고, KODA는 문서 검증정보를 Ethereum에 기록하며 제3자는 공개 기록을 다시 조회합니다.</desc>
       <defs>
@@ -50,17 +65,17 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
 
       <path className={pathClass(state.focus === 'handoff')} d="M130 79 H154" markerEnd="url(#kam-arrow)" />
       <path className={pathClass(state.focus === 'handoff')} d="M266 79 H290" markerEnd="url(#kam-arrow)" />
-      <text className="kam-route-label" x="210" y="144" textAnchor="middle">PDF 원본 전달 · 체인 밖</text>
+      <text className="kam-route-label" x="210" y="144" textAnchor="middle">PDF 전달</text>
 
-      <path className={pathClass(state.focus === 'write')} d="M74 118 V214 C74 233 96 242 122 242" markerEnd="url(#kam-arrow-active)" />
-      <text className={`kam-route-label${state.focus === 'write' ? ' is-active' : ''}`} x="22" y="173">register(...)</text>
-      <text className="kam-route-note" x="22" y="191">ID · 해시 · 발급시각</text>
+      <path className={pathClass(state.focus === 'write')} d="M74 118 V225" markerEnd="url(#kam-arrow-active)" />
+      <text className={`kam-route-label${state.focus === 'write' ? ' is-active' : ''}`} x="90" y="173">register(...)</text>
+      <text className="kam-route-note" x="90" y="191">ID · 해시<tspan x="90" dy="16">발급시각</tspan></text>
 
-      <path className={pathClass(state.focus === 'query', resultComplete)} d="M346 118 V186 C346 210 321 222 296 230" markerEnd="url(#kam-arrow-active)" />
+      <path className={pathClass(state.focus === 'query', resultComplete)} d="M346 118 V225" markerEnd="url(#kam-arrow-active)" />
       <text className={`kam-route-label${state.focus === 'query' ? ' is-active' : ''}`} x="321" y="173" textAnchor="end">공개 조회</text>
       <text className="kam-route-note" x="321" y="191" textAnchor="end">JSON-RPC · eth_call</text>
-      <path className={pathClass(state.focus === 'response', resultComplete)} d="M302 259 C332 250 365 230 365 195 V120" markerEnd="url(#kam-arrow-active)" />
-      <text className={`kam-route-label${state.focus === 'response' ? ' is-active' : ''}`} x="399" y="215" textAnchor="end">조회 응답</text>
+      <path className={pathClass(state.focus === 'response', resultComplete)} d="M378 270 H402 V132 H378 V118" markerEnd="url(#kam-arrow-active)" />
+      <text className={`kam-route-label${state.focus === 'response' ? ' is-active' : ''}`} x="397" y="211" textAnchor="end">조회 응답</text>
 
       <g className={`kam-chain${ethereumActive ? ' is-active' : ''}`} transform="translate(42 225)">
         <rect className="kam-chain-boundary" width="336" height="128" rx="4" />
@@ -74,8 +89,10 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
         <text className="kam-record" x="16" y="118">records[documentId] → hash · issuedAt</text>
       </g>
 
-      <g className="kam-boundary" transform="translate(18 365)">
-        <text x="0" y="14">체인 밖</text><text className="kam-boundary-value" x="58" y="14">PDF 원문 · 고객명 · BTC 수량</text>
+      <g className="kam-scope" transform="translate(18 369)">
+        <text className="kam-scope-row" x="0" y="14"><tspan>증명 대상</tspan><tspan x="86">Bitcoin 네트워크의 BTC</tspan></text>
+        <text className="kam-scope-row" x="0" y="37">Ethereum에는 문서 검증정보만 기록</text>
+        <text className="kam-scope-note" x="0" y="59">PDF 원문 · 고객명 · 문서에 기재된 잔고는 미등록</text>
       </g>
     </svg>
   </aside>;

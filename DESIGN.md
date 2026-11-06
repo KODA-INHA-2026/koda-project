@@ -40,6 +40,8 @@
 - Actor/processing location stays visible, with current actor emphasized.
 - Visual continuity: the exact PDF becomes a hash; hash plus ID/time becomes signed typed data; contract checks lead to a transaction/block; the original is then compared with a submitted file.
 - Real data and state precede spectacle. Replay is always labeled; playback time is never presented as network execution time.
+- After verification, show the result immediately and offer a 3.5-second-per-step review of the observed trace. Label this as recorded review, allow pause/manual selection, make no new RPC requests, and never review unexecuted steps. Reduced motion uses manual selection only.
+- Map scope notes distinguish the native BTC being certified on Bitcoin from document verification information recorded on Ethereum. The certificate's balance field is not the asset itself. Use distinct orthogonal registration/query/response paths without implying special meaning in their bends.
 
 ## Visual language
 - Our tokens, not claimed official Toss values: existing KODA forest green (#006f4c), mint, pale neutral technical canvas, opaque white third-party surface, green action/accent, muted green-grays, restrained red/orange mismatch. User explicitly rejects adopting the Toss blue/black palette. Color is the exception to the requested Toss principles.

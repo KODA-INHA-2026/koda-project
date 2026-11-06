@@ -1,0 +1,10 @@
+{
+  "base": "http://127.0.0.1:5190/live.html",
+  "findings": [
+    "Original: match immediately; 3.5s recorded steps, pause/select/end; no extra RPC during review.",
+    "File selection clears stale review; altered PDF mismatches; reduced motion uses keyboard/manual review only.",
+    "Reverification and scene change clear the previous active review.",
+    "Injected RPC failure: only the attempted group is reviewable; static query location, no response/completion highlight.",
+    "All eight scenes at 1280px/390px: no page overflow or browser errors. No wallet requests."
+  ]
+}

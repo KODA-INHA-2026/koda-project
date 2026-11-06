@@ -4,6 +4,24 @@ import { ArchitectureMap, type SceneId } from './ArchitectureMap';
 import type { LiveStage, PresentationProps } from './presentation-types';
 import './presentation.css';
 import { verificationProgress } from './verification-progress';
+import type { VerificationResult } from './verification';
+
+const REVIEW_INTERVAL = 3_500;
+const REVIEW_EXPLANATIONS: Record<string, string> = {
+  deployment: 'Ethereum에서 배포 코드와 발급자 설정을 읽어, 조회할 컨트랙트가 맞는지 확인하는 단계입니다.',
+  hash: '제3자의 브라우저에서 제출 PDF 전체 바이트의 SHA-256 해시를 계산하는 단계입니다.',
+  signature: '브라우저에서 EIP-712 서명으로부터 발급자 주소를 복구해, 미리 정한 주소와 대조하는 단계입니다.',
+  chain: 'Ethereum에서 등록 거래와 최종 확정을 확인하고, 같은 확정 블록의 발급자·문서 기록을 읽는 단계입니다.',
+  comparison: '브라우저에서 제출 PDF·발급서명 데이터·Ethereum 기록의 해시를 대조하는 단계입니다.',
+};
+type ReviewControls = {
+  index: number;
+  playing: boolean;
+  reducedMotion: boolean;
+  steps: ReturnType<typeof verificationProgress>;
+  select: (index: number) => void;
+  toggle: () => void;
+};
 
 const SCENES: { id: SceneId; label: string }[] = [
   { id: 'intro', label: '전체 흐름' }, { id: 'pdf', label: '증명서 발급' },
@@ -72,8 +90,10 @@ function resultTitle(status?: string) {
   const labels: Record<string, string> = { match: '발급 원본과 일치해요', 'file-mismatch': '발급 원본과 달라요', 'signature-mismatch': '발급서명을 확인할 수 없어요', 'not-registered': '확정된 등록 기록이 없어요', pending: '최종 확정을 기다리고 있어요', unavailable: '검증에 필요한 정보를 확인하지 못했어요', invalid: '문서와 검증정보를 확인해 주세요' };
   return status ? labels[status] ?? status : '발급 원본과 대조해 보세요';
 }
-function VerifierScene(props: PresentationProps) {
+function VerifierScene(props: PresentationProps & { review?: ReviewControls }) {
   const { result, busy, verificationTrace: trace = [] } = props;
+  const review = props.review;
+  const reviewedStep = review?.steps[review.index];
   const active = trace.find(event => event.state === 'running') ?? trace.at(-1);
   const tone = result?.status === 'match' ? 'good' : ['file-mismatch', 'signature-mismatch', 'invalid'].includes(result?.status ?? '') ? 'bad' : 'neutral';
   const unresolved = !result ? '검증 전' : result.status === 'pending' ? '확정 대기' : '미확인';
@@ -112,14 +132,20 @@ function VerifierScene(props: PresentationProps) {
         <footer>시험 발급자로 시연합니다. 공식 KODA 신원·실제 BTC 잔고를 인증하지 않습니다.</footer>
       </section>
       <section className="kp-verify-process" aria-label="문서 검증 기술 처리">
-        <span className="kp-operation-label">검증 과정</span>
-        <ol>{verificationProgress(trace, busy, result).map((item, i) => <li className={`is-${item.state}`} key={item.id} data-step={item.id}>
-          <span aria-hidden="true">{item.state === 'success' ? <Icon name="check" /> : i + 1}</span>
+        <span className="kp-operation-label">{review ? '처리 기록 다시 보기' : '검증 과정'}</span>
+        {review && <div className="kp-review-controls" aria-label="처리 기록 재생">
+          <button aria-label="이전 처리 기록" disabled={review.index === 0} onClick={() => review.select(review.index - 1)}><Icon name="back" /></button>
+          <button aria-label={review.playing ? '처리 기록 일시정지' : '처리 기록 재생'} disabled={review.reducedMotion || review.steps.length < 2} onClick={review.toggle}><Icon name={review.playing ? 'pause' : 'play'} /></button>
+          <button aria-label="다음 처리 기록" disabled={review.index === review.steps.length - 1} onClick={() => review.select(review.index + 1)}><Icon name="arrow" /></button>
+          <span>{review.index + 1} / {review.steps.length}<small>{review.playing ? '3.5초씩 보기' : '직접 선택해서 보기'}</small></span>
+        </div>}
+        <ol>{verificationProgress(trace, busy, result).map((item, i) => <li className={`is-${item.state}${reviewedStep?.id === item.id ? ' is-reviewing' : ''}`} key={item.id} data-step={item.id}>
+          <button className="kp-step-select" aria-label={`${item.title} 처리 기록 보기`} aria-current={reviewedStep?.id === item.id ? 'step' : undefined} disabled={!review || item.state === 'idle'} onClick={() => review?.select(review.steps.findIndex(step => step.id === item.id))}>{item.state === 'success' ? <Icon name="check" /> : i + 1}</button>
           <div><b>{item.title}</b><small>{item.tech}</small></div><em>{item.statusLabel}</em>
         </li>)}</ol>
-        <div className="kp-now" role="status"><span>{busy ? '지금 실행 중' : result ? '이번 검증 결과' : '검증 대기'}</span><b>{busy ? active?.operation ?? '검증 준비' : result ? resultTitle(result.status) : '문서를 선택하고 검증해 주세요'}</b></div>
+        <div className="kp-now" role="status"><span>{reviewedStep ? `실행 종료 · 이 단계의 결과: ${reviewedStep.statusLabel}` : busy ? '지금 실행 중' : result ? '이번 검증 결과' : '검증 대기'}</span><b>{reviewedStep ? REVIEW_EXPLANATIONS[reviewedStep.id] : busy ? active?.operation ?? '검증 준비' : result ? resultTitle(result.status) : '문서를 선택하고 검증해 주세요'}</b></div>
         <div className="kp-signer-result"><span>서명에서 복구한 발급자</span><code>{result?.recoveredAddress ? short(result.recoveredAddress) : '서명 확인 전'}</code></div>
-        <p className="kp-rpc-note">지갑 연결 없이 PublicNode로 조회합니다.<br />PDF는 브라우저 안에서 처리합니다.</p>
+        <p className="kp-rpc-note">{review && <>실제 실행은 끝났습니다. 기록을 다시 보는 동안 추가 조회는 하지 않습니다.<br /></>}지갑 연결 없이 PublicNode로 조회합니다. PDF는 브라우저 안에서 처리합니다.</p>
       </section>
     </div>
     <div className={`kp-hash-ledger is-${tone}`} aria-label="세 해시 대조 결과">
@@ -141,7 +167,7 @@ function VerifierScene(props: PresentationProps) {
   </Frame>;
 }
 
-function Scene({ id, props }: { id: SceneId; props: PresentationProps }) {
+function Scene({ id, props, review }: { id: SceneId; props: PresentationProps; review?: ReviewControls }) {
   if (id === 'intro') return <IntroScene {...props} />;
   if (id === 'pdf') return <PdfScene {...props} />;
   if (id === 'hash') return <HashScene {...props} />;
@@ -149,7 +175,7 @@ function Scene({ id, props }: { id: SceneId; props: PresentationProps }) {
   if (id === 'contract') return <ContractScene {...props} />;
   if (id === 'block') return <BlockScene {...props} />;
   if (id === 'handoff') return <HandoffScene {...props} />;
-  return <VerifierScene {...props} />;
+  return <VerifierScene {...props} review={review} />;
 }
 export function Presentation(props: PresentationProps) {
   const [index, setIndex] = useState(Math.max(0, SCENES.findIndex(item => item.id === LIVE_SCENE[props.stage])));
@@ -159,11 +185,32 @@ export function Presentation(props: PresentationProps) {
   useEffect(() => { const media = window.matchMedia('(prefers-reduced-motion: reduce)'); const update = () => { setReducedMotion(media.matches); if (media.matches) setPlaying(false); }; media.addEventListener('change', update); return () => media.removeEventListener('change', update); }, []);
   const current = props.mode === 'live' ? liveInspect ? SCENES.length - 1 : SCENES.findIndex(item => item.id === LIVE_SCENE[props.stage]) : index;
   const safeIndex = Math.max(0, current); const scene = SCENES[safeIndex]!;
+  const [reviewState, setReviewState] = useState<{ result: VerificationResult; index: number; playing: boolean }>();
+  const reviewSteps = verificationProgress(props.verificationTrace ?? [], false, props.result).filter(step => step.state !== 'idle');
+  const canReview = scene.id === 'verify' && !props.busy && Boolean(props.result) && reviewSteps.length > 0;
+  useEffect(() => {
+    setReviewState(canReview && props.result ? { result: props.result, index: 0, playing: !reducedMotion && reviewSteps.length > 1 } : undefined);
+  }, [canReview, props.result, reducedMotion]);
+  const activeReview = canReview && reviewState?.result === props.result ? reviewState : undefined;
+  useEffect(() => {
+    if (!activeReview?.playing || reducedMotion) return;
+    const timer = window.setTimeout(() => setReviewState(value => value && value.result === props.result
+      ? value.index < reviewSteps.length - 1 ? { ...value, index: value.index + 1 } : { ...value, playing: false }
+      : value), REVIEW_INTERVAL);
+    return () => window.clearTimeout(timer);
+  }, [activeReview, props.result, reducedMotion, reviewSteps.length]);
+  const review: ReviewControls | undefined = activeReview ? {
+    ...activeReview, reducedMotion, steps: reviewSteps,
+    select: next => setReviewState(value => value ? { ...value, index: Math.max(0, Math.min(next, reviewSteps.length - 1)), playing: false } : value),
+    toggle: () => setReviewState(value => value ? { ...value, index: !value.playing && value.index === reviewSteps.length - 1 ? 0 : value.index, playing: !value.playing } : value),
+  } : undefined;
+  const reviewedStep = review?.steps[review.index];
+  const mapReview = reviewedStep ? { label: reviewedStep.title, detail: `${REVIEW_EXPLANATIONS[reviewedStep.id]} 결과: ${reviewedStep.statusLabel}`, stepId: reviewedStep.ids[0]!, state: reviewedStep.state } : undefined;
   useEffect(() => { if (props.mode !== 'live') return; const next = SCENES.findIndex(item => item.id === LIVE_SCENE[props.stage]); if (next >= 0) setIndex(next); if (['verify', 'finalized', 'result'].includes(props.stage)) setLiveInspect(true); else if (props.stage !== 'included') setLiveInspect(false); }, [props.mode, props.stage]);
   useEffect(() => { if (props.mode !== 'recorded' || !playing || reducedMotion || index >= SCENES.length - 1) return; const timer = window.setTimeout(() => setIndex(value => value + 1), 7_500); return () => window.clearTimeout(timer); }, [index, playing, props.mode, reducedMotion]);
   useEffect(() => { if (index === SCENES.length - 1) setPlaying(false); }, [index]);
   const go = (next: number) => { setPlaying(false); setIndex(Math.min(Math.max(next, 0), SCENES.length - 1)); };
   const togglePlayback = () => { if (safeIndex === SCENES.length - 1) { setIndex(0); setPlaying(true); } else setPlaying(value => !value); };
   const jump = () => { setPlaying(false); if (props.mode === 'live') setLiveInspect(true); else setIndex(SCENES.length - 1); };
-  return <main className={`kp-root scene-${scene.id}${playing ? ' is-playing' : ''}`}><header className="kp-header"><div className="kp-brand"><strong>KODA</strong><span>증빙 전달·검증 기술 데모</span></div><div className="kp-mode"><i />{scene.id === 'verify' ? props.busy ? '실시간 조회·검증 중' : props.result ? '현재 조회 결과 · 지갑 불필요' : '검증 대기 · 지갑 불필요' : props.mode === 'recorded' ? '실제 등록 기록 · 처리 과정 다시 보기' : '새 문서 실제 처리 중'}</div></header><div className="kp-workspace"><aside className="kp-map-panel"><header><span>전체 아키텍처</span><b>발급부터 제3자 검증까지</b></header><ArchitectureMap scene={scene.id} busy={props.busy} trace={props.verificationTrace} result={props.result} receiptBlock={props.receiptBlock} /><p className="kp-map-foot">데모 실행: 브라우저·MetaMask에서 발급자 처리를 수행합니다. 실제 KODA 시스템과는 연동하지 않았습니다.</p></aside><section className="kp-stage" aria-label="현재 처리 장면"><Scene key={scene.id} id={scene.id} props={props} />{props.error && <p className="kp-error" role="alert">{props.error}</p>}</section></div><nav className="kp-transport" aria-label="발표 장면 이동"><div className="kp-player"><button aria-label={liveInspect ? '현재 처리 장면으로 돌아가기' : '이전 장면'} disabled={props.mode === 'live' ? !liveInspect : safeIndex === 0} onClick={() => props.mode === 'live' ? setLiveInspect(false) : go(safeIndex - 1)}><Icon name="back" /></button><button aria-label={safeIndex === SCENES.length - 1 && !playing ? '처음부터 다시 재생' : playing ? '재생 일시정지' : '기록 재생'} disabled={props.mode === 'live' || reducedMotion || !props.proof} onClick={togglePlayback}><Icon name={playing ? 'pause' : 'play'} /></button><span>{String(safeIndex + 1).padStart(2, '0')} / 08</span></div><ol>{SCENES.map((item, i) => <li key={item.id}><button disabled={props.mode === 'live'} aria-current={i === safeIndex ? 'step' : undefined} onClick={() => go(i)}><i />{item.label}</button></li>)}</ol><button className="kp-next" aria-label="다음 장면" disabled={safeIndex === SCENES.length - 1 || props.mode === 'live'} onClick={() => go(safeIndex + 1)}><Icon name="arrow" /></button>{scene.id !== 'verify' && props.canVerify && <button className="kp-jump" disabled={props.busy} onClick={jump}>직접 검증하기</button>}</nav><p className="kp-environment">기획 체인 <b>Ethereum</b><span aria-hidden="true"> · </span>실행 환경 <b>Sepolia 테스트넷</b></p><div className="kp-secondary"><details><summary>발표자 실행 준비</summary>{props.setup}</details><details><summary>실행 알림·전체 로그</summary>{props.notice && <p role="status">{props.notice}</p>}{props.evidence}</details></div></main>;
+  return <main className={`kp-root scene-${scene.id}${playing ? ' is-playing' : ''}`}><header className="kp-header"><div className="kp-brand"><strong>KODA</strong><span>증빙 전달·검증 기술 데모</span></div><div className="kp-mode"><i />{scene.id === 'verify' ? props.busy ? '실시간 조회·검증 중' : props.result ? '현재 조회 결과 · 지갑 불필요' : '검증 대기 · 지갑 불필요' : props.mode === 'recorded' ? '실제 등록 기록 · 처리 과정 다시 보기' : '새 문서 실제 처리 중'}</div></header><div className="kp-workspace"><aside className="kp-map-panel"><header><span>전체 아키텍처</span><b>발급부터 제3자 검증까지</b></header><ArchitectureMap scene={scene.id} busy={props.busy} trace={props.verificationTrace} result={props.result} receiptBlock={props.receiptBlock} review={mapReview} /><p className="kp-map-foot">데모 실행: 브라우저·MetaMask에서 발급자 처리를 수행합니다. 실제 KODA 시스템과는 연동하지 않았습니다.</p></aside><section className="kp-stage" aria-label="현재 처리 장면"><Scene key={scene.id} id={scene.id} props={props} review={review} />{props.error && <p className="kp-error" role="alert">{props.error}</p>}</section></div><nav className="kp-transport" aria-label="발표 장면 이동"><div className="kp-player"><button aria-label={liveInspect ? '현재 처리 장면으로 돌아가기' : '이전 장면'} disabled={props.mode === 'live' ? !liveInspect : safeIndex === 0} onClick={() => props.mode === 'live' ? setLiveInspect(false) : go(safeIndex - 1)}><Icon name="back" /></button><button aria-label={safeIndex === SCENES.length - 1 && !playing ? '처음부터 다시 재생' : playing ? '재생 일시정지' : '기록 재생'} disabled={props.mode === 'live' || reducedMotion || !props.proof} onClick={togglePlayback}><Icon name={playing ? 'pause' : 'play'} /></button><span>{String(safeIndex + 1).padStart(2, '0')} / 08</span></div><ol>{SCENES.map((item, i) => <li key={item.id}><button disabled={props.mode === 'live'} aria-current={i === safeIndex ? 'step' : undefined} onClick={() => go(i)}><i />{item.label}</button></li>)}</ol><button className="kp-next" aria-label="다음 장면" disabled={safeIndex === SCENES.length - 1 || props.mode === 'live'} onClick={() => go(safeIndex + 1)}><Icon name="arrow" /></button>{scene.id !== 'verify' && props.canVerify && <button className="kp-jump" disabled={props.busy} onClick={jump}>직접 검증하기</button>}</nav><p className="kp-environment">기획 체인 <b>Ethereum</b><span aria-hidden="true"> · </span>실행 환경 <b>Sepolia 테스트넷</b></p><div className="kp-secondary"><details><summary>발표자 실행 준비</summary>{props.setup}</details><details><summary>실행 알림·전체 로그</summary>{props.notice && <p role="status">{props.notice}</p>}{props.evidence}</details></div></main>;
 }
