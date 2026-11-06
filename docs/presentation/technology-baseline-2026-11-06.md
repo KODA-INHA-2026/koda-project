@@ -27,11 +27,13 @@ Ethereum 상용 운영과 KODA 공식 발급자 인증은 확정·구현했다�
 
 ## 기술 어펜딕스
 
-14장: 표지, BTC/Ethereum 역할, SHA-256, EIP-712, ECDSA/secp256k1, Solidity/EVM, DocumentRegistry, 트랜잭션·영수증·이벤트, finality, JSON-RPC/eth_call, PDF·JSON, 발급자 신뢰 기준, 블록체인의 추가 역할, 두 검증 환경.
+최신 부록은 피칭 설명이 아닌 기술 참고용이다. [기술 명세 원고](technical-reference-2026-11-06.md)에 각 장의 공식 문헌, 코드의 고정 커밋 링크와 추가 설명을 보존한다.
 
-슬라이드는 기술 자체의 정의 → 실제 입력·처리·결과 → 이번 구현 → 증명 범위와 한계로 구성한다. 구조도의 옅은 회색·진한 글자·녹색/민트와 여백을 따른다. 고정 파일에 들어간 숫자나 고객사를 새 문서처럼 바꾸지 않는다. 기술 상세는 이 부록에 두고, 본 시연의 화면에는 행동과 결과를 우선한다.
+14장: 기술 기준, 데이터 모델, SHA-256, EIP-712, ECDSA/secp256k1, EVM/ABI, DocumentRegistry 저장 구조, 거래·영수증·이벤트, finality, JSON-RPC/eth_call, 검증 JSON 파서, 배포 검증·발급자 신뢰, 최종 판정 조건, 두 실행 환경의 재현성.
 
-저장된 슬라이드 Page ID: `page_e2ea284cc66c81918bfacd219cb82695`. 작성용 원고와 도식 구성은 `technology-slides.mjs`에 보존한다.
+계산식·서명 페이로드·호출 데이터·실제 저장 슬롯·검증 순서·신뢰 전제와 미구현 항목을 명시한다. 구조도의 회색·녹색/민트 색상을 유지하되 기술 명세를 읽을 수 있는 배치로 바꿨다. 기술이나 현재 데모 동작은 변경하지 않았다.
+
+저장된 슬라이드 Page ID: `page_e2ea284cc66c81918bfacd219cb82695`. 최신 편집 원고는 `technical-reference-slides.mjs`, 이전 설명용 원고는 `technology-slides.mjs`다.
 
 ## 피칭에서 실제 체인을 보여주는 방법 — 의견
 
