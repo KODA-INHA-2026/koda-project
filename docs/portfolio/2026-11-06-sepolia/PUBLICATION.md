@@ -95,3 +95,14 @@
 - [설계·기여 기록](../../design/verification-centered-story-2026-11-06.md), [로컬 브라우저 관측 기록](../../design/verification-story-2026-11-06/browser-check.json).
 - 설계·기여 기록을 작업 폴더와 지정된 G: 볼트 최종결과물 폴더에 `제3자 검증 중심 7장면 재설계 기록.md`로 보존하고 두 사본의 SHA-256 일치를 확인했다.
 - 첫 Pages 게시 시도는 GitHub의 `syncing_files` 상태에서 10분 제한을 넘어 2026-11-06 11:54:44 KST 실패했다. 빌드·아티팩트 업로드는 성공했으며, 11:56:28 KST 실패한 게시 작업만 재실행했다. 공개 페이지 검증 결과는 게시 완료 후 별도로 기록한다.
+
+## 두 장면 버전 공개 — 2026-11-06
+
+사용자가 로컬에서 확인한 두 장면 버전의 링크를 요청해 같은 공유 주소에 게시했다. 발급·등록·고객사 전달과 제3자 대시보드 검증으로 발표를 나누고, 구조도에는 동일한 업무 주체를 Bitcoin과 Ethereum에 직접 연결했다.
+
+- 구현 소스: [`00b8a79`](https://github.com/KODA-INHA-2026/koda-project/commit/00b8a79ffe3fb522387bda1b1db130ca67154c3c).
+- 최종 Pages: `43a576a1b0b45cb5d07ccfe074af976c6f257483`. [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42166939459)은 **14:12:19 KST** 성공했다. 빌드 복사에 섞인 과거 데모 PDF 자료는 현재 공유 범위에서 제외했다.
+- 공개 주소: https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=00b8a79
+- 공유 경로용 TypeScript·빌드 통과. 기존 번들 크기 경고는 남는다. 로컬 기능 검증은 [두 장면 재설계 기록](../../design/two-act-demo-reset-2026-11-06.md)을 따른다.
+- 공개 HTTPS 페이지에서 새 소스 버전·두 장면을 확인하고 실제 RPC 조회로 원본 `match`, 변경본 `file-mismatch`를 확인했다. 브라우저 예외와 새 지갑 요청은 없었다.
+- [공개 관측 기록](../../design/two-act-demo-2026-11-06/public-check.json), [공개 원본 판정](../../design/two-act-demo-2026-11-06/public-match.png), [공개 변경본 판정](../../design/two-act-demo-2026-11-06/public-mismatch.png).
