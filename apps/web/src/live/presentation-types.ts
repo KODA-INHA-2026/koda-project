@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import type { Proof, TrustedDeployment, VerificationResult, VerificationTraceEvent } from './verification';
+import type { Proof, TrustedDeployment, VerificationTraceEvent } from './verification';
+import type { SignedComparisonResult } from './signed-comparison';
 
 export type LiveStage = 'ready' | 'pdf' | 'hash' | 'sign' | 'register' | 'included' | 'verify' | 'finalized' | 'result';
 export interface PresentationProps {
@@ -20,8 +21,10 @@ export interface PresentationProps {
   inputError: string;
   inputLoading: boolean;
   canDownload: boolean;
-  selectedVariant: 'original' | 'altered' | 'upload';
-  result?: VerificationResult;
+  selectedVariant: 'original' | 'altered' | 'resigned' | 'upload';
+  signedComparisonReady?: boolean;
+  comparisonReference?: Proof;
+  result?: SignedComparisonResult;
   verificationTrace?: VerificationTraceEvent[];
   receiptBlock?: string;
   canVerify: boolean;
@@ -30,7 +33,7 @@ export interface PresentationProps {
   setup: ReactNode;
   evidence: ReactNode;
   onVerify: () => void;
-  onSelectSample: (variant: 'original' | 'altered') => void;
+  onSelectSample: (variant: 'original' | 'altered' | 'resigned') => void;
   onSelectFiles: (files: File[]) => void;
   onClearFiles: () => void;
   onDownload: (variant: 'original' | 'altered') => void;

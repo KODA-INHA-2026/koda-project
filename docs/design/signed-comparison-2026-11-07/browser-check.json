@@ -1,0 +1,17 @@
+{
+  "at": "2026-11-06T15:56:18.549Z",
+  "url": "http://127.0.0.1:5190/live.html?view=verify",
+  "checks": [
+    "Approved signed comparison is selectable, with no precomputed verdict",
+    "Original matches after actual RPC and both observed request/response paths remain",
+    "PDF-only change still fails and preserves its distinct signature meaning",
+    "Genuine user-approved signature + PDF match, actual finalized registered hash differs; paused paths and distinct verdict verified",
+    "Downloaded comparison JSON and PDF can be received separately and freshly verified without wallet",
+    "Signing is explicit and presenter-only, disabled without a wallet",
+    "1280px and 390px have no page overflow",
+    "RPC failure cannot retain a previous conflict verdict or fabricate returned record",
+    "01 handoff and 03 saved external result remain available"
+  ],
+  "errors": [],
+  "realComparisonSignature": "user-approved, verified against finalized Sepolia registration"
+}

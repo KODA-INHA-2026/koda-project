@@ -4,17 +4,21 @@ import { bytesToHex, isAddress, type Address, type Hex } from 'viem';
 import { createCertificate, AS_OF, CUSTOMER } from './certificate';
 import { addressUrl, artifact, connectWallet, deployRegistry, inspectDeployment, publicClient, recoverDeployment, registerDocument, restoreWallet, RPC_URL, signDocument, transactionUrl, type Connection } from './wallet';
 import { getDeploymentProgress, type DeploymentProgress } from './deployment-progress';
-import { sha256, verifyDocument, type Proof, type TrustedDeployment, type VerificationResult, type VerificationTraceEvent } from './verification';
+import { sha256, verifyDocument, type Proof, type TrustedDeployment, type VerificationTraceEvent } from './verification';
 import { loadIssuance, saveIssuance, type SavedIssuance } from './storage';
 import { Presentation } from './Presentation';
 import type { LiveStage } from './presentation-types';
 import { loadRecordedIssuance, recordedDeployment, recordedProof, recordedBlock } from './recorded-evidence';
 import { readReceivedFiles, serializeVerificationFile, type ReceivedProof } from './verification-file';
+import { parseSignedComparisonFile, serializeSignedComparisonFile, verifySignedComparison, type SignedComparisonResult } from './signed-comparison';
+import { SignedComparisonSetup } from './SignedComparisonSetup';
+import bundledComparison from './recorded-signed-comparison.json';
 
 const short = (value?: string) => value ? `${value.slice(0, 12)}…${value.slice(-8)}` : '아직 생성 전';
 const errorText = (error: unknown) => error instanceof Error ? error.message.split('\n')[0]! : String(error);
 const TRUST_KEY = 'koda-live-trusted-v1';
 const PENDING_KEY = 'koda-live-deployment-pending-v1';
+const COMPARISON_KEY = 'koda-signed-comparison-v1';
 function readPending(): { hash: Hex; issuer: Address } | undefined {
   try { const v = JSON.parse(localStorage.getItem(PENDING_KEY) ?? 'null'); if (isAddress(v?.issuer) && /^0x[0-9a-fA-F]{64}$/.test(v?.hash)) return v; } catch { /* Invalid cached state is ignored. */ }
   return undefined;
@@ -35,6 +39,9 @@ function App() {
   const [trusted, setTrusted] = useState<TrustedDeployment | undefined>(readTrusted);
   const [connection, setConnection] = useState<Connection>();
   const [saved, setSaved] = useState<SavedIssuance>();
+  const [recorded, setRecorded] = useState<SavedIssuance>();
+  const [signedCandidate, setSignedCandidate] = useState<Proof>();
+  const [comparisonReference, setComparisonReference] = useState<Proof>();
   const [previousIssuance, setPreviousIssuance] = useState<SavedIssuance>();
   const [selected, setSelected] = useState<{ bytes: Uint8Array; name: string }>();
   const [receivedProof, setReceivedProof] = useState<ReceivedProof>();
@@ -47,7 +54,7 @@ function App() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [rpcStatus, setRpcStatus] = useState('연결 점검 전');
-  const [result, setResult] = useState<VerificationResult>();
+  const [result, setResult] = useState<SignedComparisonResult>();
   const [verificationTrace, setVerificationTrace] = useState<VerificationTraceEvent[]>([]);
   const [workingProof, setWorkingProof] = useState<Partial<Proof>>();
   const [workingSize, setWorkingSize] = useState<number>();
@@ -58,7 +65,7 @@ function App() {
   const [log, setLog] = useState<{ title: string; value: string }[]>([]);
   const lock = useRef(false);
   const [mode, setMode] = useState<'recorded' | 'live'>('recorded');
-  const [selectedVariant, setSelectedVariant] = useState<'original' | 'altered' | 'upload'>('original');
+  const [selectedVariant, setSelectedVariant] = useState<'original' | 'altered' | 'resigned' | 'upload'>('original');
   const proof = workingProof ?? saved?.proof;
   const receiptBlock = includedBlock ?? (mode === 'recorded' && proof?.transactionHash === recordedProof.transactionHash ? recordedBlock : undefined);
   const sharedRegistry = saved?.deployment?.contract.toLowerCase() === recordedDeployment.contract.toLowerCase()
@@ -94,14 +101,18 @@ function App() {
   }, [pendingDeploy]);
 
   useEffect(() => { loadRecordedIssuance().then(value => {
-    setSaved(value);
+    setSaved(value); setRecorded(value);
+    try {
+      const text = localStorage.getItem(COMPARISON_KEY) ?? (bundledComparison ? JSON.stringify(bundledComparison) : undefined);
+      if (text) setSignedCandidate(parseSignedComparisonFile(text, recordedProof, recordedDeployment));
+    } catch { /* Invalid cached comparison material never becomes a verified result. */ }
     setNotice('보존된 실증 문서로 발급·전달 흐름을 보여줍니다. PDF와 검증정보를 내려받아 제3자 화면에서 불러올 수 있어요.');
   }).catch(e => setError(errorText(e))); }, []);
   useEffect(() => { loadIssuance().then(setPreviousIssuance).catch(e => setError(errorText(e))); }, []);
   function addLog(title: string, value: string) { setLog(items => [...items, { title, value }]); }
   function recordTrace(event: VerificationTraceEvent) {
-    setVerificationTrace(items => items.some(item => item.id === event.id)
-      ? items.map(item => item.id === event.id ? event : item)
+    setVerificationTrace(items => items.some(item => item.id === event.id && item.operation === event.operation)
+      ? items.map(item => item.id === event.id && item.operation === event.operation ? event : item)
       : [...items, event]);
   }
   async function run(action: () => Promise<void>) {
@@ -170,19 +181,16 @@ function App() {
       setStage('result');
       throw deploymentError;
     }
-    const checked = await verifyDocument(
-      selected.bytes,
-      receivedProof.proof,
-      verificationTrust,
-      publicClient,
-      recordTrace,
-    );
+    const checked = comparisonReference
+      ? await verifySignedComparison(selected.bytes, receivedProof.proof, comparisonReference, verificationTrust, publicClient, recordTrace)
+      : await verifyDocument(selected.bytes, receivedProof.proof, verificationTrust, publicClient, recordTrace);
     setResult(checked); setStage(checked.status === 'match' ? 'finalized' : 'result');
     addLog('제3자 조회 결과', checked.message);
   }); }
   function clearFiles() {
     inputVersion.current++;
     setSelected(undefined); setReceivedProof(undefined); setInputSource(undefined); setInputError('');
+    setComparisonReference(undefined);
     setReadingFiles(false); setResult(undefined); setVerificationTrace([]);
   }
   async function selectFiles(files: File[]) {
@@ -190,19 +198,42 @@ function App() {
     const version = ++inputVersion.current;
     setReadingFiles(true); setInputError(''); setResult(undefined); setVerificationTrace([]);
     try {
+      const jsonFiles = files.filter(file => /\.json$/i.test(file.name));
+      if (jsonFiles.length === 1 && jsonFiles[0]!.size <= 64 * 1024) {
+        const text = await jsonFiles[0]!.text();
+        if (JSON.parse(text)?.format === 'koda-signed-comparison-v1') {
+          const candidate = parseSignedComparisonFile(text, recordedProof, recordedDeployment);
+          const otherFiles = files.filter(file => file !== jsonFiles[0]);
+          const pdfs = otherFiles.length ? await readReceivedFiles(otherFiles, [recordedDeployment]) : { pdf: undefined };
+          if (inputVersion.current !== version) return;
+          if (pdfs.pdf) setSelected(pdfs.pdf);
+          setReceivedProof({ name: jsonFiles[0]!.name, proof: candidate, deployment: recordedDeployment });
+          setComparisonReference(recordedProof); setSelectedVariant('resigned'); setInputSource('received'); setError('');
+          return;
+        }
+      }
       const received = await readReceivedFiles(files, [recordedDeployment]);
       if (inputVersion.current !== version) return;
       if (received.pdf) setSelected(received.pdf);
-      if (received.verification) setReceivedProof(received.verification);
-      setSelectedVariant('upload'); setInputSource('received'); setError('');
+      if (received.verification) { setReceivedProof(received.verification); setComparisonReference(undefined); }
+      setSelectedVariant(!received.verification && comparisonReference ? 'resigned' : 'upload'); setInputSource('received'); setError('');
     } catch (e) {
       if (inputVersion.current !== version) return;
       setSelected(undefined); setReceivedProof(undefined); setInputSource(undefined);
+      setComparisonReference(undefined);
       setInputError(errorText(e));
     } finally { if (inputVersion.current === version) setReadingFiles(false); }
   }
-  function selectSample(variant: 'original' | 'altered') {
+  function selectSample(variant: 'original' | 'altered' | 'resigned') {
     if (!saved?.deployment || !canDownload || busy || readingFiles) return;
+    if (variant === 'resigned') {
+      if (!recorded || !signedCandidate) return;
+      clearFiles(); setSelectedVariant('resigned'); setInputSource('sample');
+      setSelected({ bytes: recorded.altered, name: 'BTC잔고_120BTC_재서명본.pdf' });
+      setReceivedProof({ name: 'BTC잔고_재서명_비교정보.json', proof: signedCandidate, deployment: recordedDeployment });
+      setComparisonReference(recordedProof);
+      return;
+    }
     clearFiles();
     setSelectedVariant(variant);
     setSelected({ bytes: saved[variant], name: variant === 'original' ? 'BTC잔고_원본.pdf' : 'BTC잔고_120BTC_변경본.pdf' });
@@ -236,6 +267,12 @@ function App() {
     }
     setNotice('최근 발급 자료를 불러왔습니다. 블록 포함과 최종 확정 여부는 구분하며, 제3자 검증에서 최종 확정을 다시 확인합니다.');
   }); }
+  function acceptSignedComparison(candidate: Proof) {
+    localStorage.setItem(COMPARISON_KEY, serializeSignedComparisonFile(candidate, recordedProof, recordedDeployment));
+    setSignedCandidate(candidate);
+    if (comparisonReference) clearFiles();
+    setNotice('재서명 비교 자료를 준비했습니다. 02의 ‘다시 서명한 문서’에서 실제 등록 원본과 대조할 수 있습니다.');
+  }
   const setup = <>
     <details className="setup" open={!trusted || undefined}>
       <summary>실행 준비 <span>{trusted ? `배포 확정 · ${short(trusted.contract)}` : pendingDeploy ? '배포 거래 전송됨 · 확정 확인 중' : '시험 발급자 연결 · 컨트랙트 배포'}</span></summary>
@@ -255,6 +292,7 @@ function App() {
       <div className="setup-actions">{saved && !saved.proof.transactionHash && <button disabled={busy || !trusted || !connection} onClick={() => void run(() => submit(saved))}>서명한 문서 등록 재시도</button>}<button className="primary" disabled={busy || !trusted || !connection} onClick={issue}>인하테크홀딩스 증명서 발급·등록</button></div>
       {!connection && <p>새로 발급하려면 위에서 시험 발급자 지갑을 연결해 주세요. 기존 문서 조회에는 지갑이 필요 없어요.</p>}
     </div>
+    <SignedComparisonSetup connection={connection} busy={busy} onBusy={run} candidate={signedCandidate} onPrepared={acceptSignedComparison} onConnect={() => void connect()} />
   </>;
   const evidence = <>
     <details className="evidence"><summary>실제 입력·처리 결과 보기</summary><div className="evidence-body"><p>BTC 잔고의 사실성·현재 유효성·중간 수정 이력 전체는 검증하지 않습니다. 공식 KODA 발급자 인증도 아닙니다.</p><dl><dt>문서 ID</dt><dd>{proof?.documentId ?? '생성 전'}</dd><dt>발급 기재시각</dt><dd>{proof ? new Date(Number(proof.issuedAt) * 1000).toISOString() : '생성 전'}</dd><dt>서명된 해시</dt><dd>{proof?.documentHash ?? '생성 전'}</dd><dt>발급서명 σ</dt><dd>{proof?.signature ?? '서명 전'}</dd></dl>{log.map((item,i) => <div className="log-line" key={i}><span>{item.title}</span><code>{item.value}</code></div>)}</div></details>
@@ -264,6 +302,7 @@ function App() {
     proof={proof} trusted={workingProof ? trusted : saved?.deployment} originalSize={workingProof ? workingSize : saved?.original.byteLength}
     pdfHeaderHex={workingProof ? workingPrefix : saved ? bytesToHex(saved.original.slice(0, 24)) : undefined}
     selectedName={selected?.name} selectedProofName={receivedProof?.name} selectedVariant={selectedVariant} inputSource={inputSource} inputError={inputError} inputLoading={readingFiles}
+    signedComparisonReady={Boolean(signedCandidate && recorded)} comparisonReference={comparisonReference}
     verificationProof={receivedProof?.proof} verificationTrust={verificationTrust} result={result} verificationTrace={verificationTrace}
     receiptBlock={receiptBlock}
     canVerify={Boolean(verificationTrust && receivedProof && selected && !readingFiles)} canDownload={canDownload} notice={notice} error={error}

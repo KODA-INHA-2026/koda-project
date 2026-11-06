@@ -1,4 +1,4 @@
-import type { VerificationResult } from './verification';
+import type { SignedComparisonResult as VerificationResult } from './signed-comparison';
 
 export type VerifierOutcomeKind = 'idle' | 'busy' | 'match' | 'mismatch' | 'pending' | 'failure';
 
@@ -22,6 +22,13 @@ const WAITING: VerifierQuestion[] = [
 ];
 
 function questionsFor(result: VerificationResult): VerifierQuestion[] {
+  if (result.signedComparison?.registrationConflict) {
+    return [
+      { label: 'KODA가 발급한 문서인지', value: '발급서명 확인', state: 'confirmed' },
+      { label: '발급 당시 원본과 일치하는지', value: '등록본과 불일치', state: 'warning' },
+      { label: '이후 변경되지 않았는지', value: '등록 원본과 다름', state: 'warning' },
+    ];
+  }
   if (result.status === 'match') {
     return [
       { label: 'KODA가 발급한 문서인지', value: '발급서명 확인', state: 'confirmed' },
@@ -62,6 +69,10 @@ export function verifierOutcome(result?: VerificationResult, busy = false): Veri
   }
   if (!result) {
     return { kind: 'idle', title: '증명서를 대조해 보세요', description: 'PDF를 선택하면 제출본·발급서명·Ethereum 기록을 순서대로 대조합니다.', questions: WAITING };
+  }
+  if (result.signedComparison?.registrationConflict) {
+    return { kind: 'mismatch', title: '서명은 유효하지만 등록 원본과 다릅니다',
+      description: '서명과 제출 PDF는 일치합니다. 같은 문서 ID로 등록된 발급 원본과는 일치하지 않습니다.', questions: questionsFor(result) };
   }
   const kinds: Record<VerificationResult['status'], Pick<VerifierOutcome, 'kind' | 'title' | 'description'>> = {
     match: { kind: 'match', title: '발급 원본과 일치합니다', description: '제출 PDF·발급서명·확정된 Ethereum 기록의 해시가 같습니다.' },

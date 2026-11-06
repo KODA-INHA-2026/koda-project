@@ -1,0 +1,261 @@
+{
+  "verifiedAt": "2026-11-06T15:54:29.908Z",
+  "network": "Ethereum Sepolia",
+  "approval": "User reported approving the comparison signature and downloading its JSON in this chat.",
+  "newTransaction": false,
+  "registeredProof": {
+    "documentId": "0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe",
+    "documentHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+    "issuedAt": "1793961780",
+    "signature": "0xc1073390159d8f163b444be0065aa6950f5982fcaa8a0beba9102fb9f345f6d544c438d0d0f6a313758d07706c919160b8212d51151f533af03f94501b07e5ea1c",
+    "transactionHash": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"
+  },
+  "candidate": {
+    "documentId": "0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe",
+    "documentHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+    "issuedAt": "1793961780",
+    "signature": "0x3a7d0f54a50739185e899183f0ec65e32dfd3a07a8d56dd5206107d1f5d42cb80e5cbc09bf3d2ab44202772db362d11300e92436471bd6660bc5af4fcab8b3f71c"
+  },
+  "result": {
+    "fileHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+    "signedHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+    "recoveredAddress": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+    "chainHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+    "chainIssuedAt": "1793961780",
+    "status": "file-mismatch",
+    "message": "PDF와 새 발급서명은 일치하지만, 같은 문서 ID에 확정된 등록 원본과 다릅니다.",
+    "signatureValid": true,
+    "chainRecordValid": true,
+    "fileMatch": true,
+    "finalizedBlock": "12077483",
+    "receiptBlockNumber": "12076051",
+    "receiptBlockTime": "2026-11-06T10:44:00.000Z",
+    "signedComparison": {
+      "signatureValid": true,
+      "fileMatch": true,
+      "signedHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+      "recoveredAddress": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+      "registrationConflict": true
+    }
+  },
+  "trace": [
+    {
+      "id": "input",
+      "operation": "재서명 비교자료 형식 검사",
+      "location": "local",
+      "state": "running",
+      "detail": "6856650 bytes"
+    },
+    {
+      "id": "input",
+      "operation": "재서명 비교자료 형식 검사",
+      "location": "local",
+      "state": "success",
+      "detail": "같은 문서 ID · 등록 주장 없음"
+    },
+    {
+      "id": "sha256",
+      "operation": "재서명 PDF 전체 바이트 SHA-256",
+      "location": "local",
+      "state": "running"
+    },
+    {
+      "id": "sha256",
+      "operation": "재서명 PDF 전체 바이트 SHA-256",
+      "location": "local",
+      "state": "success",
+      "detail": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e"
+    },
+    {
+      "id": "signature",
+      "operation": "재서명 정보의 발급자 주소 복구",
+      "location": "local",
+      "state": "running"
+    },
+    {
+      "id": "signature",
+      "operation": "재서명 정보의 발급자 주소 복구",
+      "location": "local",
+      "state": "success",
+      "detail": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+    },
+    {
+      "id": "input",
+      "operation": "PDF·검증정보 형식 검사",
+      "location": "local",
+      "state": "running",
+      "detail": "6856650 bytes"
+    },
+    {
+      "id": "input",
+      "operation": "PDF·검증정보 형식 검사",
+      "location": "local",
+      "state": "success",
+      "detail": "PDF 헤더·크기·bytes32·uint64·서명 길이 확인"
+    },
+    {
+      "id": "sha256",
+      "operation": "제출 PDF 전체 바이트 SHA-256",
+      "location": "local",
+      "state": "running",
+      "detail": "Web Crypto digest"
+    },
+    {
+      "id": "sha256",
+      "operation": "제출 PDF 전체 바이트 SHA-256",
+      "location": "local",
+      "state": "success",
+      "detail": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e"
+    },
+    {
+      "id": "signature",
+      "operation": "EIP-712 서명자 주소 복구",
+      "location": "local",
+      "state": "running",
+      "detail": "ECDSA secp256k1 · Document(documentId,documentHash,issuedAt)"
+    },
+    {
+      "id": "signature",
+      "operation": "EIP-712 서명자 주소 복구",
+      "location": "local",
+      "state": "success",
+      "detail": "복원 주소 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+    },
+    {
+      "id": "chain-id",
+      "operation": "eth_chainId 조회",
+      "location": "ethereum",
+      "state": "running"
+    },
+    {
+      "id": "chain-id",
+      "operation": "eth_chainId 조회",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "chainId 11155111"
+    },
+    {
+      "id": "finalized-block",
+      "operation": "eth_getBlockByNumber(finalized)",
+      "location": "ethereum",
+      "state": "running"
+    },
+    {
+      "id": "finalized-block",
+      "operation": "eth_getBlockByNumber(finalized)",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "finalized #12077483 · 0xb198191974fa7e195a4c1683b25ef5795ab8c158857c3e7d45670bf81541e459"
+    },
+    {
+      "id": "transaction-input",
+      "operation": "eth_getTransactionByHash · register 입력 대조",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"
+    },
+    {
+      "id": "transaction-input",
+      "operation": "eth_getTransactionByHash · register 입력 대조",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "등록 입력과 제출 검증정보 일치"
+    },
+    {
+      "id": "receipt",
+      "operation": "eth_getTransactionReceipt 조회",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"
+    },
+    {
+      "id": "receipt",
+      "operation": "eth_getTransactionReceipt 조회",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "success · block #12076051"
+    },
+    {
+      "id": "canonical-block",
+      "operation": "eth_getBlockByNumber · 포함 블록 정식 체인 대조",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "#12076051"
+    },
+    {
+      "id": "canonical-block",
+      "operation": "eth_getBlockByNumber · 포함 블록 정식 체인 대조",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "0xeaac522c7044a2961fef8e946a63830b055a6f2e78f202d9dd4392103626e269"
+    },
+    {
+      "id": "registration-event",
+      "operation": "영수증의 DocumentRegistered 이벤트 해석·대조",
+      "location": "local",
+      "state": "running"
+    },
+    {
+      "id": "registration-event",
+      "operation": "영수증의 DocumentRegistered 이벤트 해석·대조",
+      "location": "local",
+      "state": "success",
+      "detail": "DocumentRegistered 값 일치"
+    },
+    {
+      "id": "finality",
+      "operation": "등록 블록과 finalized 블록 높이 비교",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "등록 #12076051 · finalized #12077483"
+    },
+    {
+      "id": "finality",
+      "operation": "등록 블록과 finalized 블록 높이 비교",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "등록 블록이 finalized 범위에 포함"
+    },
+    {
+      "id": "authorized-issuer",
+      "operation": "viem readContract → eth_call authorizedIssuer()",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "고정 블록 #12077483"
+    },
+    {
+      "id": "authorized-issuer",
+      "operation": "viem readContract → eth_call authorizedIssuer()",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "허용 발급자 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+    },
+    {
+      "id": "record",
+      "operation": "viem readContract → eth_call records(documentId)",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "고정 블록 #12077483"
+    },
+    {
+      "id": "record",
+      "operation": "viem readContract → eth_call records(documentId)",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "hash 0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c · issuedAt 1793961780"
+    },
+    {
+      "id": "hash-comparison",
+      "operation": "제출·서명·체인 해시 최종 대조",
+      "location": "local",
+      "state": "running"
+    },
+    {
+      "id": "hash-comparison",
+      "operation": "제출·서명·체인 해시 최종 대조",
+      "location": "local",
+      "state": "failure",
+      "detail": "제출 PDF 해시만 발급서명·체인 기록과 불일치"
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "checkedAt": "2026-11-06T16:00:57.834Z",
+  "fixtureUrl": "http://127.0.0.1:5190/signed-comparison-fixture.html",
+  "syntheticFixture": true,
+  "realSepoliaEvidence": false,
+  "privateKeyPersisted": false,
+  "description": "Actual VerificationExperience + verifySignedComparison, ephemeral in-memory signer, fully shaped mock VerificationClient.",
+  "checks": [
+    "Actual helper result shows two local passes, finalized registration conflict, two observed paths, and three CEO questions",
+    "Switching examples clears the previous result instead of reusing a stale verdict",
+    "Pending and RPC failure states never paint a confirmed chain record or registration conflict",
+    "The isolated actual component has no page overflow at 1440, 1280, or 390 pixels"
+  ],
+  "facts": {
+    "conflict": {
+      "status": "file-mismatch",
+      "signatureValid": true,
+      "fileMatch": true,
+      "chainRecordValid": true,
+      "registrationConflict": true
+    },
+    "pending": {
+      "status": "pending",
+      "registrationConflict": false
+    },
+    "failure": {
+      "status": "unavailable",
+      "registrationConflict": false
+    },
+    "conflictTrace": [
+      {
+        "id": "input",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "input",
+        "state": "success",
+        "location": "local"
+      },
+      {
+        "id": "sha256",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "sha256",
+        "state": "success",
+        "location": "local"
+      },
+      {
+        "id": "signature",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "signature",
+        "state": "success",
+        "location": "local"
+      },
+      {
+        "id": "input",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "input",
+        "state": "success",
+        "location": "local"
+      },
+      {
+        "id": "sha256",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "sha256",
+        "state": "success",
+        "location": "local"
+      },
+      {
+        "id": "signature",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "signature",
+        "state": "success",
+        "location": "local"
+      },
+      {
+        "id": "chain-id",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "chain-id",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "finalized-block",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "finalized-block",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "transaction-input",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "transaction-input",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "receipt",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "receipt",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "canonical-block",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "canonical-block",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "registration-event",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "registration-event",
+        "state": "success",
+        "location": "local"
+      },
+      {
+        "id": "finality",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "finality",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "authorized-issuer",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "authorized-issuer",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "record",
+        "state": "running",
+        "location": "ethereum"
+      },
+      {
+        "id": "record",
+        "state": "success",
+        "location": "ethereum"
+      },
+      {
+        "id": "hash-comparison",
+        "state": "running",
+        "location": "local"
+      },
+      {
+        "id": "hash-comparison",
+        "state": "failure",
+        "location": "local"
+      }
+    ]
+  },
+  "browserErrors": []
+}

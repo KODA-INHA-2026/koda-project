@@ -2,6 +2,17 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { verifierOutcome } from '../../apps/web/src/live/verifier-outcome.ts';
 
+test('signed comparison keeps valid issuer evidence distinct from registered-original conflict', () => {
+  const outcome = verifierOutcome({ status: 'file-mismatch', message: 'registered original differs',
+    signatureValid: true, chainRecordValid: true, fileMatch: true,
+    signedComparison: { signatureValid: true, fileMatch: true, signedHash: `0x${'44'.repeat(32)}`, registrationConflict: true } });
+  assert.equal(outcome.kind, 'mismatch');
+  assert.equal(outcome.title, '서명은 유효하지만 등록 원본과 다릅니다');
+  assert.equal(outcome.questions[0]?.state, 'confirmed');
+  assert.equal(outcome.questions[1]?.value, '등록본과 불일치');
+  assert.equal(outcome.questions[2]?.state, 'warning');
+});
+
 test('file mismatch does not describe a valid issuance signature as proof of this submitted PDF', () => {
   const outcome = verifierOutcome({ status: 'file-mismatch', message: 'different bytes', signatureValid: true, fileMatch: false });
   assert.equal(outcome.kind, 'mismatch');

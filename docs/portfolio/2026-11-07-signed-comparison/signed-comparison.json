@@ -1,0 +1,17 @@
+{
+  "format": "koda-signed-comparison-v1",
+  "chain": {
+    "chainId": 11155111,
+    "contract": "0xc13083047c0657ff576a972469d982b51e43dcb3",
+    "issuer": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+  },
+  "reference": {
+    "transactionHash": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"
+  },
+  "candidate": {
+    "documentId": "0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe",
+    "documentHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+    "issuedAt": "1793961780",
+    "signature": "0x3a7d0f54a50739185e899183f0ec65e32dfd3a07a8d56dd5206107d1f5d42cb80e5cbc09bf3d2ab44202772db362d11300e92436471bd6660bc5af4fcab8b3f71c"
+  }
+}
