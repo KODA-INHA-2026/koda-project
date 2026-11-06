@@ -34,3 +34,16 @@
 - 공개 HTTPS 주소를 Chrome에서 직접 열어 8개 장면 이동과 한글 PDF 복원을 확인했다.
 - 지갑 연결·새 서명·새 거래 없이 원본은 `match`, 120 BTC 변경본은 `file-mismatch`. 두 결과 모두 현재 조회한 finalized 블록 `12072046`에서 등록 기록을 대조했다.
 - [공개 페이지 관측 기록](public-page-qa.json), [게시 화면](public-page.jpg)을 보존했다. 외부 사용자의 파일 선택·모든 브라우저 조합을 새로 검수한 것은 아니다.
+
+## 구조도 중심 버전으로 갱신 — 2026-11-06
+
+사용자는 위의 첫 공개본을 팀에 전달하지 않았으며, 전체 구조도와 현재 동작을 함께 보여주는 개선본을 공유하도록 요청했다. 같은 공유 주소를 현재 버전으로 갱신하고 이전 버전은 Git 이력에 보존했다.
+
+- 구현 소스: `cf3e37e` (`feat/first-demo`).
+- 정적 배포: `7641acd5a5370ccb8a28ff557197ed6c8e628aa5` (`gh-pages`).
+- [Pages 실행 #10](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42137054862): 2026-11-06 09:28:55 KST `success`.
+- 공개 경로: https://koda-inha-2026.github.io/koda-project/sepolia-20261106/
+- 배포용 TypeScript 검사와 빌드 통과. live 테스트 22개 통과 후 로컬 체인 연결 대기에서 4개가 시간 초과됐다. 동일한 컨트랙트 테스트 4개를 샌드박스 밖에서 재실행해 모두 통과했다. 테스트·제품 코드 변경 없이 총 26개 검증을 완료했다. 번들 크기 경고는 남아 있다.
+- 발표는 KODA 대시보드를 가정한 제3자 검증 화면에 집중한다. 운영 대시보드 연동은 아니며, 외부 검증 패키지는 미구현 확장 방향으로만 설명한다.
+- [연출 설계·기여 기록](../../design/architecture-led-storyboard.md), [로컬 화면 검수](architecture-led/browser-qa.json)를 함께 보존한다.
+- 공개 HTTPS 페이지에서 새 구조도·장면 구성이 표시되는 것을 확인했다. 실제 공개 RPC 대조에서 원본은 `발급 원본과 일치해요`, 변경본은 `발급 원본과 달라요`로 표시됐다. [공개 검수 기록](architecture-led/public-browser-qa.json)과 [공개 첫 화면](architecture-led/public-page.jpg)을 보존했다.
