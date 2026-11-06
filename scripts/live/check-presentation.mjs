@@ -15,6 +15,10 @@ try {
   await issuer.goto(base);
   await expect(issuer.getByRole('button', { name: '증명서 PDF 받기', exact: false })).toBeEnabled();
   await issuer.evaluate(() => document.fonts.ready);
+  await expect(issuer.locator('.ij-source')).toContainText('인하테크홀딩스㈜');
+  await expect(issuer.locator('.ij-source')).toContainText('100.00000000 BTC');
+  await expect(issuer.locator('.ij-source')).toContainText('2026-10-31 23:59:59 KST');
+  await expect(issuer.locator('.ij-source-link')).toHaveText('같은 정보로 PDF 생성');
   await issuer.screenshot({ path: `${output}/01-issue.png`, fullPage: true });
   async function downloadFrom(target, button, name) {
     const pending = target.waitForEvent('download');
@@ -27,6 +31,9 @@ try {
   const pdfPath = await downloadFrom(issuer, '증명서 PDF 받기', 'BTC잔고_원본.pdf');
   const jsonPath = await downloadFrom(issuer, '검증정보 JSON 받기', 'BTC잔고_검증정보.json');
   const receivedJson = JSON.parse(await readFile(jsonPath, 'utf8'));
+  const registered = JSON.parse(await readFile('docs/portfolio/2026-11-06-sepolia/inha-20261106/registration-finalized.json', 'utf8'));
+  expect(receivedJson.proof).toEqual(registered.proof);
+  expect(await readFile(pdfPath)).toEqual(await readFile('docs/portfolio/2026-11-06-sepolia/inha-20261106/inha-original.pdf'));
   expect(`0x${createHash('sha256').update(await readFile(pdfPath)).digest('hex')}`).toBe(receivedJson.proof.documentHash);
   await issuer.close();
   // A separate BrowserContext has none of the issuer page's storage or in-memory data.
@@ -208,6 +215,12 @@ try {
     for (let act = 0; act < 3; act++) {
       await page.locator('.kp-acts button').nth(act).click();
       expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+      if (act === 0) {
+        const source = await page.locator('.ij-source').boundingBox();
+        const document = await page.locator('.ij-document').boundingBox();
+        expect(source.y + source.height).toBeLessThan(document.y);
+        await expect(page.locator('.ij-source')).toContainText('실제 원장 연동 아님');
+      }
       if (width !== 1440) await shot(`${width}-act-${act + 1}`);
     }
   }

@@ -20,12 +20,20 @@ test('live certificate is deterministic, changed quantity changes the complete f
   writeFileSync('tmp/pdfs/live/altered.pdf', altered);
 });
 
-test('historical replay preserves the registered PDF while the next customer changes', async () => {
+test('default replay reproduces the finalized Inha registration and preserves the historical Hanul bytes', async () => {
   const font = readFileSync('apps/web/public/fonts/PretendardVariable.ttf');
-  const historical = reproduceRecordedIssuance(font);
-  assert.equal(await sha256(historical.original), recordedProof.documentHash);
-  assert.notEqual(await sha256(historical.altered), recordedProof.documentHash);
-  const next = renderCertificate(font, recordedProof.documentId, recordedProof.issuedAt);
-  assert.notEqual(await sha256(next), recordedProof.documentHash);
-  assert.equal(historical.customer, '한울테크홀딩스㈜');
+  const current = reproduceRecordedIssuance(font);
+  assert.equal(await sha256(current.original), recordedProof.documentHash);
+  assert.deepEqual(current.original, new Uint8Array(readFileSync('docs/portfolio/2026-11-06-sepolia/inha-20261106/inha-original.pdf')));
+  assert.notEqual(await sha256(current.altered), recordedProof.documentHash);
+  assert.equal(current.customer, '인하테크홀딩스㈜');
+
+  const historical = {
+    documentId: `0x603157e939369a0a8b69499c6849e26ea0938b394a099130c9fb71e7303af32a` as const,
+    documentHash: `0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842` as const,
+    issuedAt: '1793904567',
+  };
+  const historicalPdf = renderCertificate(font, historical.documentId, historical.issuedAt, false, '한울테크홀딩스㈜');
+  assert.equal(await sha256(historicalPdf), historical.documentHash);
+  assert.deepEqual(historicalPdf, new Uint8Array(readFileSync('docs/portfolio/2026-11-06-sepolia/pdf/registered-original.pdf')));
 });

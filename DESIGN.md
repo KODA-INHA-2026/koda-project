@@ -83,7 +83,7 @@
 - Network wording: primary map/block labels say Ethereum; an execution note says Sepolia testnet. Real block numbers and explorer links are test execution evidence. The signed domain remains chainId 11155111 and is shown accurately in technical details.
 - Separate why a public blockchain is used from why Ethereum L1 was selected. The former is external access to the registered comparison basis; the latter is the chosen public-L1/EVM design for issuer authorization, first-registration preservation, and fixed-state reads. Do not claim these are unique to Ethereum or establish optimal operating cost.
 - Three checks: issued by the configured issuer; matches issuance original; no difference relative to that original. Test issuer ≠ official KODA identity. Do not imply all intermediate edits or current validity are proven.
-- New fictional customer: 인하테크홀딩스㈜. The already registered historical PDF remains 한울테크홀딩스㈜; changing it would change its hash.
+- Default fictional customer: 인하테크홀딩스㈜, using its separately finalized registration at block 12076051. The historical 한울테크홀딩스㈜ PDF and registration are preserved separately; neither is renamed or re-signed.
 
 ## Implementation constraints
 - Existing React/Vite/TypeScript/CSS and viem; no new dependency needed. CSS keyframes/transitions are sufficient for the current scene vocabulary.
@@ -94,7 +94,7 @@
 
 ## Open questions
 - Sharing route remains `/sepolia-20261106/`. The user subsequently requested a link to the locally reviewed two-act version; publish the verified build at this route and check the public version.
-- [ ] User wallet approval for a new 인하테크홀딩스㈜ certificate; collect for next session, do not prompt during overnight work.
+- [x] User approved the new 인하테크홀딩스㈜ certificate. Registration, finality and exact original PDF bytes were verified; the public default and external package now use that proof.
 - [ ] Production issuer identity governance, key rotation/revocation and chosen RPC trust policy remain future decisions, not implemented claims.
 - [ ] External verifier/code distribution is now authorized as a review prototype (03). Both paths use the same hash, signature, registry and trust criteria; identity onboarding, access rights and production RPC policy remain unconfirmed. PDF/JSON format is our technical design rather than a CEO-prescribed file format.
 
@@ -114,3 +114,9 @@
 - Keep detailed code, RPC semantics, fee equations, references and limitations in the technical appendix. The main map remains Ethereum; test execution evidence retains Sepolia and chainId 11155111.
 - Audience comprehension comes from spatially persistent `RPC 조회`, `등록 기록 응답`, browser hash/signature processing and smart-contract record labels. Preserve the previous 6.9-second minimum motion timing; real network waits may extend it. Pause, skip-to-result, replay and reduced motion remain available. Do not solve information overload simply by slowing a text carousel.
 - In 01, SHA-256/EIP-712 stays beside the PDF-derived proof, issuer authorization and no-overwrite rules stay beside Ethereum, and observed receipt inclusion remains distinct from finality. Do not reuse the receiver's potentially unrelated proof result as issuer finality evidence.
+
+## 2026-11-06 · 인하 자료 반영과 수탁정보에서 PDF로의 연결
+- Scope is only the default Inha evidence and the source-to-document link. Re-signed comparison and additional scenes remain outside this change.
+- Show a compact KODA source row before the existing PDF/registration/delivery flow. Customer, native BTC quantity and balance-as-of come from the same demo snapshot used by the PDF generator; label the values as fictional and not connected to a real KODA ledger.
+- Preserve the registered PDF bytes and all trust/verification rules. Use the actual Inha proof and receipt in both browser downloads and the external package's example and observed reports.
+- Keep 02's dashboard and continuous query/response behavior intact. No new wallet approval or registration is needed to publish already finalized evidence.

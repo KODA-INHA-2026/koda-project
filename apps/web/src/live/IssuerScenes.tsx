@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { PresentationProps } from './presentation-types';
 import { transactionUrl } from './wallet';
+import { DEMO_CUSTODY_SNAPSHOT } from './certificate';
 import './issuer-scenes.css';
 
 type IssueJourneyProps = PresentationProps & {
@@ -13,7 +14,7 @@ type IssueJourneyProps = PresentationProps & {
 };
 
 const BEATS = [
-  { label: '발급', detail: 'BTC 잔고 증명서 원본을 확정합니다' },
+  { label: '발급', detail: '수탁정보를 바탕으로 BTC 잔고 증명서를 만듭니다' },
   { label: '등록', detail: '나중에 대조할 검증정보를 Ethereum에 남깁니다' },
   { label: '전달', detail: 'PDF와 검증정보를 고객사가 받아 함께 제출합니다' },
 ] as const;
@@ -53,6 +54,16 @@ export function IssueJourney(props: IssueJourneyProps) {
     </header>
 
     <section className={`ij-canvas is-frame-${frame}`} aria-label="증명서 발급, 검증정보 등록, 고객사 전달 흐름">
+      <div className="ij-source" aria-label="PDF 생성에 사용하는 가상 KODA 수탁정보">
+        <div className="ij-source-heading"><strong>KODA · 발급에 사용할 수탁정보</strong><span>시연용 가상 데이터 · 실제 원장 연동 아님</span></div>
+        <dl>
+          <div><dt>법인</dt><dd>{props.customer}</dd></div>
+          <div><dt>수탁 BTC 전체 잔고</dt><dd>{DEMO_CUSTODY_SNAPSHOT.quantity} {DEMO_CUSTODY_SNAPSHOT.asset}</dd></div>
+          <div><dt>잔고 기준시점</dt><dd>{props.asOf}</dd></div>
+        </dl>
+      </div>
+      <div className="ij-source-link"><Icon name="arrow" /><span>같은 정보로 PDF 생성</span></div>
+      <div className="ij-flow">
       <svg className="ij-routes" viewBox="0 0 1000 430" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <marker id="ij-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
@@ -68,13 +79,12 @@ export function IssueJourney(props: IssueJourneyProps) {
         </circle>}
       </svg>
 
-      <div className="ij-koda-label"><i />KODA · 증명서 발급</div>
       <section className="ij-document" aria-label="KODA가 발급한 가상 BTC 잔고 증명서">
         <header><strong>KODA</strong><span>가상 증명서</span></header>
         <Icon name="file" />
         <h2>BTC 잔고 증명서</h2>
         <p>{props.customer}</p>
-        <b>100 <small>BTC</small></b>
+        <b>{Number(DEMO_CUSTODY_SNAPSHOT.quantity)} <small>{DEMO_CUSTODY_SNAPSHOT.asset}</small></b>
         <dl>
           <div><dt>잔고 기준시점</dt><dd>{props.asOf}</dd></div>
           <div><dt>발급 기재시각</dt><dd>{issuedTime(props.proof?.issuedAt)}</dd></div>
@@ -109,6 +119,7 @@ export function IssueJourney(props: IssueJourneyProps) {
         <div className="ij-chain-evidence"><span>블록 포함 <b>{props.receiptBlock ? `#${props.receiptBlock}` : '확인 전'}</b></span><span>finality <b>최종 확정은 조회 시 확인</b></span></div>
         <small>PDF 원문과 고객 정보는 등록하지 않습니다</small>
       </section>
+      </div>
     </section>
 
     <footer className="ij-footer">

@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-06T11:16:25.236Z",
+  "checks": [
+    {
+      "width": 1440,
+      "sourceBeforePdf": true,
+      "noHorizontalOverflow": true,
+      "proofChainOverlap": false
+    },
+    {
+      "width": 1280,
+      "sourceBeforePdf": true,
+      "noHorizontalOverflow": true,
+      "proofChainOverlap": false
+    },
+    {
+      "width": 390,
+      "sourceBeforePdf": true,
+      "noHorizontalOverflow": true,
+      "proofChainOverlap": false
+    }
+  ]
+}

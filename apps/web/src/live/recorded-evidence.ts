@@ -3,7 +3,6 @@ import { sha256, type Proof, type TrustedDeployment } from './verification.js';
 import type { SavedIssuance } from './storage.js';
 
 // Public testnet transaction, explicitly approved and executed on 2026-11-06 KST.
-// Never change the historical customer or PDF layout to match a new scenario.
 export const recordedDeployment: TrustedDeployment = {
   chainId: 11155111,
   contract: '0xc13083047c0657ff576a972469d982b51e43dcb3',
@@ -11,14 +10,14 @@ export const recordedDeployment: TrustedDeployment = {
   deploymentTransaction: '0x2bf8e548990c8e391430c7f2f3344a955e912bf1efc915740617a8d51bb80de7',
 };
 export const recordedProof: Proof = {
-  documentId: '0x603157e939369a0a8b69499c6849e26ea0938b394a099130c9fb71e7303af32a',
-  documentHash: '0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842',
-  issuedAt: '1793904567',
-  signature: '0x02e3dfd1671896ecbd43e7fbd5b8066d6fde80a2512d47c9a648123ba9c3e5b350eddb0e928acc4824a405a8a37db2ae149df95aa721656a07c3800a642ab9351b',
-  transactionHash: '0x6c0d68e1f292a3ba9322e733291c0b2fb8da4fbbfe505d0466613438b0c2d1e8',
+  documentId: '0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe',
+  documentHash: '0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c',
+  issuedAt: '1793961780',
+  signature: '0xc1073390159d8f163b444be0065aa6950f5982fcaa8a0beba9102fb9f345f6d544c438d0d0f6a313758d07706c919160b8212d51151f533af03f94501b07e5ea1c',
+  transactionHash: '0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb',
 };
-export const recordedBlock = '12071362';
-export const recordedCustomer = '한울테크홀딩스㈜';
+export const recordedBlock = '12076051';
+export const recordedCustomer = '인하테크홀딩스㈜';
 
 export function reproduceRecordedIssuance(font: Uint8Array): SavedIssuance {
   return {

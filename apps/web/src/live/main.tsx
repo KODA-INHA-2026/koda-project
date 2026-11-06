@@ -249,7 +249,7 @@ function App() {
     </details>
     <div className="issuer-actions">
       <div className="setup-actions"><button disabled={busy} onClick={replayRecorded}>공개 실증 기록으로 돌아가기</button>{previousIssuance?.deployment && previousIssuance.proof.transactionHash !== recordedProof.transactionHash && <button disabled={busy} onClick={resumePrevious}>이 브라우저의 최근 발급 불러오기</button>}</div>
-      <p>다음 발급 사례: {CUSTOMER} · 100 BTC. 기존 한울테크홀딩스 실증 문서는 그대로 보존해요.</p>
+      <p>공개 시연 자료는 인하테크홀딩스㈜의 실제 등록 원본입니다. 기존 한울테크홀딩스 실증 기록은 별도로 보존했습니다.</p>
       <p>새 발급은 MetaMask에서 문서 서명과 등록 거래를 직접 승인해야 해요.</p>
       {saved?.deployment && !sharedRegistry && <p role="status">새 시험 계약은 이 공개 검증 화면의 신뢰 목록에 아직 등록되지 않았습니다. 고객사 전달 기능은 사전에 공개한 계약에서 등록한 자료에만 열립니다.</p>}
       <div className="setup-actions">{saved && !saved.proof.transactionHash && <button disabled={busy || !trusted || !connection} onClick={() => void run(() => submit(saved))}>서명한 문서 등록 재시도</button>}<button className="primary" disabled={busy || !trusted || !connection} onClick={issue}>인하테크홀딩스 증명서 발급·등록</button></div>

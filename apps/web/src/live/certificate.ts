@@ -1,8 +1,15 @@
 import { createDisplayPdf, type PdfEntry } from '../../../../packages/protocol/src/pdf.js';
 import type { Hex } from 'viem';
 
-export const CUSTOMER = '인하테크홀딩스㈜';
-export const AS_OF = '2026-10-31 23:59:59 KST';
+// Shared by the issuance view and PDF generator; these are demo values, not a KODA ledger feed.
+export const DEMO_CUSTODY_SNAPSHOT = {
+  customer: '인하테크홀딩스㈜',
+  asset: 'BTC',
+  quantity: '100.00000000',
+  asOf: '2026-10-31 23:59:59 KST',
+} as const;
+export const CUSTOMER = DEMO_CUSTODY_SNAPSHOT.customer;
+export const AS_OF = DEMO_CUSTODY_SNAPSHOT.asOf;
 export async function createCertificate(documentId: Hex, issuedAt: string, altered = false) {
   const response = await fetch(`${import.meta.env.BASE_URL}fonts/PretendardVariable.ttf`);
   if (!response.ok) throw new Error('PDF용 한글 글꼴을 불러오지 못했습니다.');
@@ -14,7 +21,7 @@ export function renderCertificate(font: Uint8Array, documentId: Hex, issuedAt: s
     { field: 'customer', label: '법인', value: `${customer} (가상 DAT 법인)` },
     { field: 'scope', label: '잔고 범위', value: '해당 법인의 KODA 수탁 BTC 전체 잔고 (가상)' },
     { field: 'asset', label: '자산', value: 'Bitcoin 네트워크의 네이티브 BTC / 랩드 BTC 아님' },
-    { field: 'quantity', label: '수탁 잔고', value: altered ? '120.00000000 BTC' : '100.00000000 BTC' },
+    { field: 'quantity', label: '수탁 잔고', value: `${altered ? '120.00000000' : DEMO_CUSTODY_SNAPSHOT.quantity} ${DEMO_CUSTODY_SNAPSHOT.asset}` },
     { field: 'asof', label: '잔고 기준시점', value: AS_OF },
     { field: 'issued', label: '발급 기재시각 UTC', value: new Date(Number(issuedAt) * 1000).toISOString() },
     { field: 'id', label: '문서 ID', value: documentId },
