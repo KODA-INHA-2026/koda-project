@@ -1,9 +1,9 @@
 {
-  "purpose": "Continuous third-party request, registry response and PDF comparison",
-  "sourceCommit": "df982fff4bb38a332b8c7eb4343aec6c0bc7c857",
   "sourceBranch": "feat/first-demo",
-  "builtAtUtc": "2026-11-06T05:42:58.4998639Z",
+  "sourceCommit": "f1559be8f9fcf9c5c360fcbe568adcbbf7fd3119",
+  "builtAtUtc": "2026-11-06T06:26:56.4389315Z",
   "designNetwork": "Ethereum L1",
+  "network": "Ethereum Sepolia",
   "asset": "native BTC (fictional certificate)",
-  "network": "Ethereum Sepolia"
+  "purpose": "Actual PDF and verification JSON handoff to KODA receiver dashboard"
 }
