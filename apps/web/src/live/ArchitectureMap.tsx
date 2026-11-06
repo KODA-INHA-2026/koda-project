@@ -1,5 +1,5 @@
 import type { VerificationResult, VerificationTraceEvent } from './verification';
-import { architectureMapState, type SceneId } from './architecture-state';
+import { architectureMapState, type ArchitectureState, type SceneId } from './architecture-state';
 import './architecture-map.css';
 
 export type { SceneId } from './architecture-state';
@@ -10,38 +10,24 @@ export interface ArchitectureMapProps {
   trace?: VerificationTraceEvent[];
   result?: VerificationResult;
   receiptBlock?: string;
-  review?: { label: string; detail: string; stepId: string; state?: string; playing?: boolean };
+  motion?: ArchitectureState & { playing: boolean };
 }
 
 function actorClass(active: boolean) { return `kam-actor${active ? ' is-active' : ''}`; }
 function pathClass(active: boolean, complete = false, flowing = active) { return `kam-path${active ? ' is-active' : ''}${complete ? ' is-complete' : ''}${flowing ? ' is-flowing' : ''}`; }
 function pathMarker(active: boolean) { return active ? 'url(#kam-arrow-active)' : 'url(#kam-arrow)'; }
 
-const REVIEW_CHAIN_STEPS = new Set([
-  'deployment-validation', 'chain-id', 'finalized-block', 'transaction-input', 'receipt',
-  'canonical-block', 'authorized-issuer', 'record',
-]);
-
 export function ArchitectureMap(props: ArchitectureMapProps) {
-  const currentState = architectureMapState(props);
-  const reviewStopped = props.review && ['failure', 'pending', 'stopped'].includes(props.review.state ?? '');
-  const state = props.review ? {
-    focus: REVIEW_CHAIN_STEPS.has(props.review.stepId)
-      ? reviewStopped ? 'query' as const : 'response' as const
-      : 'third-party' as const,
-    label: props.review.label,
-    detail: props.review.detail,
-    chainReadComplete: false,
-  } : currentState;
+  const state = props.motion ?? architectureMapState(props);
   const resultComplete = props.scene === 'compare' && state.chainReadComplete;
-  const reviewFlowing = !props.review || (props.review.playing === true && !reviewStopped);
+  const reviewFlowing = !props.motion || props.motion.playing;
   const kodaActive = ['koda', 'write'].includes(state.focus);
   const customerActive = state.focus === 'handoff';
   const thirdActive = ['third-party', 'query', 'response'].includes(state.focus);
   const ethereumActive = resultComplete || ['ethereum', 'write', 'query', 'response'].includes(state.focus);
 
-  return <aside className={`kam${props.review ? ' is-review' : ''}${props.review && !props.review.playing ? ' is-review-paused' : ''}${thirdActive ? ' is-verifier' : ''}`} aria-label={`전체 아키텍처. 현재 위치: ${state.label}. ${state.detail}`}>
-    <p className="kam-current"><span>{props.review ? '처리 기록' : '현재 위치'}</span><strong>{state.label}</strong></p>
+  return <aside className={`kam${props.motion && !props.motion.playing ? ' is-review-paused' : ''}${thirdActive ? ' is-verifier' : ''}`} aria-label={`전체 아키텍처. 현재 위치: ${state.label}. ${state.detail}`}>
+    <p className="kam-current"><span>현재 위치</span><strong>{state.label}</strong></p>
     <svg className="kam-diagram" viewBox="0 0 336 610" role="img" aria-labelledby="kam-title kam-desc">
       <title id="kam-title">KODA 증빙 전달과 제3자 검증 아키텍처</title>
       <desc id="kam-desc">고객사 소유 BTC와 KODA의 수탁 관리는 Bitcoin 네트워크에 연결됩니다. KODA가 발급한 PDF는 고객사를 거쳐 제3자에게 전달됩니다. 문서 검증정보는 KODA가 Ethereum에 등록하며, 제3자는 Bitcoin이 아닌 Ethereum에서 그 기록을 조회합니다.</desc>

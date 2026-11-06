@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active. Last refreshed: 2026-11-06.
-- Current work boundary: the user rejected the seven-chapter version as dense and fragmented. Rebuild the presentation around TWO acts: issuance/registration/customer delivery, then third-party verification. After local review the user requested a link, authorizing publication of this two-act version. The CEO's external-document verification brief remains the content authority. Research informs communication, not new business or proof claims.
+- Current work boundary (latest): continuous dashboard → Ethereum → dashboard verification motion is the approved focus. New comparison cases and customer file/package handoff remain deferred. Earlier context: the user rejected the seven-chapter version as dense and fragmented. Rebuild the presentation around TWO acts: issuance/registration/customer delivery, then third-party verification. After local review the user requested a link, authorizing publication of this two-act version. The CEO's external-document verification brief remains the content authority. Research informs communication, not new business or proof claims.
 - Refinement baseline: the user accepted the architecture-led version as the draft to improve. Primary architecture and narrative labels use Ethereum, the planned document registry chain. Identify Sepolia separately as the actual test execution environment; preserve the real chain ID, RPC, wallet checks and explorer destinations. Never imply that existing test transactions were executed on Ethereum mainnet.
 - Surface: `/live.html`, the BTC document verification presentation and working Sepolia verifier.
 - Latest user correction (2026-11-06, after first publication): the dense technical version is tiring and loses the point. Keep the overall architecture visible beside a focused scene, activate the current actor/location/data path, and make the blockchain's role and added value visible through operations. Technical names and long hashes alone do not explain the system.
@@ -28,7 +28,7 @@
 
 ## Information architecture
 - Exactly two presentation acts: (1) KODA issues a PDF, registers verification information on Ethereum, and delivers the PDF to the customer; (2) the third party verifies the submitted PDF in a single KODA dashboard. Internal technical phases do not create more pages or numbered chapters.
-- The verification dashboard stays in place. Show a visual event beside it: a request travels to Ethereum, the existing registry record is highlighted, the response returns and is compared with the submitted file. A new block must not appear when reading. Result feedback is immediate; optional paced replay summarizes observed processing without additional RPC.
+- The verification dashboard stays in place. Show a visual event beside it: a request travels to Ethereum, the existing registry record is highlighted, the response returns and is compared with the submitted file. A new block must not appear when reading. One evidence-gated visual sequence starts at the verification click. The real result is immediately accessible in a status line if it finishes first; the main verdict follows the visible request, record response and comparison. Explicit replay adds no RPC.
 - Put each business actor in the architecture ONCE. Connect KODA and the customer directly to Bitcoin for custody/asset attribution, and connect KODA and the third party directly to Ethereum for registration/query. No separate custody-background box, no third-party path to Bitcoin, no bridge between the two chains.
 - The first act gives the context briefly and offers immediate access to the verifier. The second act is the core demonstration. Original and altered files are two inputs to the same UI, not additional scenes.
 - A compact presentation transport offers play/pause, previous/next and jump to verifier. It is not a pretend KODA product navigation.
@@ -43,7 +43,7 @@
 - Actor/processing location stays visible, with current actor emphasized.
 - Visual continuity: the exact PDF becomes a hash; hash plus ID/time becomes signed typed data; contract checks lead to a transaction/block; the original is then compared with a submitted file.
 - Real data and state precede spectacle. Replay is always labeled; playback time is never presented as network execution time.
-- After verification, show the result immediately. A small paced replay control may explain the observed local inspection, registry read and comparison, staying on the same screen. Clearly label replay, allow pause/manual movement, never add RPC or unobserved success. Reduced motion uses manual movement only.
+- Start motion with the verification click, not an automatic rewind after completion. Show a document-ID request from the dashboard button to Ethereum, then a card carrying the observed original hash back into the dashboard comparison slot. Use minimum reading time plus actual trace gates. Pause all motion; offer result skip and explicit replay. Reduced motion shows real results directly. No invented response on errors or pending results.
 - Map scope notes distinguish the native BTC being certified on Bitcoin from document verification information recorded on Ethereum. The certificate's balance field is not the asset itself. Use distinct orthogonal registration/query/response paths without implying special meaning in their bends.
 
 ## Visual language
@@ -62,7 +62,7 @@
 ## Accessibility
 - Target WCAG 2.2 AA basics: readable contrast, semantic buttons/headings, visible focus, labels, 44px touch targets.
 - Every player control works by keyboard. Status uses polite live regions; errors use alerts. Color is accompanied by text/icons.
-- Reduced motion disables auto-advance and decorative movement; manual navigation and all results remain available.
+- Reduced motion disables verifier choreography and exposes actual results directly. Changing this preference during or after verification must not restart an old animation or reset a busy run to ready.
 
 ## Responsive behavior
 - Desktop presentation first (1280–1920), with functional 390px mobile layout.

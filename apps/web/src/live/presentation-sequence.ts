@@ -1,30 +1,38 @@
-import type { SceneId } from './architecture-state';
-import type { VerificationTraceEvent } from './verification';
+import type { ArchitectureFocus } from './architecture-state';
+import type { VerificationResult, VerificationTraceEvent } from './verification';
 
 export const ACTS = ['발급·등록·전달', '제3자 검증'] as const;
-export type ReviewPhase = 'inspect' | 'lookup' | 'compare';
+export type MotionStep = 'ready' | 'prepare' | 'request' | 'record' | 'return' | 'compare' | 'result';
+export const MOTION_MS: Record<MotionStep, number> = {
+  ready: 0, prepare: 900, request: 1600, record: 1100, return: 1800, compare: 1500, result: 0,
+};
+export interface MotionEvidence { trace: VerificationTraceEvent[]; result?: VerificationResult }
 
-export function chapterForTrace(trace: VerificationTraceEvent[]): SceneId {
-  const event = trace.findLast(item => item.state === 'running') ?? trace.at(-1);
-  if (!event) return 'receive';
-  if (['input', 'sha256', 'signature'].includes(event.id)) return 'inspect';
-  if (event.id === 'hash-comparison') return 'compare';
-  return 'lookup';
+// These are minimum presentation durations, never network timing or proof of completion.
+// Each transition also needs evidence from the existing verifier.
+export function nextMotionStep(step: MotionStep, { trace, result }: MotionEvidence): MotionStep {
+  const attempted = trace.some(event => event.id === 'record');
+  const recordRead = trace.some(event => event.id === 'record' && event.state === 'success')
+    && result?.chainRecordValid === true && Boolean(result.chainHash);
+  const compared = trace.some(event => event.id === 'hash-comparison');
+  switch (step) {
+    case 'prepare': return attempted ? 'request' : result ? 'result' : step;
+    case 'request': return recordRead ? 'record' : result ? 'result' : step;
+    case 'record': return recordRead ? 'return' : result ? 'result' : step;
+    case 'return': return recordRead && compared ? 'compare' : result ? 'result' : step;
+    case 'compare': return result ? 'result' : step;
+    default: return step;
+  }
 }
 
-// A summary of observed work, not a second execution or an exhaustive RPC timeline.
-export function observedReviewPhases(trace: VerificationTraceEvent[]): ReviewPhase[] {
-  const phases: ReviewPhase[] = [];
-  if (trace.some(event => ['input', 'sha256', 'signature'].includes(event.id))) phases.push('inspect');
-  if (trace.some(event => !['deployment-validation', 'input', 'sha256', 'signature', 'hash-comparison'].includes(event.id))) phases.push('lookup');
-  if (trace.some(event => event.id === 'hash-comparison')) phases.push('compare');
-  if (!phases.length && trace.some(event => event.id === 'deployment-validation')) phases.push('lookup');
-  return phases;
+export function motionFocus(step: MotionStep): ArchitectureFocus {
+  if (step === 'request') return 'query';
+  if (step === 'record') return 'ethereum';
+  if (step === 'return') return 'response';
+  return 'third-party';
 }
 
-export function reviewMapStep(phase: ReviewPhase, trace: VerificationTraceEvent[]) {
-  const events = trace.filter(event => phase === 'inspect' ? ['input', 'sha256', 'signature'].includes(event.id)
-    : phase === 'compare' ? event.id === 'hash-comparison'
-      : !['input', 'sha256', 'signature', 'hash-comparison'].includes(event.id));
-  return events.findLast(event => event.state === 'failure') ?? events.at(-1);
-}
+export const MOTION_LABEL: Record<MotionStep, string> = {
+  ready: '제3자 · 문서 검증', prepare: 'PDF·발급정보 확인', request: '문서 ID로 조회',
+  record: '등록된 원본 확인', return: '등록 기록 수신', compare: '제출 PDF와 대조', result: '검증 결과',
+};
