@@ -2,6 +2,7 @@
 
 ## Source of truth
 - Status: Active. Last refreshed: 2026-11-06.
+- Current work boundary: after reviewing the content plan, the user authorized implementation following additional Toss research. Apply the scene/copy improvements documented in `docs/design/toss-research-application-2026-11-06.md`. The CEO's external-document verification brief remains the content authority; research informs communication, not new business or proof claims.
 - Refinement baseline: the user accepted the architecture-led version as the draft to improve. Primary architecture and narrative labels use Ethereum, the planned document registry chain. Identify Sepolia separately as the actual test execution environment; preserve the real chain ID, RPC, wallet checks and explorer destinations. Never imply that existing test transactions were executed on Ethereum mainnet.
 - Surface: `/live.html`, the BTC document verification presentation and working Sepolia verifier.
 - Latest user correction (2026-11-06, after first publication): the dense technical version is tiring and loses the point. Keep the overall architecture visible beside a focused scene, activate the current actor/location/data path, and make the blockchain's role and added value visible through operations. Technical names and long hashes alone do not explain the system.

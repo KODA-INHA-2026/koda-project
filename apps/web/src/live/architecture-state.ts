@@ -48,11 +48,23 @@ function lastTrace(trace: VerificationTraceEvent[] = []) {
   return [...trace].reverse().find(event => event.state === 'running') ?? trace.at(-1);
 }
 
-function resultState(result: VerificationResult): ArchitectureState {
+function failedTrace(trace: VerificationTraceEvent[] = []) {
+  return [...trace].reverse().find(event => event.state === 'failure');
+}
+
+function resultState(result: VerificationResult, trace?: VerificationTraceEvent[]): ArchitectureState {
   if (result.status === 'match') return state('third-party', '검증 완료 · 원본 일치', '확정된 공개 기록과 제출 PDF 대조 완료', result.chainRecordValid === true);
   if (result.status === 'file-mismatch') return state('third-party', '검증 완료 · 제출본 불일치', '확정 기록은 유효하고 제출 PDF만 원본과 다름', result.chainRecordValid === true);
   if (result.status === 'pending') return state('third-party', '검증 중단 · 확정 대기', '등록 기록이 finalized 되기 전이라 판정하지 않음');
-  if (result.status === 'unavailable') return state('third-party', '검증 중단 · 공개 조회 실패', '공개 기록 또는 배포 신뢰 기준을 확인하지 못해 판정하지 않음');
+  if (result.status === 'unavailable') {
+    const failed = failedTrace(trace);
+    if (failed?.id === 'input') return state('third-party', '검증 중단 · PDF 입력 확인 실패', result.message);
+    if (failed?.id === 'sha256') return state('third-party', '검증 중단 · PDF 해시 계산 실패', result.message);
+    if (failed?.id === 'signature') return state('third-party', '검증 중단 · 발급서명 확인 실패', result.message);
+    if (failed?.id === 'deployment-validation') return state('third-party', '검증 중단 · 컨트랙트 확인 실패', result.message);
+    if (failed && RPC_TRACE_IDS.has(failed.id)) return state('third-party', '검증 중단 · 공개 조회 실패', result.message);
+    return state('third-party', '검증 중단 · 검증정보 확인 실패', result.message);
+  }
   if (result.status === 'not-registered') return state('third-party', '검증 종료 · 확정 기록 없음', 'finalized 상태에서 문서 ID를 찾지 못함');
   if (result.status === 'signature-mismatch') return state('third-party', '검증 중단 · 발급서명 불일치', '문서 서명에서 지정 발급자 확인 실패');
   if (result.signatureValid !== true) return state('third-party', '검증 중단 · 입력 확인 실패', 'PDF 또는 검증정보 형식을 확인해 주세요');
@@ -60,14 +72,14 @@ function resultState(result: VerificationResult): ArchitectureState {
 }
 
 export function architectureMapState({ scene, busy, trace, result, receiptBlock }: ArchitectureStateInput): ArchitectureState {
-  if (scene === 'intro') return state('none', '전체 흐름', '업무 주체와 공개 검증기록의 연결');
+  if (scene === 'intro') return state('none', '전체 흐름', '증명서 발급부터 제3자 검증까지');
   if (scene === 'pdf') return state('koda', 'KODA · 증명서 발급', 'BTC 잔고 증명서 PDF 확정');
   if (scene === 'hash') return state('koda', 'KODA · 해시 계산', 'PDF 전체 바이트 → SHA-256');
   if (scene === 'sign') return state('koda', 'KODA · 발급서명', '문서 ID·해시·발급시각에 서명');
   if (scene === 'contract') return state('write', 'KODA → Ethereum', 'register(...) 검증 후 기록');
   if (scene === 'block') return state('ethereum', 'Ethereum · 포함과 확정', receiptBlock ? `등록 블록 #${receiptBlock}` : '거래 포함·finalized 확인');
   if (scene === 'handoff') return state('handoff', '고객사 · 원본 보관·제출', 'PDF는 체인 밖에서 제3자에게 전달');
-  if (result) return resultState(result);
+  if (result) return resultState(result, trace);
 
   const current = lastTrace(trace);
   if (!busy || !current) return state('third-party', '제3자 · 검증 준비', 'PDF 선택 후 공개 기록 조회');

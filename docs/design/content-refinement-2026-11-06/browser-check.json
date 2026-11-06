@@ -1,0 +1,12 @@
+{
+  "base": "http://127.0.0.1:5190/live.html",
+  "findings": [
+    "Live Sepolia original: match; all 5 trace groups completed.",
+    "Live Sepolia altered: file-mismatch; chain succeeded, comparison differed.",
+    "Injected RPC failure: no success indicators; retry action available.",
+    "Keyboard scene selection and reduced-motion playback guard passed.",
+    "1280px: all 8 scenes without page overflow.",
+    "390px: all 8 scenes without page overflow.",
+    "No browser page errors. No wallet connection or signing requested."
+  ]
+}

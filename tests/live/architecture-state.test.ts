@@ -33,10 +33,42 @@ test('receipt event decoding and finality comparison remain local processing', (
 test('unavailable and pending results never mark a completed chain read', () => {
   const unavailable = architectureMapState({ ...base, busy: false, result: result({ status: 'unavailable', signatureValid: true }) });
   const pending = architectureMapState({ ...base, busy: false, result: result({ status: 'pending', signatureValid: true, finalizedBlock: '100' }) });
-  assert.match(unavailable.label, /공개 조회 실패/);
+  assert.match(unavailable.label, /검증정보 확인 실패/);
   assert.equal(unavailable.chainReadComplete, false);
   assert.match(pending.label, /확정 대기/);
   assert.equal(pending.chainReadComplete, false);
+});
+
+test('unavailable results describe the actual local, deployment, or RPC failure', () => {
+  const local = architectureMapState({
+    ...base,
+    busy: false,
+    trace: [trace('sha256', 'failure', 'local')],
+    result: result({ status: 'unavailable', message: 'PDF 해시를 계산할 수 없습니다.' }),
+  });
+  const deployment = architectureMapState({
+    ...base,
+    busy: false,
+    trace: [trace('deployment-validation', 'failure', 'ethereum')],
+    result: result({ status: 'unavailable', message: '배포 신뢰 기준을 확인할 수 없습니다.' }),
+  });
+  const rpc = architectureMapState({
+    ...base,
+    busy: false,
+    trace: [trace('record', 'failure', 'ethereum')],
+    result: result({ status: 'unavailable', message: '확정된 기록을 조회할 수 없습니다.' }),
+  });
+
+  assert.match(local.label, /PDF 해시 계산 실패/);
+  assert.equal(local.detail, 'PDF 해시를 계산할 수 없습니다.');
+  assert.match(deployment.label, /컨트랙트 확인 실패/);
+  assert.equal(deployment.detail, '배포 신뢰 기준을 확인할 수 없습니다.');
+  assert.match(rpc.label, /공개 조회 실패/);
+  assert.equal(rpc.detail, '확정된 기록을 조회할 수 없습니다.');
+  for (const actual of [local, deployment, rpc]) {
+    assert.equal(actual.focus, 'third-party');
+    assert.equal(actual.chainReadComplete, false);
+  }
 });
 
 test('only a validated chain record completes both read paths', () => {

@@ -45,7 +45,7 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
         <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">고객사</text><text x="14" y="50">원본 보관</text><text x="14" y="68">업무상 제출</text>
       </g>
       <g className={actorClass(thirdActive)} transform="translate(290 40)">
-        <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">제3자</text><text x="14" y="50">PDF 선택</text><text x="14" y="68">독립 대조</text>
+        <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">제3자</text><text x="14" y="50">PDF 선택</text><text x="14" y="68">제출 문서 검증</text>
       </g>
 
       <path className={pathClass(state.focus === 'handoff')} d="M130 79 H154" markerEnd="url(#kam-arrow)" />
@@ -64,10 +64,10 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
 
       <g className={`kam-chain${ethereumActive ? ' is-active' : ''}`} transform="translate(42 225)">
         <rect className="kam-chain-boundary" width="336" height="128" rx="4" />
-        <text className="kam-kicker" x="16" y="25">공개 검증 인프라</text>
-        <text className="kam-chain-title" x="16" y="50">Ethereum</text>
-        <text className="kam-chain-sub" x="16" y="70">고객 BTC가 올라가는 체인이 아님</text>
-        <text className="kam-block-label" x="260" y="20" textAnchor="middle">블록 구조 · 개념도</text>
+        <text className="kam-chain-title" x="16" y="28">Ethereum</text>
+        <text className="kam-chain-sub" x="16" y="51">KODA가 발급한 문서의</text>
+        <text className="kam-chain-sub" x="16" y="68">검증정보를 기록합니다</text>
+        <text className="kam-block-label" x="260" y="18" textAnchor="middle">블록 구조 · 개념도</text>
         <g className="kam-blocks" transform="translate(194 24)"><rect x="0" y="8" width="36" height="36" /><path d="M36 26h12" /><rect x="48" y="8" width="36" height="36" /><path d="M84 26h12" /><rect x="96" y="8" width="36" height="36" /></g>
         <line x1="16" y1="78" x2="320" y2="78" />
         <text className="kam-contract" x="16" y="99">DocumentRegistry</text>
