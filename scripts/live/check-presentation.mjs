@@ -205,6 +205,28 @@ try {
   }
   expect(errors).toEqual([]);
   expect(walletRequests.filter(method => method !== 'eth_accounts')).toEqual([]);
+  const connectionPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await connectionPage.addInitScript(() => {
+    Object.defineProperty(window, 'ethereum', { value: { request: async ({ method }) => {
+      if (method === 'eth_accounts') return [];
+      if (method === 'eth_requestAccounts') {
+        window.qaConnectionPending = true;
+        return new Promise(() => {});
+      }
+      throw new Error(`Unexpected QA wallet method: ${method}`);
+    } } });
+  });
+  await connectionPage.goto(receiverUrl.href);
+  await connectionPage.locator('summary').filter({ hasText: /^발표자 실행 준비$/ }).click();
+  await connectionPage.locator('summary').filter({ hasText: /^실행 준비 / }).click();
+  await connectionPage.getByRole('button', { name: 'MetaMask 연결', exact: true }).click();
+  await expect.poll(() => connectionPage.evaluate(() => window.qaConnectionPending)).toBe(true);
+  await expect(connectionPage.locator('.ve-experience')).toHaveAttribute('data-motion-step', 'ready');
+  await expect(connectionPage.locator('.ve-code-cutaway')).toContainText('실행 전');
+  await expect(connectionPage.getByRole('button', { name: '문서 검증하기', exact: true })).toBeDisabled();
+  await expect(connectionPage.locator('.ve-live-state')).toHaveCount(0);
+  await connectionPage.close();
+  findings.push('An isolated mocked pending wallet connection does not start verification motion or claim a verification call; global action locks remain enabled.');
   findings.push('Reduced-motion changes during and after verification do not rewind to ready or trigger automatic replay. Pause stops block and arrival effects as well as packets.');
   findings.push('1440/1280/390px: all three scenes without horizontal overflow or browser exceptions. Only passive eth_accounts restoration; no wallet connection/signature/transaction requests. Mobile keeps results and captions; packet motion is desktop only.');
   await writeFile(`${output}/browser-check.json`, JSON.stringify({ base, checkedAt: new Date().toISOString(), findings }, null, 2));

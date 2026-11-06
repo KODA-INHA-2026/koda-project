@@ -2,9 +2,9 @@
   "title": "KODA 증빙 검증 · 기술 부록 구현 명세와 근거",
   "pageId": "page_e2ea284cc66c81918bfacd219cb82695",
   "artifactRef": "artifact_external_a99db12d-6311-4794-96e9-91547a301461",
-  "slideCount": 14,
-  "reviewedAt": "2026-11-06T07:58:38.5187677Z",
+  "slideCount": 16,
+  "reviewedAt": "2026-11-06T08:24:42.7668120Z",
   "format": "saved editable Spaces presentation",
   "source": "technical-reference-slides.mjs",
-  "note": "Technical reference revision: 14 slides rendered and reviewed; official citations, pinned source, ABI/storage/formulas/predicates and trust boundaries. Demo runtime unchanged."
+  "note": "Existing 14 technical reference slides preserved. Added and visually reviewed slides 15-16: actual viem client source, RPC getter execution, issuer wallet, off-chain signatures, transaction fees and RPC service costs. New registration confirmation pending transaction hash."
 }

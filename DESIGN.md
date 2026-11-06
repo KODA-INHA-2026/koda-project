@@ -105,3 +105,10 @@
 - Keep the map label `제3자`; explain banks, counterparties and external auditors once outside the tiny box. Map surface label follows dashboard versus external execution.
 - Technical appendix uses the light-gray, dark-navy, green/mint architecture style, one main technology per page, editable text/diagrams, and concrete implementation plus limitation. SHA-256, EIP-712/ECDSA secp256k1, Solidity/EVM and finalized RPC rules do not change.
 - No new wallet, deploy or registration action in this iteration. Discuss using preserved real transaction receipts for pitching; live wallet/finality remains a rehearsal option, not required on stage.
+
+## 2026-11-06 · 조회 코드와 실제 등록 근거
+- The latest request authorizes another certificate registration in the existing Sepolia registry, using the user's wallet approval. It does not authorize or require a fresh deployment. Preserve the previously registered historical PDF and evidence.
+- Keep the accepted delivery/query choreography and third-party dashboard. Add one compact code view outside the product surface to connect the verification action with browser hashing/signature recovery, viem, JSON-RPC `eth_call`, the registry getter, and the returned comparison values.
+- Code excerpts explain the current presentation step; actual trace/status must distinguish current computation, completed computation being shown, and replay. Wallet connection or another busy presenter operation must not start verification visuals.
+- Local verification and read-only calls need no recipient wallet or transaction fee. Off-chain document signing needs the issuer key but no on-chain gas. Registration changes contract state and its transaction sender pays gas in the current direct-send implementation. Production key custody and RPC billing remain separate decisions.
+- Keep detailed code, RPC semantics, fee equations, references and limitations in the technical appendix. The main map remains Ethereum; test execution evidence retains Sepolia and chainId 11155111.

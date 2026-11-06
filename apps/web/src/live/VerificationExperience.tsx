@@ -6,8 +6,17 @@ import { verifierOutcome } from './verifier-outcome';
 import './verification-experience.css';
 
 type Motion = { step: MotionStep; paused: boolean; replay: boolean; reducedMotion: boolean; replayRun: () => void; finish: () => void; toggle: () => void };
-type Props = PresentationProps & { motion: Motion };
+type Props = PresentationProps & { motion: Motion; verificationBusy: boolean };
 const short = (value?: string) => value ? `${value.slice(0, 10)}…${value.slice(-6)}` : '—';
+const EXECUTION_VIEW: Record<MotionStep, { owner: string; title: string; code: string; note: string }> = {
+  ready: { owner: '브라우저', title: '검증 버튼이 실행을 시작합니다', code: 'onClick → verifyDocument(pdfBytes, proof, trusted)', note: '파일을 고른 뒤 버튼을 누를 때만 실제 검증을 실행합니다.' },
+  prepare: { owner: '브라우저', title: 'PDF와 발급서명을 먼저 확인합니다', code: "sha256(pdfBytes)\nrecoverTypedDataAddress({ domain, message, signature })", note: 'PDF 전체 바이트의 해시를 계산하고 EIP-712 서명에서 발급자 주소를 복구합니다.' },
+  request: { owner: 'viem → JSON-RPC', title: '확정된 블록의 계약 상태를 요청합니다', code: "client.readContract({\n  functionName: 'records', args: [documentId],\n  blockNumber: finalized.number\n})", note: 'viem이 ABI 호출을 eth_call 요청으로 인코딩합니다. 지갑 연결·서명·가스비가 없는 읽기 요청입니다.' },
+  record: { owner: 'EVM · DocumentRegistry', title: 'public getter가 저장된 레코드를 읽습니다', code: 'mapping(bytes32 => DocumentRecord) public records;\nrecords(documentId) → (documentHash, issuedAt)', note: '컨트랙트 코드를 변경하거나 새 블록을 만들지 않고, 지정한 확정 블록의 상태를 실행해 읽습니다.' },
+  return: { owner: 'JSON-RPC → viem', title: 'ABI 응답을 문서 해시와 발급시각으로 해석합니다', code: 'const [chainHash, chainIssuedAt] = record', note: 'RPC의 반환값을 viem이 ABI에 따라 디코딩해 브라우저 검증 코드로 돌려줍니다.' },
+  compare: { owner: '브라우저', title: '제출 파일·서명·체인 기록을 대조합니다', code: 'Hfile === proof.documentHash\nproof.documentHash === chainHash', note: '같은 문서 ID의 확정된 등록값과 제출 PDF 전체 바이트가 이어지는지 확인합니다.' },
+  result: { owner: '브라우저', title: '실제 판정 결과를 세 질문으로 표시합니다', code: 'result.status', note: '성공·불일치·대기·확인 불가 등 실제 종료 상태를 표시합니다. 과정 다시 보기는 RPC를 다시 호출하지 않습니다.' },
+};
 function Icon({ name }: { name: 'file' | 'check' | 'close' | 'alert' | 'arrow' | 'play' | 'pause' }) {
   const paths = {
     file: 'M6 3h8l4 4v14H6ZM14 3v5h4M9 12h6M9 16h6',
@@ -29,9 +38,10 @@ function ProductIcon({ name }: { name: 'building' | 'audit' | 'verify' }) {
 export function VerificationExperience(props: Props) {
   const { step, paused, replay, reducedMotion } = props.motion;
   const trace = props.verificationTrace ?? [];
-  const outcome = verifierOutcome(props.result, props.busy);
+  const outcome = verifierOutcome(props.result, props.verificationBusy);
   const running = step !== 'ready' && step !== 'result';
-  const finished = step === 'result' && Boolean(props.result) && !props.busy;
+  const finished = step === 'result' && Boolean(props.result) && !props.verificationBusy;
+  const currentTrace = [...trace].reverse().find(event => event.state === 'running') ?? trace.at(-1);
   const fileHash = trace.findLast(event => event.id === 'sha256' && event.state === 'success')?.detail ?? props.result?.fileHash;
   const hasRecord = props.result?.chainRecordValid === true && Boolean(props.result.chainHash);
   const recordVisible = hasRecord && ['record', 'return', 'compare', 'result'].includes(step);
@@ -51,6 +61,10 @@ export function VerificationExperience(props: Props) {
                 : isMismatch ? '제출 PDF가 등록된 원본과 다릅니다'
                   : props.result?.status === 'not-registered' ? '이 문서 ID의 등록 기록을 찾지 못했습니다'
                     : '검증을 완료하지 못했습니다. 확인된 범위는 아래에 남겼습니다';
+  const execution = EXECUTION_VIEW[step];
+  const executionStatus = replay ? '완료된 실행 기록 재생 · 추가 요청 없음'
+    : props.verificationBusy ? '실제 검증 함수 실행 중'
+      : props.result ? '실제 실행 완료' : '실행 전';
 
   // Connect the real button, registry record and comparison slot, including after resize.
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -99,7 +113,7 @@ export function VerificationExperience(props: Props) {
           <label className="ve-upload"><span className="ve-upload-heading"><b>전달받은 두 파일</b><em>파일 불러오기</em></span><span className={`ve-file-row${props.selectedName ? ' is-loaded' : ''}`}><Icon name="file" /><span><b>증명서 PDF</b><small>{props.selectedName ?? '선택 전'}</small></span><small>{props.selectedName ? '불러옴' : '필요'}</small></span><span className={`ve-file-row${props.selectedProofName ? ' is-loaded' : ''}`}><span className="ve-json-icon" aria-hidden="true">{'{ }'}</span><span><b>검증정보 JSON</b><small>{props.selectedProofName ?? '문서 ID·원본 해시·발급서명'}</small></span><small>{props.selectedProofName ? '불러옴' : '필요'}</small></span><input aria-label="전달받은 PDF와 검증정보 선택" disabled={props.busy} type="file" multiple accept="application/pdf,application/json,.pdf,.json" onChange={event => { props.onSelectFiles(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label>
           {props.inputError && <p className="ve-input-error" role="alert">{props.inputError}</p>}
           {(props.selectedName || props.selectedProofName || props.inputLoading) && <div className="ve-input-status"><span>{props.inputLoading ? '파일 읽는 중' : props.inputSource === 'sample' ? '발표용 예시 자료' : '수신자가 선택한 파일'}</span><button disabled={props.busy} onClick={props.onClearFiles}>다시 선택</button></div>}
-          <button ref={buttonRef} className="ve-primary" disabled={!props.canVerify || props.busy || running} onClick={props.onVerify}>{props.busy ? '검증 중' : running ? '처리 흐름 표시 중' : props.result ? '다시 검증하기' : '문서 검증하기'}<Icon name="arrow" /></button>
+          <button ref={buttonRef} className="ve-primary" disabled={!props.canVerify || props.busy || running} onClick={props.onVerify}>{props.verificationBusy ? '검증 중' : running ? '처리 흐름 표시 중' : props.result ? '다시 검증하기' : '문서 검증하기'}<Icon name="arrow" /></button>
           <div className={`ve-compare-tray${returned ? ' has-record' : ''}`} aria-label="제출 PDF와 등록 기록 대조">
             <div className={`ve-file-digest${fileHash ? ' has-hash' : ''}`}><span>제출 PDF <small>SHA-256</small></span><code>{short(fileHash)}</code></div>
             <div className="ve-comparison-sign" aria-label={compared ? isMatch ? '해시 일치' : '해시 불일치' : '대조 전'}>{compared ? isMatch ? '=' : '≠' : '·'}</div>
@@ -126,6 +140,14 @@ export function VerificationExperience(props: Props) {
         </svg>
         <div ref={registryRef} className="ve-registry-record"><span>{recordVisible ? '등록된 원본 해시' : props.result?.status === 'not-registered' && finished ? '등록 기록 없음' : '문서 ID로 찾을 발급 기록'}</span><code>{recordVisible ? short(props.result?.chainHash) : 'documentHash'}</code><small>DocumentRegistry · 스마트컨트랙트</small></div>
         <p className="ve-chain-note">기존 기록 조회 · 새 거래 없음</p>
+        <section className={`ve-code-cutaway is-${step}`} aria-label="검증 버튼 뒤에서 실행되는 코드와 호출 요약">
+          <header><span>현재 실행 · {execution.owner}</span><small>{executionStatus}</small></header>
+          <div className="ve-code-current"><b>{execution.title}</b><code>{execution.code}</code><p>{execution.note}</p></div>
+          <details className="ve-code-details"><summary>전체 경로·관측 상태</summary>
+            <div className="ve-code-route" aria-label="브라우저 코드부터 스마트컨트랙트 조회까지의 실행 경로"><span>브라우저</span><i>›</i><span>viem</span><i>›</i><span>eth_call</span><i>›</i><span>Registry</span></div>
+            <p className="ve-code-prerequisites">실제 관측: {currentTrace ? `${currentTrace.operation} · ${currentTrace.state}` : '실행 전'}. 화면 단계는 완료된 trace를 느리게 재생할 수 있습니다. 검증 함수는 거래·영수증·이벤트·finality도 대조합니다.</p>
+          </details>
+        </section>
       </section>
 
       <div className="ve-transfer-layer" aria-hidden="true">
@@ -139,9 +161,9 @@ export function VerificationExperience(props: Props) {
     <div className="ve-flow-footer">
       <p className="ve-process-caption" aria-live="polite">{caption}</p>
       <div className="ve-playback">
-        <span className="ve-execution-status" role="status">{props.result && !props.busy ? <><b>실제 판정: {outcome.title}</b><small>{running ? `${replay ? '과정 다시 보기' : '처리 흐름 표시 중'} · 추가 조회 없음` : hasRecord ? '조회·대조 완료' : '확인된 범위까지 표시'}</small></> : <>{props.busy ? '실제 조회·검증 중' : '검증 결과에 맞춰 처리 흐름이 이어집니다'}</>}</span>
+        <span className="ve-execution-status" role="status">{props.result && !props.verificationBusy ? <><b>실제 판정: {outcome.title}</b><small>{running ? `${replay ? '과정 다시 보기' : '처리 흐름 표시 중'} · 추가 조회 없음` : hasRecord ? '조회·대조 완료' : '확인된 범위까지 표시'}</small></> : <>{props.verificationBusy ? '실제 조회·검증 중' : '검증 결과에 맞춰 처리 흐름이 이어집니다'}</>}</span>
         {running && !reducedMotion && <button aria-label={paused ? '처리 흐름 재생' : '처리 흐름 일시정지'} onClick={props.motion.toggle}><Icon name={paused ? 'play' : 'pause'} /></button>}
-        {running && props.result && !props.busy && <button onClick={props.motion.finish}>결과 바로 보기<Icon name="arrow" /></button>}
+        {running && props.result && !props.verificationBusy && <button onClick={props.motion.finish}>결과 바로 보기<Icon name="arrow" /></button>}
         {finished && !reducedMotion && <button onClick={props.motion.replayRun}>과정 다시 보기<Icon name="play" /></button>}
       </div>
     </div>

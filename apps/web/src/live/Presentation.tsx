@@ -15,10 +15,11 @@ export function Presentation(props: PresentationProps) {
   const [motion, setMotion] = useState<{ step: MotionStep; paused: boolean; replay: boolean; enteredAt: number; elapsed: number; previousResult?: VerificationResult; previousTrace?: VerificationTraceEvent[] }>();
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const trace = props.verificationTrace ?? [];
+  const verificationBusy = props.busy && props.stage === 'verify';
   const observedResult = motion && !motion.replay && props.result === motion.previousResult ? undefined : props.result;
   const observedTrace = motion && !motion.replay && props.verificationTrace === motion.previousTrace ? [] : trace;
-  const step = reducedMotion ? observedResult ? 'result' : props.busy ? 'prepare' : 'ready'
-    : motion?.step ?? (props.busy ? 'prepare' : props.result ? 'result' : 'ready');
+  const step = reducedMotion ? observedResult ? 'result' : verificationBusy ? 'prepare' : 'ready'
+    : motion?.step ?? (verificationBusy ? 'prepare' : props.result ? 'result' : 'ready');
   const next = nextMotionStep(step, { trace: observedTrace, result: observedResult });
   const scene = act === 0 ? (['custody', 'register', 'delivery'] as const)[frame]!
     : act === 2 || step === 'ready' ? 'receive' : step === 'prepare' ? 'inspect' : ['compare', 'result'].includes(step) ? 'compare' : 'lookup';
@@ -77,7 +78,7 @@ export function Presentation(props: PresentationProps) {
       <section className="kp-stage" aria-label="현재 발표 장면">
         {act === 0 ? <IssueJourney {...props} frame={frame} playing={playing} reducedMotion={reducedMotion}
           onFrame={next => { setPlaying(false); setFrame(next); }} onToggle={() => { if (frame === 2 && !playing) setFrame(0); setPlaying(value => !value); }} onVerifyScene={() => go(1)} />
-          : act === 2 ? <ExternalVerification /> : <VerificationExperience {...verifierProps} motion={{ step, paused: motion?.paused ?? false, replay: motion?.replay ?? false, reducedMotion,
+          : act === 2 ? <ExternalVerification /> : <VerificationExperience {...verifierProps} verificationBusy={verificationBusy} motion={{ step, paused: motion?.paused ?? false, replay: motion?.replay ?? false, reducedMotion,
             replayRun: () => begin(true), finish: () => setMotion(undefined),
             toggle: () => setMotion(value => value && { ...value, paused: !value.paused, enteredAt: performance.now(),
               elapsed: value.elapsed + (value.paused ? 0 : performance.now() - value.enteredAt) }),

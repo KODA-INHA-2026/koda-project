@@ -671,3 +671,102 @@ ZIP: 소스·규격·고정 신뢰 설정·의존성 라이선스
 - [tools/external-verifier/verify.ts](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/tools/external-verifier/verify.ts)
 - [docs/external-verification/IMPLEMENTATION.md](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/docs/external-verification/IMPLEMENTATION.md)
 - [apps/web/public/external-verifier/manifest.json](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/public/external-verifier/manifest.json)
+
+## 15. viem client · 발급자 지갑과 제3자 조회의 분리
+
+Wallet Client는 MetaMask의 시험 발급자만 사용한다. 수신자 검증은 Public Client의 읽기 전용 RPC 경로다.
+
+### 현재 소스 발췌 · 두 client 생성
+
+```text
+export const publicClient = createPublicClient({
+  chain: sepolia,
+  transport: http(RPC_URL, {
+    retryCount: 1, timeout: 15_000
+  })
+});
+
+// injectedWallet() 내부 반환문
+return createWalletClient({
+  chain: sepolia, transport: custom(provider)
+});
+```
+
+### readContract의 실제 경로
+
+verifyDocument() → readContract()
+→ ABI 인코딩 → eth_call
+→ RPC 노드에서 EVM getter 실행
+→ ABI 디코딩 → 브라우저 대조
+
+authorizedIssuer()와
+records(documentId)는 같은
+finalized 블록 번호를 사용한다.
+
+발급자의 서명·등록에는
+signTypedData·writeContract를 쓴다.
+
+**범위·한계:** Public Client가 “공개”라는 뜻은 무신뢰 노드라는 뜻이 아니다. 현재는 단일 공개 RPC를 사용한다. ABI·계약 주소·고정 신뢰 목록의 정확성은 별도 전제다.
+
+viem 공식 문서는 Public Client의 readContract가 ABI-encoded data로 call action을 사용한다고 설명한다. 이 슬라이드는 API·계약의 실제 네트워크 동작을 설명하며, 수신자가 KODA 운영 계정을 받는다고 주장하지 않는다.
+
+**공식 근거**
+
+- [viem 2.x, Public Client / readContract](https://viem.sh/docs/clients/public)
+- [viem 2.x, Wallet Client / signTypedData](https://viem.sh/docs/clients/wallet)
+- [Ethereum, JSON-RPC API](https://ethereum.org/developers/docs/apis/json-rpc/)
+
+**현재 구현**
+
+- [apps/web/src/live/wallet.ts#L1](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L1)
+- [apps/web/src/live/verification.ts#L237](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L237)
+
+## 16. 실행 비용 · 오프체인 서명과 등록 거래의 구분
+
+문서 서명·파일 검증·체인 등록·RPC 조회는 서로 다른 주체와 비용 구조를 가진다.
+
+### 누가 무엇을 실행하는가
+
+제3자 브라우저: SHA-256(PDF)·서명자 복구
+  로컬 연산, 체인 가스 없음
+
+시험 발급자 MetaMask
+  signTypedData(Document)
+  오프체인 서명, 등록 거래 아님
+
+시험 발급자 Wallet Client
+  simulateContract(register) → writeContract
+  Ethereum 상태 변경 거래 제출
+
+제3자 Public Client
+  eth_call / 거래·영수증·블록 조회
+
+### 가스·영수증·API 비용
+
+온체인 거래 수수료의 사후 계산:
+  receipt.gasUsed × receipt.effectiveGasPrice
+
+지갑이 승인한 등록 거래의
+송신자가 Sepolia ETH 가스를 낸다.
+문서 EIP-712 서명과 eth_call은
+온체인 가스를 내지 않는다.
+
+현재 검증기는 receipt의 상태·블록·
+이벤트를 대조한다. 수수료를 계산·
+표시하거나 합산하지는 않는다.
+RPC 사업자 API 요금은 별도다.
+
+**범위·한계:** Sepolia ETH는 테스트 자산이며 상용 비용 추정 근거가 아니다. 실제 운영의 발급량·가스 예산·누가 비용을 부담할지는 KODA의 운영 결정이 필요하다.
+
+Ethereum 공식 문서는 실제 가스비를 사용 가스량과 단위 가스 가격의 곱으로 설명한다. EIP-1559 영수증의 effectiveGasPrice를 사용한 이 식은 실제 지불액 산출에 쓰이며, 현 화면은 그 값을 별도 표기하지 않는다. simulateContract는 사전 시뮬레이션이고 상태 변경을 만들지 않으며, 후속 writeContract만 거래 제출 경로다.
+
+**공식 근거**
+
+- [Ethereum, Gas and fees](https://ethereum.org/developers/docs/gas/)
+- [viem 2.x, Wallet Client / signTypedData](https://viem.sh/docs/clients/wallet)
+- [viem 2.x, Public Client / readContract](https://viem.sh/docs/clients/public)
+
+**현재 구현**
+
+- [apps/web/src/live/wallet.ts#L89](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L89)
+- [apps/web/src/live/verification.ts#L252](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L252)

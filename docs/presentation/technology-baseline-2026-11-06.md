@@ -29,9 +29,9 @@ Ethereum 상용 운영과 KODA 공식 발급자 인증은 확정·구현했다�
 
 최신 부록은 피칭 설명이 아닌 기술 참고용이다. [기술 명세 원고](technical-reference-2026-11-06.md)에 각 장의 공식 문헌, 코드의 고정 커밋 링크와 추가 설명을 보존한다.
 
-14장: 기술 기준, 데이터 모델, SHA-256, EIP-712, ECDSA/secp256k1, EVM/ABI, DocumentRegistry 저장 구조, 거래·영수증·이벤트, finality, JSON-RPC/eth_call, 검증 JSON 파서, 배포 검증·발급자 신뢰, 최종 판정 조건, 두 실행 환경의 재현성.
+16장: 기술 기준, 데이터 모델, SHA-256, EIP-712, ECDSA/secp256k1, EVM/ABI, DocumentRegistry 저장 구조, 거래·영수증·이벤트, finality, JSON-RPC/eth_call, 검증 JSON 파서, 배포 검증·발급자 신뢰, 최종 판정 조건, 두 실행 환경의 재현성, viem Public/Wallet Client 분리, 실행 비용과 거래·조회 구분.
 
-계산식·서명 페이로드·호출 데이터·실제 저장 슬롯·검증 순서·신뢰 전제와 미구현 항목을 명시한다. 구조도의 회색·녹색/민트 색상을 유지하되 기술 명세를 읽을 수 있는 배치로 바꿨다. 기술이나 현재 데모 동작은 변경하지 않았다.
+계산식·서명 페이로드·호출 데이터·실제 저장 슬롯·검증 순서·신뢰 전제와 미구현 항목을 명시한다. 15장은 `verifyDocument → readContract → ABI → eth_call` 경로와 client 권한을, 16장은 오프체인 서명·등록 거래·가스·조회 비용을 분리한다. 구조도의 회색·녹색/민트 색상을 유지하되 기술 명세를 읽을 수 있는 배치로 바꿨다. 기술이나 현재 데모 동작은 변경하지 않았다.
 
 저장된 슬라이드 Page ID: `page_e2ea284cc66c81918bfacd219cb82695`. 최신 편집 원고는 `technical-reference-slides.mjs`, 이전 설명용 원고는 `technology-slides.mjs`다.
 
