@@ -1,9 +1,10 @@
 {
   "designNetwork": "Ethereum L1",
-  "builtAtUtc": "2026-11-06T11:17:30.5418776Z",
+  "builtAtUtc": "2026-11-06T16:04:42.8432850Z",
   "sourceBranch": "feat/first-demo",
   "network": "Ethereum Sepolia",
-  "purpose": "Finalized Inha evidence and shared custody data to PDF",
+  "purpose": "Actual signed alternate comparison within existing third-party verification scene",
   "asset": "native BTC (fictional certificate)",
-  "sourceCommit": "74bca57b4f24f5f01abdcc4deef0a35c8523a4f0"
+  "sourceCommit": "7d543a2ee778011381631c268c45a9e3d14acbe0",
+  "signedComparison": "user-approved message signature; no new registration transaction"
 }
