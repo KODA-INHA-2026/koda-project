@@ -1,9 +1,9 @@
 {
   "designNetwork": "Ethereum L1",
-  "sourceCommit": "a5797d72355fbf3a88bc27f9d935f1d82f1d2b40",
-  "asset": "native BTC (fictional certificate)",
-  "builtAtUtc": "2026-11-06T08:29:34.6448615Z",
-  "network": "Ethereum Sepolia",
+  "builtAtUtc": "2026-11-06T10:35:50.5166562Z",
   "sourceBranch": "feat/first-demo",
-  "purpose": "Verification code path and wallet/RPC technical reference"
+  "network": "Ethereum Sepolia",
+  "purpose": "Persistent blockchain labels on issuance, RPC request and response paths",
+  "asset": "native BTC (fictional certificate)",
+  "sourceCommit": "90ee1d38662700bf810332e5c5061529a38201b5"
 }
