@@ -1,0 +1,9 @@
+{
+  "base": "http://127.0.0.1:5190/live.html",
+  "findings": [
+    "Real original match is immediate; 3.5s review changes chapters while the dashboard DOM persists; pause/select/end add no RPC.",
+    "Altered PDF mismatches; original metadata signature is not shown as authenticating the submitted file. Reduced-motion review remains manual and keyboard accessible.",
+    "Injected lookup failure: incomplete result, one attempted review group, no false confirmations or chain completion.",
+    "Seven chapters at 1440/1280/390px without horizontal overflow; no browser exceptions or wallet requests."
+  ]
+}

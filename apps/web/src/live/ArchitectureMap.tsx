@@ -32,7 +32,7 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
     detail: props.review.detail,
     chainReadComplete: false,
   } : currentState;
-  const resultComplete = props.scene === 'verify' && state.chainReadComplete;
+  const resultComplete = props.scene === 'compare' && state.chainReadComplete;
   const kodaActive = ['koda', 'write'].includes(state.focus);
   const customerActive = state.focus === 'handoff';
   const thirdActive = ['third-party', 'query', 'response'].includes(state.focus);
@@ -44,9 +44,20 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
       <strong>{state.label}</strong>
       <p>{state.detail}</p>
     </header>
-    <svg className="kam-diagram" viewBox="0 0 420 435" role="img" aria-labelledby="kam-title kam-desc">
+    <section className="kam-custody-context" aria-label="수탁 관계와 업무 배경">
+      <span>수탁 관계 · 업무 배경</span>
+      <div className="kam-custody-flow">
+        <div><b>고객사</b><small>BTC 귀속</small></div>
+        <i aria-hidden="true"><small>BTC 수탁</small></i>
+        <div><b>KODA</b><small>수탁자</small></div>
+        <i aria-hidden="true"><small>보관·관리</small></i>
+        <div><b>Bitcoin 네트워크</b><small>고객사별 전용 지갑</small></div>
+      </div>
+      <p>BTC는 고객사에 귀속되고, KODA가 수탁·관리합니다.</p>
+    </section>
+    <svg className="kam-diagram" viewBox="0 0 420 390" role="img" aria-labelledby="kam-title kam-desc">
       <title id="kam-title">KODA 문서 검증 전체 아키텍처</title>
-      <desc id="kam-desc">KODA가 만든 PDF는 고객사를 거쳐 제3자에게 전달되고, KODA는 문서 검증정보를 Ethereum에 기록하며 제3자는 공개 기록을 다시 조회합니다.</desc>
+      <desc id="kam-desc">위 수탁 관계와 분리된 문서 검증 흐름입니다. KODA가 만든 PDF는 고객사를 거쳐 제3자에게 전달되고, KODA는 문서 검증정보를 Ethereum에 기록하며 제3자는 같은 기록을 다시 조회합니다.</desc>
       <defs>
         <marker id="kam-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
         <marker id="kam-arrow-active" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
@@ -60,7 +71,7 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
         <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">고객사</text><text x="14" y="50">원본 보관</text><text x="14" y="68">업무상 제출</text>
       </g>
       <g className={actorClass(thirdActive)} transform="translate(290 40)">
-        <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">제3자</text><text x="14" y="50">PDF 선택</text><text x="14" y="68">제출 문서 검증</text>
+        <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">제3자</text><text x="14" y="50">KODA 대시보드</text><text x="14" y="68">제출 문서 검증</text>
       </g>
 
       <path className={pathClass(state.focus === 'handoff')} d="M130 79 H154" markerEnd="url(#kam-arrow)" />
@@ -90,9 +101,7 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
       </g>
 
       <g className="kam-scope" transform="translate(18 369)">
-        <text className="kam-scope-row" x="0" y="14"><tspan>증명 대상</tspan><tspan x="86">Bitcoin 네트워크의 BTC</tspan></text>
-        <text className="kam-scope-row" x="0" y="37">Ethereum에는 문서 검증정보만 기록</text>
-        <text className="kam-scope-note" x="0" y="59">PDF 원문 · 고객명 · 문서에 기재된 잔고는 미등록</text>
+        <text className="kam-scope-note" x="0" y="14">PDF 원문 · 고객명 · 문서에 기재된 잔고는 Ethereum에 미등록</text>
       </g>
     </svg>
   </aside>;

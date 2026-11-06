@@ -27,7 +27,10 @@
 - Third party selects a PDF and verifies without a wallet. Only this surface uses product UI.
 
 ## Information architecture
-- One presentation route: introductory scene → original → hash → signature → contract → block inclusion/finality → customer handoff → verifier.
+- One presentation route, seven question-led chapters: custody/certificate → verification information (hash + signature) → registration/finality → third-party receipt → submitted-file inspection → public-record lookup → comparison/result. The first three establish the evidence; the latter four make verification the center of the demonstration.
+- In the four verification chapters, retain the same KODA dashboard proposal surface. Only the adjacent technical explanation changes. Navigation is for the presenter, not a pretend multi-page customer workflow. Actual running trace and labeled completed-record review select the corresponding chapter without delaying the real result.
+- Public-record lookup is a first-class scene: request/document ID → Ethereum DocumentRegistry at a fixed finalized block → returned hash/issuedAt → local comparison. A checklist may navigate evidence but cannot replace this data flow.
+- Show a small, static custody-context relationship: customer BTC entrusted to KODA; KODA manages customer-specific wallets on Bitcoin. Keep it visually separate from document verification and do not imply this demo reads Bitcoin balances or proves reserves.
 - A compact presentation transport offers play/pause, previous/next and jump to verifier. It is not a pretend KODA product navigation.
 - The whole journey is one technical process. KODA, the customer and the third party are business actors; Ethereum is shared infrastructure used for registration AND third-party reads, not a fourth business actor or a customer asset destination.
 - Technical stage is an open neutral/mint canvas with explicit inputs, operations, outputs and arrows crossing named boundaries. Only the third party gets a product window. That window remains connected to visible local hashing/signature recovery and public JSON-RPC reads; the last scene is not detached from the technical demonstration.
@@ -71,12 +74,14 @@
 - Empty state explains missing registered evidence and offers presenter tools.
 - Pending inclusion/finality is not a failed or verified result. RPC unavailable offers retry and never turns green.
 - Success means the submitted PDF matches a signed registered hash. Mismatch means different bytes, not necessarily fraud or a particular changed field.
+- Dashboard results lead with large icon + explicit match/mismatch/incomplete/pending text and the CEO's three questions. A valid signature on the original metadata does not authenticate an altered submitted PDF: that first question requires the submitted file to match the trusted registered original.
 - Disabled issuer actions explain wallet/setup requirements. Read-only verification does not require connection or payment.
 
 ## Content voice
 - Use concise accurate Korean labels for responsibility and purpose; retain precise technical language for computation and implementation. Prefer “SHA-256 해시 계산”, “EIP-712 구조화 데이터 서명”, “register(...)”, “eth_call”, “ECDSA 서명자 복구” over replacing these with only metaphors such as “문서 지문”.
 - Technical labels stay accurate: SHA-256, EIP-712 / ECDSA secp256k1, Solidity / EVM, JSON-RPC / eth_call / finalized.
 - Network wording: primary map/block labels say Ethereum; an execution note says Sepolia testnet. Real block numbers and explorer links are test execution evidence. The signed domain remains chainId 11155111 and is shown accurately in technical details.
+- Separate why a public blockchain is used from why Ethereum L1 was selected. The former is external access to the registered comparison basis; the latter is the chosen public-L1/EVM design for issuer authorization, first-registration preservation, and fixed-state reads. Do not claim these are unique to Ethereum or establish optimal operating cost.
 - Three checks: issued by the configured issuer; matches issuance original; no difference relative to that original. Test issuer ≠ official KODA identity. Do not imply all intermediate edits or current validity are proven.
 - New fictional customer: 인하테크홀딩스㈜. The already registered historical PDF remains 한울테크홀딩스㈜; changing it would change its hash.
 

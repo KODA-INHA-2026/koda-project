@@ -18,7 +18,7 @@ export function verificationProgress(trace: VerificationTraceEvent[], busy: bool
       ? result?.status === 'pending' && step.id === 'chain' ? 'pending'
         : result?.status === 'file-mismatch' && step.id === 'comparison' ? 'mismatch' : 'failure'
       : finished ? 'success' : events.length ? busy ? 'running' : 'stopped' : 'idle';
-    const labels = { idle: '대기', running: '처리 중', success: '완료', pending: '확정 대기', mismatch: '불일치', failure: '확인 불가', stopped: '중단' };
+    const labels = { idle: '대기', running: '처리 중', success: '완료', pending: result?.receiptBlockNumber ? '최종 확정 대기' : '블록 포함 대기', mismatch: '불일치', failure: '확인 불가', stopped: '중단' };
     return { ...step, state, statusLabel: labels[state] };
   });
 }
