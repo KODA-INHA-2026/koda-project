@@ -1,9 +1,9 @@
 {
-  "sourceBranch": "feat/first-demo",
-  "sourceCommit": "74ff79940a79657c3f72bdd39aeb41058450bf23",
-  "builtAtUtc": "2026-11-06T07:24:45.6544700Z",
   "designNetwork": "Ethereum L1",
-  "network": "Ethereum Sepolia",
+  "sourceCommit": "a5797d72355fbf3a88bc27f9d935f1d82f1d2b40",
   "asset": "native BTC (fictional certificate)",
-  "purpose": "KODA dashboard and standalone external verification draft"
+  "builtAtUtc": "2026-11-06T08:29:34.6448615Z",
+  "network": "Ethereum Sepolia",
+  "sourceBranch": "feat/first-demo",
+  "purpose": "Verification code path and wallet/RPC technical reference"
 }
