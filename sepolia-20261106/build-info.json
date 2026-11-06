@@ -1,9 +1,9 @@
 {
-  "designNetwork": "Ethereum L1",
-  "network": "Ethereum Sepolia",
-  "sourceCommit": "9c04fceb2396f5c4f26232df78d126c76b4edb05",
-  "asset": "native BTC (fictional certificate)",
-  "builtAtUtc": "2026-11-06T02:06:20.5182215Z",
   "sourceBranch": "feat/first-demo",
-  "purpose": "Immediate verification results and paced review of observed processing"
+  "designNetwork": "Ethereum L1",
+  "builtAtUtc": "2026-11-06T02:43:54.6513604Z",
+  "network": "Ethereum Sepolia",
+  "sourceCommit": "d6766900b7d7758c94d5e613c66018061b5a0763",
+  "asset": "native BTC (fictional certificate)",
+  "purpose": "Seven chapters centered on third-party verification"
 }
