@@ -35,3 +35,9 @@ Presentation, IssuerScenes, 발표 순서/URL 매핑, 관련 CSS, 04·05 번호�
 - [레이아웃 확인](five-stage-2026-11-07/visual/layout-check.json): 1536·1280·390px에서 다섯 장면 모두 가로 넘침과 브라우저 예외가 없었다. 파일 선택 영역은 세로 배치를 유지했다.
 - [재서명 비교 검수](five-stage-2026-11-07/signed-comparison/browser-check.json): 사용자 승인 서명의 120 BTC 문서는 로컬 서명·파일 검사를 통과하지만 실제 확정 등록 원본과 달라 실패한다. RPC 실패 시 이전 대조 결과나 반환 해시를 성공처럼 남기지 않는다.
 - 검증 함수·계약·PDF 생성·서명 규격·기존 거래 및 fixture는 변경하지 않았다. 기존 `view=verify`·`view=external` 주소는 각각 04·05로 연결한다.
+
+## 공유 및 보존
+
+- [공유 데모](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=1e1eaad): 소스 `1e1eaadc20252754ad54ff5723c30b4bf4c2e43d`, Pages `cc537bb2043351beda416f2353e89e0503891ca8`.
+- [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42264700380) 성공. [공개 페이지 검수](five-stage-2026-11-07/public-check.json)에서 최신 빌드·다섯 장면·실제 원본/재서명 대조를 확인했다.
+- 지정한 Drive 작업 폴더의 `2026-11-07 대표님 네 단계 재구성`에 이 문서와 검수 이미지·기록을 보존했다.

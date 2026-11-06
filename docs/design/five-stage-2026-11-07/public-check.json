@@ -1,0 +1,20 @@
+{
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=1e1eaad",
+  "checkedAt": "2026-11-06T17:57:41.264Z",
+  "build": {
+    "designNetwork": "Ethereum L1",
+    "builtAtUtc": "2026-11-06T17:45:22.8112917Z",
+    "sourceBranch": "feat/first-demo",
+    "network": "Ethereum Sepolia",
+    "purpose": "CEO four-stage presentation flow with a separate external verification draft",
+    "asset": "native BTC (fictional certificate)",
+    "sourceCommit": "1e1eaadc20252754ad54ff5723c30b4bf4c2e43d",
+    "signedComparison": "user-approved message signature; no new registration transaction"
+  },
+  "findings": [
+    "Published build matches the source commit; all five scenes and original verify deep link work.",
+    "Actual Sepolia RPC: original match and user-approved re-signed comparison conflict.",
+    "External scene remains saved execution evidence; five-scene navigation is available."
+  ],
+  "errors": []
+}
