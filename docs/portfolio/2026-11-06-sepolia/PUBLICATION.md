@@ -1,5 +1,14 @@
 # 1차 피드백 공유 — 2026-11-06
 
+## 최신: 인하 기본 자료와 수탁정보 연결
+
+- 소스 `74bca57b4f24f5f01abdcc4deef0a35c8523a4f0`, Pages `59369b16d9385bcabef84c38e421c2b0ff28bfcd`. [공유 링크](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=74bca57), [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42209157949) 성공.
+- 사용자가 지정한 1·2번만 반영했다. 실제 확정된 인하테크홀딩스 자료를 웹·03 패키지에 사용하고, 01에서 가상 수탁정보와 PDF 생성을 연결했다. 계약·검증 규칙은 유지하고 과거 한울 증거를 보존했다.
+- live 회귀 47/47, TypeScript·공유 빌드, 실제 RPC 원본·변경본, 외부 입력 거절 6건, 1440/1280/390px 검수 통과. 20:18:56 KST 공개 다운로드 파일·신규 거래 연결·검증·외부 ZIP 일치를 확인했다.
+- [구현 기록](../../design/inha-source-flow-2026-11-06.md), [공개 확인](../../design/inha-source-flow-2026-11-06/public-check.json).
+
+## 이전 게시 이력
+
 - 공유 주소: https://koda-inha-2026.github.io/koda-project/sepolia-20261106/
 - 소스 브랜치: `feat/first-demo`
 - 정적 배포 브랜치: `gh-pages`, 새 폴더 `sepolia-20261106/`.

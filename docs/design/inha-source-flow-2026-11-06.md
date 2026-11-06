@@ -28,3 +28,11 @@
 ## 기여 기록
 
 대표님이 강조한 내부 정보와 외부 증빙의 연결을, 새 기능을 임의로 확대하지 않고 가상 원천정보와 실제 PDF 생성의 동일 데이터 사용으로 구체화했다. 실제 등록 원본을 바꾸어 이름만 교체하는 오류를 피하고, 신규 발급본의 바이트·서명·거래를 웹과 외부 실행 자료에 일관되게 반영했다.
+
+## 공개 확인
+
+- 구현 소스: `74bca57b4f24f5f01abdcc4deef0a35c8523a4f0`, Pages: `59369b16d9385bcabef84c38e421c2b0ff28bfcd`.
+- [공유 데모](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=74bca57), [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42209157949) 성공.
+- 2026-11-06 20:18:56 KST 공개 페이지에서 새 인하 PDF가 보존 원본과 바이트 단위로 일치하고 JSON이 신규 등록 거래를 가리키는지 확인했다. 새 수신자 환경의 실제 RPC 검증은 원본 일치·변경본 불일치였다.
+- 03 공개 ZIP SHA-256: `1e35ad10bdc676efd0a65c802a8b5711c4625c49f24e963cacf2747c9508b508`. 로컬에서 검수한 패키지와 같다.
+- 브라우저 예외나 새 지갑 승인 요청은 없었다. 관측 기록: `inha-source-flow-2026-11-06/public-check.json`.

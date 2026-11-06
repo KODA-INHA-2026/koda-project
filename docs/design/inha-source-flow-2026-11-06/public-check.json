@@ -1,0 +1,25 @@
+{
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=74bca57",
+  "checkedAt": "2026-11-06T11:18:56.958Z",
+  "build": {
+    "designNetwork": "Ethereum L1",
+    "builtAtUtc": "2026-11-06T11:17:30.5418776Z",
+    "sourceBranch": "feat/first-demo",
+    "network": "Ethereum Sepolia",
+    "purpose": "Finalized Inha evidence and shared custody data to PDF",
+    "asset": "native BTC (fictional certificate)",
+    "sourceCommit": "74bca57b4f24f5f01abdcc4deef0a35c8523a4f0"
+  },
+  "packageSha256": "1e35ad10bdc676efd0a65c802a8b5711c4625c49f24e963cacf2747c9508b508",
+  "findings": [
+    "Published 3 scenes and KODA dashboard shell",
+    "Actual PDF/JSON downloads into a fresh receiver; real RPC original match and changed PDF mismatch",
+    "03 actual saved reports match/mismatch; downloaded public ZIP matches tested package; no fresh RPC for saved report display",
+    "No browser exceptions or interactive wallet requests"
+  ],
+  "errors": [],
+  "walletRequests": [
+    "eth_accounts"
+  ],
+  "rpcRequests": 28
+}
