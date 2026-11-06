@@ -20,9 +20,9 @@ export function ExternalVerification() {
   const run = manifest?.runs[variant];
   const matches = run?.status === 'match';
   return <article className="ev-root">
-    <header className="ve-stage-heading"><span>03 · 외부 검증 방식 · 검토용 초안</span><h1>수신자의 환경에서도 같은 자료를 검증합니다</h1><p>공개된 검증 규격과 코드를 실행해, 같은 PDF를 같은 Ethereum 기록과 대조합니다.</p></header>
+    <header className="ve-stage-heading"><span>05 · 외부 검증 초안</span><h1>수신자의 환경에서도 같은 자료를 검증합니다</h1><p>04의 검증을 대시보드 밖에서 실행하는 방식입니다. 같은 PDF를 같은 Ethereum 기록과 대조합니다.</p></header>
     <div className="ev-route" aria-label="외부 검증 입력과 조회 흐름">
-      <section><small>고객사가 제출</small><strong>PDF + 검증정보</strong><p>02에서 사용한 같은 두 파일</p></section><span aria-hidden="true">→</span>
+      <section><small>고객사가 제출</small><strong>PDF + 검증정보</strong><p>04에서 사용한 같은 두 파일</p></section><span aria-hidden="true">→</span>
       <section className="is-local"><small>외부 수신자 · 자신의 컴퓨터</small><strong>공개 검증 코드 실행</strong><p>파일 해시 · 발급서명 · 등록 기록 대조</p></section><span aria-hidden="true">↔</span>
       <section><small>조회할 공통 기준</small><strong>Ethereum</strong><p>같은 DocumentRegistry</p></section>
     </div>
@@ -44,6 +44,6 @@ export function ExternalVerification() {
       </section>
     </div>
     <aside className="ev-feedback"><strong>KODA에 확인할 부분</strong><p>제3자에게 대시보드 이용을 제공할지, 별도 검증 도구를 배포할지 두 방식을 비교하기 위한 초안입니다. 실제 이용 권한과 운영 방식은 아직 정하지 않았습니다.</p></aside>
-    <details className="ve-evidence"><summary>외부 검증의 범위와 신뢰 기준</summary><p>같은 코드를 다른 환경에서 실행할 수 있다는 의미입니다. 독립된 기관의 코드 감사를 받았다는 뜻은 아닙니다. 제출 JSON이 발급자나 조회 서버를 임의로 지정하지 못하도록 하고, 공개 패키지에 고정한 발급자·계약과 대조합니다. RPC 응답에 대한 의존은 남으며, 별도 노드·조회 경로의 선택은 운영 설계에서 정해야 합니다.</p><p>SHA-256, EIP-712/ECDSA, 컨트랙트와 판정 규칙은 02와 같습니다. 새 배포·서명·거래 없이 기존 등록 기록을 조회합니다.</p></details>
+    <details className="ve-evidence"><summary>외부 검증의 범위와 신뢰 기준</summary><p>같은 코드를 다른 환경에서 실행할 수 있다는 의미입니다. 독립된 기관의 코드 감사를 받았다는 뜻은 아닙니다. 제출 JSON이 발급자나 조회 서버를 임의로 지정하지 못하도록 하고, 공개 패키지에 고정한 발급자·계약과 대조합니다. RPC 응답에 대한 의존은 남으며, 별도 노드·조회 경로의 선택은 운영 설계에서 정해야 합니다.</p><p>SHA-256, EIP-712/ECDSA, 컨트랙트와 일반 문서 판정 규칙은 04와 같습니다. 새 배포·서명·거래 없이 기존 등록 기록을 조회합니다.</p></details>
   </article>;
 }

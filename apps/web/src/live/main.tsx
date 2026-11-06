@@ -271,7 +271,7 @@ function App() {
     localStorage.setItem(COMPARISON_KEY, serializeSignedComparisonFile(candidate, recordedProof, recordedDeployment));
     setSignedCandidate(candidate);
     if (comparisonReference) clearFiles();
-    setNotice('재서명 비교 자료를 준비했습니다. 02의 ‘다시 서명한 문서’에서 실제 등록 원본과 대조할 수 있습니다.');
+    setNotice('재서명 비교 자료를 준비했습니다. 04의 ‘다시 서명한 문서’에서 실제 등록 원본과 대조할 수 있습니다.');
   }
   const setup = <>
     <details className="setup" open={!trusted || undefined}>

@@ -4,7 +4,7 @@ import { mkdir, writeFile, readFile, mkdtemp } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
 const base = process.env.KODA_PREVIEW_URL ?? 'http://127.0.0.1:5190/live.html';
-const output = process.env.KODA_REVIEW_OUTPUT ?? 'docs/design/two-verification-options-2026-11-06';
+const output = process.env.KODA_REVIEW_OUTPUT ?? 'docs/design/five-stage-2026-11-07';
 await mkdir(output, { recursive: true });
 await mkdir('tmp', { recursive: true });
 const downloads = await mkdtemp('tmp/handoff-');
@@ -13,13 +13,34 @@ const findings = [];
 try {
   const issuer = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await issuer.goto(base);
-  await expect(issuer.getByRole('button', { name: '증명서 PDF 받기', exact: false })).toBeEnabled();
   await issuer.evaluate(() => document.fonts.ready);
+  await expect(issuer.locator('.kp-acts button')).toHaveCount(5);
+  await expect(issuer.locator('.kp-root')).toHaveAttribute('data-presentation-act', '1');
+  await expect(issuer.locator('.ij-root')).toHaveAttribute('data-issuance-stage', '1');
+  await expect(issuer.getByRole('heading', { name: 'KODA의 수탁정보로 잔고 증명서를 만듭니다' })).toBeVisible();
   await expect(issuer.locator('.ij-source')).toContainText('인하테크홀딩스㈜');
-  await expect(issuer.locator('.ij-source')).toContainText('100.00000000 BTC');
+  await expect(issuer.locator('.ij-source')).toContainText('100 BTC');
   await expect(issuer.locator('.ij-source')).toContainText('2026-10-31 23:59:59 KST');
-  await expect(issuer.locator('.ij-source-link')).toHaveText('같은 정보로 PDF 생성');
   await issuer.screenshot({ path: `${output}/01-issue.png`, fullPage: true });
+  await issuer.getByRole('button', { name: /02 · 이 문서의 해시와 서명/ }).click();
+  await expect(issuer.locator('.kp-root')).toHaveAttribute('data-presentation-act', '2');
+  await expect(issuer.locator('.ij-root')).toHaveAttribute('data-issuance-stage', '2');
+  await expect(issuer.getByRole('heading', { name: '원본의 해시를 만들고, 발급자가 서명합니다' })).toBeVisible();
+  await expect(issuer.locator('.ij-crypto')).toContainText('SHA-256');
+  await expect(issuer.locator('.ij-crypto')).toContainText('EIP-712 / ECDSA');
+  await expect(issuer.locator('.ij-continuity')).toContainText('BTC 잔고 증명서');
+  await issuer.screenshot({ path: `${output}/02-hash-sign.png`, fullPage: true });
+  await issuer.getByRole('button', { name: /03 · 검증정보를 Ethereum에 등록/ }).click();
+  await expect(issuer.locator('.kp-root')).toHaveAttribute('data-presentation-act', '3');
+  await expect(issuer.locator('.ij-root')).toHaveAttribute('data-issuance-stage', '3');
+  await expect(issuer.getByRole('heading', { name: 'Ethereum에 기록하고, 고객사에 전달합니다' })).toBeVisible();
+  await expect(issuer.locator('.ij-ethereum')).toContainText('DocumentRegistry');
+  await expect(issuer.locator('.ij-handoff')).toContainText('KODA가 발급');
+  await expect(issuer.locator('.ij-handoff')).toContainText('고객사');
+  await expect(issuer.locator('.ij-handoff')).toContainText('제3자');
+  await expect(issuer.getByRole('button', { name: 'PDF 받기', exact: true })).toBeEnabled();
+  await expect(issuer.getByRole('button', { name: '검증정보 받기', exact: true })).toBeEnabled();
+  await issuer.screenshot({ path: `${output}/03-register-handoff.png`, fullPage: true });
   async function downloadFrom(target, button, name) {
     const pending = target.waitForEvent('download');
     await target.getByRole('button', { name: button, exact: false }).click();
@@ -28,8 +49,8 @@ try {
     await file.saveAs(path);
     return path;
   }
-  const pdfPath = await downloadFrom(issuer, '증명서 PDF 받기', 'BTC잔고_원본.pdf');
-  const jsonPath = await downloadFrom(issuer, '검증정보 JSON 받기', 'BTC잔고_검증정보.json');
+  const pdfPath = await downloadFrom(issuer, 'PDF 받기', 'BTC잔고_원본.pdf');
+  const jsonPath = await downloadFrom(issuer, '검증정보 받기', 'BTC잔고_검증정보.json');
   const receivedJson = JSON.parse(await readFile(jsonPath, 'utf8'));
   const registered = JSON.parse(await readFile('docs/portfolio/2026-11-06-sepolia/inha-20261106/registration-finalized.json', 'utf8'));
   expect(receivedJson.proof).toEqual(registered.proof);
@@ -46,13 +67,19 @@ try {
   page.on('request', request => { if (rpcRoute.test(request.url())) rpcRequests++; });
   await page.exposeFunction('qaWalletRequest', method => { walletRequests.push(method); });
   await page.addInitScript(() => { Object.defineProperty(window, 'ethereum', { value: { request: async ({ method }) => { await window.qaWalletRequest(method); if (method === 'eth_accounts') return []; throw new Error('Unexpected interactive wallet call'); } } }); });
-  const shot = async name => { await page.evaluate(() => window.scrollTo(0, 0)); await page.screenshot({ path: `${output}/${name}.png`, fullPage: !['03-request', '04-return'].includes(name), animations: 'allow' }); };
+  const shot = async name => { await page.evaluate(() => window.scrollTo(0, 0)); await page.screenshot({ path: `${output}/${name}.png`, fullPage: !['04-request', '04-return'].includes(name), animations: 'allow' }); };
   const stage = page.locator('.ve-experience');
   const receiverUrl = new URL(base); receiverUrl.searchParams.set('view', 'verify');
   await page.goto(receiverUrl.href);
   await page.getByLabel('전달받은 PDF와 검증정보 선택').waitFor({ state: 'attached' });
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator('.kp-acts button')).toHaveCount(3);
+  await expect(page.locator('.kp-acts button')).toHaveCount(5);
+  await expect(page.locator('.kp-acts')).toContainText('원본 발급');
+  await expect(page.locator('.kp-acts')).toContainText('전자서명·해시 생성');
+  await expect(page.locator('.kp-acts')).toContainText('블록체인 기록');
+  await expect(page.locator('.kp-acts')).toContainText('제3자 대조·검증');
+  await expect(page.locator('.kp-acts')).toContainText('외부 검증 초안');
+  await expect(page.locator('.kp-root')).toHaveAttribute('data-presentation-act', '4');
   for (const route of ['koda-bitcoin', 'customer-bitcoin', 'koda-customer-pdf', 'customer-third-party-pdf', 'koda-ethereum-register', 'third-party-ethereum-query', 'ethereum-third-party-response']) await expect(page.getByTestId(route)).toHaveCount(1);
   await expect(page.locator('.ve-product-nav')).toContainText('KODA');
   await expect(page.locator('.ve-evidence')).not.toHaveAttribute('open');
@@ -60,7 +87,7 @@ try {
   const verifyButton = page.getByRole('button', { name: '문서 검증하기', exact: true });
   await expect(verifyButton).toBeDisabled();
   await expect(page.locator('.ve-file-row.is-loaded')).toHaveCount(0);
-  await shot('02-empty-receiver');
+  await shot('04-empty-receiver');
   await input.setInputFiles(jsonPath);
   await expect(page.locator('.ve-file-row.is-loaded')).toHaveCount(1);
   await expect(verifyButton).toBeDisabled();
@@ -88,7 +115,7 @@ try {
   await expect(page.locator('.ve-input-error')).toHaveCount(0);
   await expect(page.locator('.ve-file-row.is-loaded')).toHaveCount(2);
   await expect(page.locator('.ve-input-status')).toContainText('수신자가 선택한 파일');
-  await shot('02-ready');
+  await shot('04-ready');
   findings.push('Real PDF and JSON downloads preserve the registered file hash. A fresh receiver BrowserContext starts empty and verifies only the uploaded pair; either file can be loaded first.');
   findings.push('An untrusted registry JSON is rejected before RPC and clears stale inputs. A late earlier file-read cannot overwrite a newer accepted pair.');
   await page.locator('.ve-dashboard').evaluate(element => { element.dataset.qaIdentity = 'same-dashboard'; });
@@ -113,7 +140,7 @@ try {
   await expect(page.locator('.ve-route-label.is-query')).toContainText('RPC 조회');
   await expect(page.locator('.ve-route-label.is-response')).toContainText('등록 기록 응답');
   await expect(page.locator('.ve-process-card, .ve-code-cutaway')).toHaveCount(0);
-  await shot('03-request');
+  await shot('04-request');
   releaseRecord();
   await expect(page.locator('.ve-execution-status')).toContainText('실제 판정:', { timeout: 90000 });
   await expect(stage).toHaveAttribute('data-motion-step', 'request');
@@ -135,7 +162,7 @@ try {
   await expect(stage).toHaveAttribute('data-motion-step', 'compare');
   await page.getByRole('button', { name: '처리 흐름 일시정지', exact: true }).click();
   expect(await page.locator('.ve-return-slot').evaluate(e => getComputedStyle(e).animationPlayState)).toBe('paused');
-  await shot('05-compare');
+  await shot('04-compare');
   await page.getByRole('button', { name: '처리 흐름 재생', exact: true }).click();
   await expect(page.locator('.ve-outcome')).toHaveClass(/is-match/);
   await expect(page.locator('.ve-dashboard')).toHaveAttribute('data-qa-identity', 'same-dashboard');
@@ -145,7 +172,7 @@ try {
   await expect(page.locator('.ve-route-label.is-query')).toContainText('RPC 조회');
   await expect(page.locator('.ve-route-label.is-response')).toContainText('등록 기록 응답');
   await expect(page.locator('.ve-route-label.is-observed')).toHaveCount(2);
-  await shot('06-match');
+  await shot('04-match');
   findings.push('Actual original: click → prepare → request → observed registry record → return → comparison → match, in one stable dashboard. Delayed records RPC cannot fabricate a response.');
   findings.push('Actual result is accessible while visual motion is paused. Left map highlights query then response in sync; no new block or transaction on reads.');
 
@@ -169,12 +196,12 @@ try {
   await expect(page.locator('.ve-outcome')).toHaveClass(/is-mismatch/, { timeout: 90000 });
   await expect(page.locator('.ve-questions .is-confirmed')).toHaveCount(0);
   await expect(page.locator('.ve-travel-packet')).toHaveCount(0);
-  await shot('07-mismatch');
+  await shot('04-mismatch');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await expect(stage).toHaveAttribute('data-motion-step', 'result');
   findings.push('Replay and keyboard skip add no RPC. Changing the file cancels motion and clears stale evidence. Reduced motion shows real mismatch immediately without animation waits.');
   await page.locator('.kp-acts button').first().click();
-  await page.locator('.kp-acts button').nth(1).click();
+  await page.locator('.kp-acts button').nth(3).click();
   await expect(page.locator('.ve-outcome')).toHaveClass(/is-mismatch/);
 
   await page.unroute(rpcRoute);
@@ -194,10 +221,10 @@ try {
   await expect(page.locator('.ve-questions .is-confirmed')).toHaveCount(0);
   await expect(page.locator('.ve-return-slot')).not.toContainText('0x');
   await expect(page.locator('.ve-comparison-sign')).toHaveText('·');
-  await shot('08-unavailable');
+  await shot('04-unavailable');
   findings.push('Injected RPC error remains incomplete: no returned hash, comparison or successful answer fabricated.');
   const beforeExternal = rpcRequests;
-  await page.locator('.kp-acts button').nth(2).click();
+  await page.locator('.kp-acts button').nth(4).click();
   await expect(page.locator('.ev-verdict')).toHaveClass(/is-match/);
   await expect(page.locator('.kam-diagram')).toContainText('자체 실행 환경');
   await page.getByRole('button', { name: '120 BTC 변경본', exact: true }).click();
@@ -208,18 +235,19 @@ try {
   await packageFile.saveAs(`${downloads}/external-verifier.zip`);
   expect((await readFile(`${downloads}/external-verifier.zip`)).subarray(0, 2).toString()).toBe('PK');
   expect(rpcRequests).toBe(beforeExternal);
-  await shot('09-external-draft');
-  findings.push('03 displays actual saved external CLI reports, switches original/mismatch without fabricating a new RPC run, and downloads the real standalone verifier ZIP.');
+  await shot('05-external-draft');
+  findings.push('05 displays actual saved external CLI reports, switches original/mismatch without fabricating a new RPC run, and downloads the real standalone verifier ZIP.');
   for (const width of [1440, 1280, 390]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
-    for (let act = 0; act < 3; act++) {
+    for (let act = 0; act < 5; act++) {
       await page.locator('.kp-acts button').nth(act).click();
       expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
       if (act === 0) {
         const source = await page.locator('.ij-source').boundingBox();
         const document = await page.locator('.ij-document').boundingBox();
-        expect(source.y + source.height).toBeLessThan(document.y);
-        await expect(page.locator('.ij-source')).toContainText('실제 원장 연동 아님');
+        if (width > 650) expect(source.x + source.width).toBeLessThan(document.x);
+        else expect(source.y + source.height).toBeLessThan(document.y);
+        await expect(page.locator('.ij-source')).toContainText('실제 수탁 원장과 연동한 값은 아닙니다');
       }
       if (width !== 1440) await shot(`${width}-act-${act + 1}`);
     }
@@ -240,7 +268,7 @@ try {
   await connectionPage.goto(receiverUrl.href);
   await connectionPage.locator('summary').filter({ hasText: /^발표자 실행 준비$/ }).click();
   await connectionPage.locator('summary').filter({ hasText: /^실행 준비 / }).click();
-  await connectionPage.getByRole('button', { name: 'MetaMask 연결', exact: true }).click();
+  await connectionPage.getByRole('button', { name: 'MetaMask 연결', exact: true }).first().click();
   await expect.poll(() => connectionPage.evaluate(() => window.qaConnectionPending)).toBe(true);
   await expect(connectionPage.locator('.ve-experience')).toHaveAttribute('data-motion-step', 'ready');
   await expect(connectionPage.locator('.ve-route-label.is-query')).toContainText('RPC 조회');
@@ -251,7 +279,7 @@ try {
   await connectionPage.close();
   findings.push('An isolated mocked pending wallet connection does not start verification motion or claim a verification call; global action locks remain enabled.');
   findings.push('Reduced-motion changes during and after verification do not rewind to ready or trigger automatic replay. Pause stops block and arrival effects as well as packets.');
-  findings.push('1440/1280/390px: all three scenes without horizontal overflow or browser exceptions. Only passive eth_accounts restoration; no wallet connection/signature/transaction requests. Mobile keeps results and captions; packet motion is desktop only.');
+  findings.push('1440/1280/390px: all five scenes without horizontal overflow or browser exceptions. Only passive eth_accounts restoration; no wallet connection/signature/transaction requests. Mobile keeps results and captions; packet motion is desktop only.');
   await writeFile(`${output}/browser-check.json`, JSON.stringify({ base, checkedAt: new Date().toISOString(), findings }, null, 2));
   console.log(JSON.stringify({ base, findings }, null, 2));
 } finally { await browser.close(); }

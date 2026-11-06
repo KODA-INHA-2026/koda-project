@@ -1,158 +1,106 @@
-import type { ReactNode } from 'react';
 import type { PresentationProps } from './presentation-types';
 import { transactionUrl } from './wallet';
 import { DEMO_CUSTODY_SNAPSHOT } from './certificate';
 import './issuer-scenes.css';
 
 type IssueJourneyProps = PresentationProps & {
-  frame: number;
-  onVerifyScene: () => void;
-  onFrame: (frame: number) => void;
-  playing: boolean;
-  onToggle: () => void;
-  reducedMotion: boolean;
+  phase: 0 | 1 | 2;
+  onNext: () => void;
+  onPrevious: () => void;
 };
 
-const BEATS = [
-  { label: '발급', detail: '수탁정보를 바탕으로 BTC 잔고 증명서를 만듭니다' },
-  { label: '등록', detail: '나중에 대조할 검증정보를 Ethereum에 남깁니다' },
-  { label: '전달', detail: 'PDF와 검증정보를 고객사가 받아 함께 제출합니다' },
+const SCENES = [
+  { label: '01 · 원본 발급', title: 'KODA의 수탁정보로 잔고 증명서를 만듭니다', description: '법인 한 곳의 수탁 BTC 전체 잔고를, 기준시점과 함께 PDF에 담습니다.', next: '02 · 이 문서의 해시와 서명', takeaway: '이 PDF가 이후 대조할 발급 원본입니다.' },
+  { label: '02 · 전자서명·해시 생성', title: '원본의 해시를 만들고, 발급자가 서명합니다', description: '같은 PDF의 바이트를 SHA-256으로 계산하고, 문서 ID·해시·발급시각에 서명합니다.', next: '03 · 검증정보를 Ethereum에 등록', takeaway: '해시는 파일 대조에, 서명은 발급자 확인에 사용합니다.' },
+  { label: '03 · 블록체인 기록', title: 'Ethereum에 기록하고, 고객사에 전달합니다', description: '문서 ID로 다시 찾을 수 있도록 검증정보를 등록합니다. 고객사는 PDF와 검증정보를 받아 제출합니다.', next: '04 · 전달받은 파일 검증하기', takeaway: '이제 제3자가 제출 파일을 등록 기록과 대조할 수 있습니다.' },
 ] as const;
 
-const short = (value?: string) => value ? `${value.slice(0, 10)}…${value.slice(-6)}` : '준비 전';
+const short = (value?: string) => value ? `${value.slice(0, 10)}…${value.slice(-8)}` : '준비 전';
 const issuedTime = (value?: string) => value
-  ? new Intl.DateTimeFormat('ko-KR', {
-      dateStyle: 'short',
-      timeStyle: 'short',
-      timeZone: 'Asia/Seoul',
-    }).format(new Date(Number(value) * 1000))
+  ? new Intl.DateTimeFormat('ko-KR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Asia/Seoul' }).format(new Date(Number(value) * 1000))
   : '발급 전';
 
-function Icon({ name }: { name: 'file' | 'person' | 'play' | 'pause' | 'arrow' }) {
-  const paths: Record<typeof name, ReactNode> = {
-    file: <><path d="M6 3h8l4 4v14H6Z" /><path d="M14 3v5h4M9 12h6M9 16h6" /></>,
-    person: <><circle cx="12" cy="8" r="4" /><path d="M4 21c.8-5 3.5-7 8-7s7.2 2 8 7" /></>,
-    play: <path d="m9 5 10 7-10 7Z" />,
-    pause: <path d="M8 5v14M16 5v14" />,
-    arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
-  };
-  return <svg viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
+function FileIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6ZM14 3v5h4M9 12h6M9 16h6" /></svg>;
+}
+
+function Certificate({ customer, asOf, proof, compact = false }: Pick<PresentationProps, 'customer' | 'asOf' | 'proof'> & { compact?: boolean }) {
+  return <section className={`ij-document${compact ? ' is-compact' : ''}`} aria-label="같은 발급 원본 PDF">
+    <header><strong>KODA</strong><span>가상 증명서</span></header>
+    <FileIcon />
+    <h2>BTC 잔고 증명서</h2><p>{customer}</p>
+    <b>{Number(DEMO_CUSTODY_SNAPSHOT.quantity)} <small>BTC</small></b>
+    <dl><div><dt>잔고 기준시점</dt><dd>{asOf}</dd></div><div><dt>발급 기재시각</dt><dd>{issuedTime(proof?.issuedAt)}</dd></div></dl>
+    <small>Bitcoin 네트워크의 네이티브 BTC</small>
+  </section>;
+}
+
+function FlowArrow({ label, detail }: { label: string; detail?: string }) {
+  return <div className="ij-flow-arrow"><span>{label}</span><i aria-hidden="true" />{detail && <small>{detail}</small>}</div>;
 }
 
 export function IssueJourney(props: IssueJourneyProps) {
-  const frame = Math.min(Math.max(props.frame, 0), BEATS.length - 1);
-  const activeBeat = BEATS[frame] ?? BEATS[0];
-  const hasSubmittedRegistration = Boolean(props.proof?.transactionHash);
-  const hasRecordedRegistration = Boolean(props.proof?.transactionHash && props.receiptBlock);
-  const registrationLabel = hasRecordedRegistration ? '블록 포함 확인' : hasSubmittedRegistration ? '등록 거래 제출' : '등록 준비';
+  const { phase, proof } = props;
+  const scene = SCENES[phase];
+  const included = Boolean(proof?.transactionHash && props.receiptBlock);
+  const submitted = Boolean(proof?.transactionHash);
+  const registrationLabel = included ? '블록 포함 확인' : submitted ? '등록 거래 제출' : '등록 준비';
 
-  return <article className="ij-root">
-    <header className="ij-heading">
-      <span>01 · KODA 발급과 검증정보 등록</span>
-      <h1>KODA가 발급하고, 고객사가 받아 제출합니다</h1>
-      <p>고객사는 BTC 잔고 증명서와 검증정보를 함께 받고, 제3자는 전달받은 자료를 Ethereum 기록과 대조합니다.</p>
-    </header>
+  return <article className={`ij-root ij-phase-${phase}`} data-issuance-stage={phase + 1}>
+    <header className="ij-heading"><span>{scene.label}</span><h1>{scene.title}</h1><p>{scene.description}</p></header>
+    <div className="ij-continuity"><FileIcon /><span>{props.customer} <b>BTC 잔고 증명서</b></span><small>문서 ID <code>{short(proof?.documentId)}</code></small></div>
 
-    <section className={`ij-canvas is-frame-${frame}`} aria-label="증명서 발급, 검증정보 등록, 고객사 전달 흐름">
-      <div className="ij-source" aria-label="PDF 생성에 사용하는 가상 KODA 수탁정보">
-        <div className="ij-source-heading"><strong>KODA · 발급에 사용할 수탁정보</strong><span>시연용 가상 데이터 · 실제 원장 연동 아님</span></div>
-        <dl>
-          <div><dt>법인</dt><dd>{props.customer}</dd></div>
-          <div><dt>수탁 BTC 전체 잔고</dt><dd>{DEMO_CUSTODY_SNAPSHOT.quantity} {DEMO_CUSTODY_SNAPSHOT.asset}</dd></div>
-          <div><dt>잔고 기준시점</dt><dd>{props.asOf}</dd></div>
-        </dl>
-      </div>
-      <div className="ij-source-link"><Icon name="arrow" /><span>같은 정보로 PDF 생성</span></div>
-      <div className="ij-flow">
-      <svg className="ij-routes" viewBox="0 0 1000 430" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <marker id="ij-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
-          <marker id="ij-arrow-active" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
-        </defs>
-        <path className="ij-route ij-route-delivery" d="M275 170 C440 160 590 125 740 125" markerEnd="url(#ij-arrow-muted)" />
-        <path className="ij-route ij-route-proof-delivery" d="M555 248 C640 232 670 172 740 150" markerEnd="url(#ij-arrow-muted)" />
-        <path className="ij-route ij-route-register" d="M255 230 C365 285 455 328 610 338" markerEnd="url(#ij-arrow-muted)" />
-        {props.playing && !props.reducedMotion && frame > 0 && <circle key={`${frame}-${props.playing}`} className="ij-moving-packet" r="6">
-          <animateMotion dur="2.2s" repeatCount="1" path={frame === 1
-            ? 'M255 230 C365 285 455 328 610 338'
-            : 'M555 248 C640 232 670 172 740 150'} />
-        </circle>}
-      </svg>
+    <div className="ij-canvas" key={phase}>
+      {phase === 0 && <div className="ij-issue-flow">
+        <section className="ij-source" aria-label="PDF 생성에 사용하는 가상 KODA 수탁정보">
+          <span className="ij-location">KODA · 수탁정보</span><h2>증명서에 담을 잔고</h2>
+          <dl><div><dt>법인</dt><dd>{props.customer}</dd></div><div><dt>수탁 BTC 전체 잔고</dt><dd className="ij-source-balance">{Number(DEMO_CUSTODY_SNAPSHOT.quantity)} <small>BTC</small></dd></div><div><dt>잔고 기준시점</dt><dd>{props.asOf}</dd></div></dl>
+          <p>시연용 가상 데이터<br />실제 수탁 원장과 연동한 값은 아닙니다.</p>
+        </section>
+        <FlowArrow label="같은 정보로" detail="PDF 생성" />
+        <Certificate {...props} />
+      </div>}
 
-      <section className="ij-document" aria-label="KODA가 발급한 가상 BTC 잔고 증명서">
-        <header><strong>KODA</strong><span>가상 증명서</span></header>
-        <Icon name="file" />
-        <h2>BTC 잔고 증명서</h2>
-        <p>{props.customer}</p>
-        <b>{Number(DEMO_CUSTODY_SNAPSHOT.quantity)} <small>{DEMO_CUSTODY_SNAPSHOT.asset}</small></b>
-        <dl>
-          <div><dt>잔고 기준시점</dt><dd>{props.asOf}</dd></div>
-          <div><dt>발급 기재시각</dt><dd>{issuedTime(props.proof?.issuedAt)}</dd></div>
-        </dl>
-        <small>Bitcoin 네트워크의 네이티브 BTC</small>
-      </section>
+      {phase === 1 && <div className="ij-proof-flow">
+        <Certificate {...props} compact />
+        <FlowArrow label="PDF 전체 바이트" />
+        <section className="ij-crypto" aria-label="KODA 발급 과정의 해시 계산과 전자서명">
+          <div className="ij-hash-step"><span className="ij-location">KODA 발급 과정 · Web Crypto</span><h2>SHA-256 <span>원본 해시</span></h2><code className="ij-digest">{short(proof?.documentHash)}</code><p>같은 파일인지 대조할 값</p></div>
+          <div className="ij-signing-link"><span aria-hidden="true">↓</span> 문서 ID + 원본 해시 + 발급시각</div>
+          <div className="ij-sign-step"><span className="ij-location">발급자 지갑 · EIP-712 / ECDSA</span><h2>전자서명</h2><p>지정된 발급자의 서명인지 확인할 근거</p><div className="ij-signature"><span aria-hidden="true">⌁</span><span>{proof?.signature ? '시험 발급자의 서명' : '발급자 서명 준비 전'}</span><code>{short(proof?.signature)}</code></div></div>
+        </section>
+      </div>}
 
-      <div className="ij-delivery-label">증명서 PDF</div>
-      <div className="ij-proof-delivery-label">검증정보 JSON</div>
-      <section className="ij-customer" aria-label="고객사가 증명서 PDF와 검증정보를 받아 보관하고 제출하는 업무 흐름">
-        <Icon name="person" />
-        <span>고객사</span>
-        <h2>두 파일을 받아 보관</h2>
-        <p>증명서 PDF · 검증정보 JSON<br />필요한 업무에서 제3자에게 제출</p>
-      </section>
-
-      <section className="ij-proof" aria-label="PDF에서 만든 검증정보">
-        <span>PDF 원본에서 생성</span>
-        <div className="ij-proof-tech"><p><b>PDF 전체 바이트 · SHA-256</b><code>{short(props.proof?.documentHash)}</code></p>
-          <p><b>발급자 서명 · EIP-712</b><code>{short(props.proof?.signature)}</code></p></div>
-      </section>
-      <div className="ij-register-label">등록 거래 · 발급자 가스 부담</div>
-
-      <section className="ij-ethereum" aria-label={`Ethereum 문서 검증정보 ${registrationLabel}`}>
-        <div className="ij-chain-blocks" aria-hidden="true"><i /><i /><i /></div>
-        <div>
-          <span>Ethereum · {registrationLabel}</span>
-          <h2>문서 검증정보</h2>
-          <p>문서 ID · 원본 해시 · 발급시각</p>
+      {phase === 2 && <>
+        <div className="ij-register-flow">
+          <section className="ij-register-input" aria-label="발급자가 등록할 문서 검증정보">
+            <span className="ij-location">KODA · 시험 발급자</span><h2>문서 검증정보</h2>
+            <dl><div><dt>문서 ID</dt><dd><code>{short(proof?.documentId)}</code></dd></div><div><dt>원본 해시</dt><dd><code>{short(proof?.documentHash)}</code></dd></div><div><dt>발급시각</dt><dd>{issuedTime(proof?.issuedAt)}</dd></div></dl>
+            <p>발급자 서명을 함께 제출</p>
+          </section>
+          <FlowArrow label="등록 거래" detail="register() · 발급자 가스 부담" />
+          <section className="ij-ethereum" aria-label={`Ethereum 문서 검증정보 ${registrationLabel}`}>
+            <span className="ij-location">문서 검증정보를 기록하는 곳</span><h2>Ethereum</h2>
+            <svg className="ij-chain" viewBox="0 0 320 108" aria-hidden="true"><path className="ij-chain-link" d="M50 62H102M210 62h58" /><g className="ij-chain-side"><path d="M8 42h42v42H8ZM8 42l10-10h42L50 42M50 42l10-10v42L50 84M268 42h42v42h-42ZM268 42l10-10h42l-10 10M310 42l10-10v42l-10 10" /></g><path className="ij-chain-top" d="M102 27l21-20h108l-21 20Z"/><path className="ij-chain-depth" d="M210 27l21-20v76l-21 20Z"/><path className="ij-chain-front" d="M102 27h108v76H102Z"/><path className="ij-chain-lines" d="M119 48h72M119 63h72M119 78h47"/></svg>
+            <div className="ij-stored-record"><b>DocumentRegistry</b><code>{short(proof?.documentHash)}</code><small>{registrationLabel}{included ? ` · #${props.receiptBlock}` : ''}</small></div>
+            <p>지정 발급자만 등록 · 같은 ID 덮어쓰기 금지</p><small>PDF 원문과 BTC 수량은 저장하지 않습니다.</small>
+          </section>
         </div>
-        <p className="ij-contract-rule"><b>등록 규칙</b>고정 발급자만 · 같은 문서 ID 덮어쓰기 없음</p>
-        <div className="ij-chain-evidence"><span>블록 포함 <b>{props.receiptBlock ? `#${props.receiptBlock}` : '확인 전'}</b></span><span>finality <b>최종 확정은 조회 시 확인</b></span></div>
-        <small>PDF 원문과 고객 정보는 등록하지 않습니다</small>
-      </section>
-      </div>
-    </section>
-
-    <footer className="ij-footer">
-      <div className="ij-beats" aria-label="발급 흐름 설명">
-        <button type="button" className="ij-play" disabled={props.reducedMotion} onClick={props.onToggle} aria-label={props.playing ? '설명 일시정지' : '설명 재생'}>
-          <Icon name={props.playing ? 'pause' : 'play'} />
-        </button>
-        <ol>{BEATS.map((beat, index) => <li key={beat.label}>
-          <button type="button" aria-current={frame === index ? 'step' : undefined} onClick={() => props.onFrame(index)}>
-            <i />
-            <span>{beat.label}</span>
-          </button>
-        </li>)}</ol>
-        <p><b>{activeBeat.label}</b>{activeBeat.detail}</p>
-      </div>
-      <div className="ij-scene-actions">
-        <span>시연 자료 받기 · 고객사 수령 자료</span>
-        <div className="ij-downloads">
-          <button type="button" disabled={!props.canDownload || props.busy} onClick={() => props.onDownload('original')}><b>PDF</b>증명서 PDF 받기</button>
-          <button type="button" disabled={!props.canDownload || props.busy} onClick={props.onDownloadProof}><b>JSON</b>검증정보 JSON 받기</button>
+        <div className="ij-handoff" aria-label="KODA에서 고객사를 거쳐 제3자에게 전달하는 두 파일">
+          <div><span className="ij-location">KODA가 발급</span><strong><FileIcon />PDF <span>+</span> 검증정보 JSON</strong></div><i aria-hidden="true">→</i>
+          <div><span className="ij-location">고객사</span><strong>두 파일을 받아 보관·제출</strong></div><i aria-hidden="true">→</i>
+          <div><span className="ij-location">제3자</span><strong>전달받은 파일 검증</strong></div>
         </div>
-        <button type="button" className="ij-verify" disabled={props.busy} onClick={props.onVerifyScene}>
-          외부 수신자 화면으로 <Icon name="arrow" />
-        </button>
+      </>}
+    </div>
+
+    <footer className="ij-footer"><p>{scene.takeaway}</p>
+      <div className="ij-controls">
+        {phase > 0 && <button className="ij-back" disabled={props.busy} onClick={props.onPrevious}>이전 단계</button>}
+        {phase === 2 && <div className="ij-downloads"><span>시연 자료 받기</span><button disabled={!props.canDownload || props.busy} onClick={() => props.onDownload('original')}>PDF 받기</button><button disabled={!props.canDownload || props.busy} onClick={props.onDownloadProof}>검증정보 받기</button></div>}
+        <button className="ij-next" disabled={props.busy} onClick={props.onNext}>{scene.next}<span aria-hidden="true">→</span></button>
       </div>
     </footer>
-
-    <p className="ij-evidence-note">
-      {hasRecordedRegistration
-        ? <>등록은 보존된 테스트넷 거래로 확인했습니다. 두 파일은 실제로 내려받아 제3자 화면에 불러올 수 있으며, 전달 채널은 업무 흐름을 설명한 것입니다. <a href={transactionUrl(props.proof!.transactionHash!)} target="_blank" rel="noreferrer">등록 거래 보기 ↗</a></>
-        : hasSubmittedRegistration
-          ? <>등록 거래는 제출됐으며 블록 포함은 아직 확인되지 않았습니다. 발급 자료는 등록 확인 후 함께 받을 수 있습니다. <a href={transactionUrl(props.proof!.transactionHash!)} target="_blank" rel="noreferrer">제출 거래 보기 ↗</a></>
-          : '등록과 고객사 전달은 현재 처리 단계에 따라 표시합니다.'}
-    </p>
+    {phase === 2 && <p className="ij-evidence-note">{included ? <>{props.mode === 'recorded' ? '보존된 시험 거래의 등록 기록입니다.' : '등록 거래의 블록 포함을 확인했습니다.'} 최종 확정은 검증 시 다시 확인합니다. <a href={transactionUrl(proof!.transactionHash!)} target="_blank" rel="noreferrer">실제 등록 거래 보기 ↗</a></> : submitted ? <>등록 거래를 제출했습니다. 블록 포함은 아직 확인되지 않았습니다. <a href={transactionUrl(proof!.transactionHash!)} target="_blank" rel="noreferrer">제출 거래 보기 ↗</a></> : '등록 준비 전입니다. 장면을 넘기는 것만으로 거래가 실행되지는 않습니다.'}</p>}
   </article>;
 }

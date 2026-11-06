@@ -90,7 +90,7 @@ export function VerificationExperience(props: Props) {
   const packetPath = step === 'request' ? routes.request : routes.response;
   const packetStyle = { offsetPath: `path('${packetPath}')`, animationDuration: `${MOTION_MS[step]}ms`, animationPlayState: paused ? 'paused' : 'running' } as CSSProperties;
   return <article className="ve-root">
-    <header className="ve-stage-heading"><span>02 · KODA 대시보드에서 검증</span><h1>전달받은 증명서를 KODA 발급 기록과 대조합니다</h1><p>외부 수신자가 PDF와 검증정보를 불러오면, Ethereum의 등록 기록을 조회해 결과를 확인합니다.</p></header>
+    <header className="ve-stage-heading"><span>04 · 제3자의 대조·검증</span><h1>전달받은 증명서를 KODA 발급 기록과 대조합니다</h1><p>외부 수신자가 PDF와 검증정보를 불러오면, Ethereum의 등록 기록을 조회해 결과를 확인합니다.</p></header>
     <div className="ve-demo-tools"><span><b>KODA 대시보드 적용안</b> · 서비스 화면 제안</span><details className="ve-demo-input"><summary>발표용 예시</summary><div><p>받은 파일을 직접 불러오거나 아래 비교 자료를 선택할 수 있습니다.</p><button disabled={props.busy || !props.canDownload} onClick={() => props.onDownload('altered')}>변경본 PDF 받기</button><p>다시 서명한 문서는 같은 시험 발급자가 같은 문서 ID의 다른 내용에 서명한 비교 사례입니다. 실제 KODA의 발급 사고를 의미하지 않습니다.</p>{!props.signedComparisonReady && <p>비교용 서명은 아래 ‘발표자 실행 준비’에서 준비할 수 있습니다. 서명 전에는 검증 결과를 표시하지 않습니다.</p>}</div></details></div>
     <div className="ve-scenarios" role="group" aria-label="시연 파일 선택">
       <span>발표용 비교</span>
