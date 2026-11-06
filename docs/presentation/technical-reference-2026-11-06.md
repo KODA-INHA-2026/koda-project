@@ -1,6 +1,6 @@
 # KODA 증빙 검증 기술 부록 — 구현 명세와 근거
 
-기술 참고용 자료. 확인일: 2026-11-06. 기준 소스: `74ff79940a79657c3f72bdd39aeb41058450bf23`. 현재 데모 기술·동작은 변경하지 않았다.
+기술 참고용 자료. 확인일: 2026-11-06. 기준 소스: `90ee1d38662700bf810332e5c5061529a38201b5`. 현재 데모 기술·동작은 변경하지 않았다.
 
 ## 1. 기술 부록 · 구현 명세와 검증 근거
 
@@ -8,7 +8,7 @@
 
 ### 검토 기준
 
-기준 소스: 74ff799 (2026-11-06)
+기준 소스: 90ee1d3 (2026-11-06)
 
 PDF 해시: SHA-256 / Web Crypto
 문서 서명: EIP-712 + ECDSA / secp256k1
@@ -17,8 +17,8 @@ PDF 해시: SHA-256 / Web Crypto
 라이브러리: OpenZeppelin 5.6.1 · viem 2.57.14
 실제 배포·조회: Sepolia, chainId 11155111
 
-이 부록은 기술을 변경하지 않는다.
-표준·규격과 저장소의 실제 구현을 대조한다.
+최신 등록: 인하테크홀딩스㈜ 가상 BTC 잔고 증명서
+공유 페이지의 기본 파일 교체와는 별도다.
 
 ### 검증 명제
 
@@ -43,9 +43,9 @@ BTC 실재·법인 신원·RPC 응답의
 
 **현재 구현**
 
-- [package.json](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/package.json)
-- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/contracts/DocumentRegistry.sol)
-- [apps/web/src/live/verification.ts](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts)
+- [package.json](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/package.json)
+- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/contracts/DocumentRegistry.sol)
+- [apps/web/src/live/verification.ts](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts)
 
 ## 2. 데이터 모델 · 자산과 증빙 기록의 분리
 
@@ -92,8 +92,8 @@ issuedAt
 
 **현재 구현**
 
-- [apps/web/src/live/certificate.ts](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/certificate.ts)
-- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/contracts/DocumentRegistry.sol)
+- [apps/web/src/live/certificate.ts](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/certificate.ts)
+- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/contracts/DocumentRegistry.sol)
 
 ## 3. SHA-256 · PDF 바이트의 다이제스트
 
@@ -141,8 +141,8 @@ FIPS 180-4에서 Ch, Maj, Σ0, Σ1, σ0, σ1을 정의한다. 위 W[t] 식은 t=
 
 **현재 구현**
 
-- [apps/web/src/live/verification.ts#L141](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L141)
-- [apps/web/src/live/verification-file.ts#L60](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification-file.ts#L60)
+- [apps/web/src/live/verification.ts#L141](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L141)
+- [apps/web/src/live/verification-file.ts#L60](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification-file.ts#L60)
 
 ## 4. EIP-712 · 타입 해시와 도메인 분리
 
@@ -191,8 +191,8 @@ DocumentRegistry의 저장 규칙이다.
 
 **현재 구현**
 
-- [packages/chain/src/document-registry.ts](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/src/document-registry.ts)
-- [packages/chain/contracts/DocumentRegistry.sol#L48](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/contracts/DocumentRegistry.sol#L48)
+- [packages/chain/src/document-registry.ts](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/src/document-registry.ts)
+- [packages/chain/contracts/DocumentRegistry.sol#L48](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/contracts/DocumentRegistry.sol#L48)
 
 ## 5. ECDSA / secp256k1 · 서명자 주소 복구
 
@@ -241,9 +241,9 @@ n은 secp256k1 생성점 G의 차수이다. z는 이 프로젝트의 Keccak-256 
 
 **현재 구현**
 
-- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/contracts/DocumentRegistry.sol)
-- [apps/web/src/live/verification.ts#L217](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L217)
-- [apps/web/src/live/wallet.ts#L89](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L89)
+- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/contracts/DocumentRegistry.sol)
+- [apps/web/src/live/verification.ts#L217](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L217)
+- [apps/web/src/live/wallet.ts#L89](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/wallet.ts#L89)
 
 ## 6. EVM 호출 · ABI 인코딩과 실행 경계
 
@@ -290,9 +290,9 @@ EVM target: Cancun
 
 **현재 구현**
 
-- [apps/web/src/live/generated/DocumentRegistry.json](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/generated/DocumentRegistry.json)
-- [packages/chain/src/document-registry.ts](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/src/document-registry.ts)
-- [apps/web/src/live/wallet.ts#L94](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L94)
+- [apps/web/src/live/generated/DocumentRegistry.json](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/generated/DocumentRegistry.json)
+- [packages/chain/src/document-registry.ts](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/src/document-registry.ts)
+- [apps/web/src/live/wallet.ts#L94](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/wallet.ts#L94)
 
 ## 7. DocumentRegistry · 저장 구조와 불변조건
 
@@ -340,8 +340,8 @@ records slot 2는 현재 컴파일 산출물의 실제 storageLayout 값이다. 
 
 **현재 구현**
 
-- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/contracts/DocumentRegistry.sol)
-- [apps/web/src/live/generated/DocumentRegistry.json](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/generated/DocumentRegistry.json)
+- [packages/chain/contracts/DocumentRegistry.sol](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/contracts/DocumentRegistry.sol)
+- [apps/web/src/live/generated/DocumentRegistry.json](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/generated/DocumentRegistry.json)
 
 ## 8. 등록 증거 · 거래 입력, 영수증, 이벤트, 상태
 
@@ -361,22 +361,23 @@ records slot 2는 현재 컴파일 산출물의 실제 storageLayout 값이다. 
 5. 등록 높이 ≤ 조회한 finalized 높이
 6. finalized 높이에서 issuer / records 조회
 
-### 이벤트와 상태의 구분
+### 새 등록 거래의 실제 관측값
 
-DocumentRegistered
-  topics[0] = 이벤트 시그니처 해시
-  topics[1] = indexed documentId
-  data = ABI(documentHash, issuedAt)
+인하테크홀딩스㈜ · 가상 100 BTC
+등록 블록: 12,076,051
+블록 시각: 11월 6일 10:44:00 UTC
+거래: 0xb75fdf3a…16310eb
 
-이벤트: 거래 실행 중 발생한 로그
-상태: 계약에 저장된 현재 기준값
+PDF 재생성 해시 = 등록 해시
+0xba9bca0b…6579f3c
 
-거래 실패·무관한 등록·다른 문서의
-거래를 정상 등록으로 취급하지 않는다.
+11월 6일 11:01:32 UTC 관측
+finalized 높이: 12,076,070
+원본 match / 변경본 file-mismatch
 
 **범위·한계:** 이 구현은 RPC 응답 간 정합성을 검사한다. 거래·receipt의 Merkle-Patricia 포함 증명이나 합의 검증기를 직접 실행하는 구현은 아니다.
 
-DocumentRegistered(bytes32,bytes32,uint64)의 topic0는 0x6ff0ae8cb7683b055d1eebe67d788ee55ddc6c87bd826eb7f74c23daa95965c8이다. 파일 수신 파서는 등록 transactionHash를 필수로 요구한다. verifyDocument 자체 타입에서는 optional이므로 이 조건은 수신 파일 경로의 추가 보장이다.
+DocumentRegistered(bytes32,bytes32,uint64)의 topic0는 0x6ff0ae8cb7683b055d1eebe67d788ee55ddc6c87bd826eb7f74c23daa95965c8이다. topics[1]은 indexed documentId, data는 ABI(documentHash, issuedAt)다. 이벤트는 실행 로그이고 records는 저장 상태다. 파일 수신 파서는 등록 transactionHash를 필수로 요구한다. verifyDocument 자체 타입에서는 optional이므로 이 조건은 수신 파일 경로의 추가 보장이다. 최신 거래: https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb . 증거는 docs/portfolio/2026-11-06-sepolia/registration-latest.json 및 inha-20261106/reproduction.json. 재생성 PDF의 SHA-256이 실제 등록값과 같음을 확인했으며, 사용자 브라우저에서 내려받은 파일을 직접 수집한 것은 아니다.
 
 **공식 근거**
 
@@ -385,7 +386,7 @@ DocumentRegistered(bytes32,bytes32,uint64)의 topic0는 0x6ff0ae8cb7683b055d1eeb
 
 **현재 구현**
 
-- [apps/web/src/live/verification.ts#L252](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L252)
+- [apps/web/src/live/verification.ts#L252](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L252)
 
 ## 9. PoS finality · 등록 포함과 확정 상태
 
@@ -425,7 +426,7 @@ finalized 높이를 얻었다고
 
 **범위·한계:** 몇 초 경과 또는 N개 확인만으로 확정을 대신하지 않는다. 단일 RPC에 의존하며 TSA·공인시점 인증을 구현하지 않았다. 정상 합의의 안전성 전제를 둔다.
 
-
+화면의 확정 대기 표시는 마지막 검증 결과다. 문서 등록을 자동으로 finalized까지 계속 조회하는 동작은 현재 없다. 시간이 지난 뒤 검증을 다시 실행해야 새 finalized 높이를 읽는다. 재발급이나 새 거래 제출은 필요 없다. 등록 블록 12,076,051에 대해 2026-11-06 10:50:41 UTC 관측 당시 finalized 높이는 12,076,009로 대기 상태였다. 11:01:32 UTC 관측에서는 finalized 높이 12,076,070으로 FINALIZED_VERIFIED를 확인했고, 원본 match·변경본 file-mismatch였다. 이 두 관측 시각은 정확한 합의 확정 시각을 뜻하지 않는다. 최신 증거는 docs/portfolio/2026-11-06-sepolia/registration-latest.json에 보존한다.
 
 **공식 근거**
 
@@ -434,7 +435,7 @@ finalized 높이를 얻었다고
 
 **현재 구현**
 
-- [apps/web/src/live/verification.ts#L245](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L245)
+- [apps/web/src/live/verification.ts#L245](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L245)
 
 ## 10. JSON-RPC · 고정 블록에서 eth_call
 
@@ -482,8 +483,8 @@ RPC 예시의 CONTRACT, CALLDATA, B는 런타임 값의 자리표시자다. 실�
 
 **현재 구현**
 
-- [apps/web/src/live/wallet.ts#L7](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L7)
-- [apps/web/src/live/verification.ts#L237](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L237)
+- [apps/web/src/live/wallet.ts#L7](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/wallet.ts#L7)
+- [apps/web/src/live/verification.ts#L237](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L237)
 
 ## 11. 검증정보 JSON · 직렬화와 입력 검증
 
@@ -498,7 +499,7 @@ PDF와 분리된 detached verification envelope다. JSON 자체 전체를 서명
  "proof": {
    "documentId": "0x...",     // 32 bytes, nonzero
    "documentHash": "0x...",   // 32 bytes, nonzero
-   "issuedAt": "1793904567",  // decimal uint64 string
+   "issuedAt": "1793961780",  // decimal uint64 string
    "signature": "0x...",      // 65 bytes
    "transactionHash": "0x..." // 32 bytes, required
  }
@@ -529,7 +530,7 @@ transactionHash는 서명 필드가 아니다.
 
 **현재 구현**
 
-- [apps/web/src/live/verification-file.ts#L4](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification-file.ts#L4)
+- [apps/web/src/live/verification-file.ts#L4](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification-file.ts#L4)
 
 ## 12. 배포 검증 · 코드 일치와 발급자 신뢰
 
@@ -574,8 +575,8 @@ immutable 값 검증은 getter·생성자 인수로 보완.
 
 **현재 구현**
 
-- [apps/web/src/live/wallet.ts#L42](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L42)
-- [apps/web/src/live/recorded-evidence.ts#L7](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/recorded-evidence.ts#L7)
+- [apps/web/src/live/wallet.ts#L42](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/wallet.ts#L42)
+- [apps/web/src/live/recorded-evidence.ts#L7](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/recorded-evidence.ts#L7)
 
 ## 13. 최종 판정 · 전자서명과 등록 기준의 역할
 
@@ -614,7 +615,7 @@ Existing original record differs: R=false
 
 **범위·한계:** 위 반례는 신뢰 발급자가 같은 ID의 다른 내용을 다시 서명한 상황을 가정한다. 현재 데모는 원본·PDF 변경본을 실증했다. 다른 체인·투명성 로그와의 비교도 가능하다.
 
-현재 02·03의 수신 파일 경로는 transactionHash를 필수로 요구한다. verifyDocument() 함수 타입 자체에서는 optional이므로, 이 성공 명제를 임의의 함수 호출 전체에 일반화하지 않는다. 한 번 변경한 PDF를 원래 바이트로 복원하면 다시 일치한다. 따라서 결과는 현재 제출본의 원본 일치이며 모든 유통 이력의 연속 무변경 증명은 아니다. 단순한 중앙 DB에도 최초 등록 거절 규칙을 만들 수 있다. 블록체인의 추가 가치는 규칙 자체의 독점성이 아니라 공통 상태·합의·외부 조회 및 운영 통제 경계에 있다. 이 코드의 invalid 상태는 어떤 검사에서 연결이 실패했는지 trace로 구분한다.
+현재 02·03의 수신 파일 경로는 transactionHash를 필수로 요구한다. verifyDocument() 함수 타입 자체에서는 optional이다. 재서명한 대체 문서에 기존 거래 해시를 붙이면 현재 코드는 거래 입력 대조에서 먼저 invalid를 반환하며 records 조회까지 가지 않는다. 따라서 위 R=false는 비교 사례의 논리적 성질이며 현재 화면에서 관측한 실행 순서를 뜻하지 않는다. transactionHash를 지운 JSON도 현 파서가 거절하므로 이것을 해결책으로 사용하지 않는다. 후속 보조 사례는 등록의 필수 검사를 유지한 채 로컬 파일·서명 검사와 등록 기준 불일치를 별도로 보여주도록 설계해야 한다. 새 오프체인 서명에는 발급자 지갑 승인이 필요하나 새 온체인 등록은 필요 없다. 한 번 변경한 PDF를 원래 바이트로 복원하면 다시 일치한다. 따라서 현재 제출본의 원본 일치를 검사하며 모든 유통 이력의 연속 무변경을 증명하지 않는다. 중앙 DB도 중복 ID를 거절할 수 있다. 블록체인의 추가 가치는 공통 상태·합의·외부 조회와 발급기관 DB와의 통제 경계 분리에 있다.
 
 **공식 근거**
 
@@ -623,8 +624,8 @@ Existing original record differs: R=false
 
 **현재 구현**
 
-- [apps/web/src/live/verification.ts#L217](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L217)
-- [packages/chain/contracts/DocumentRegistry.sol#L43](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/packages/chain/contracts/DocumentRegistry.sol#L43)
+- [apps/web/src/live/verification.ts#L217](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L217)
+- [packages/chain/contracts/DocumentRegistry.sol#L43](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/packages/chain/contracts/DocumentRegistry.sol#L43)
 
 ## 14. 두 실행 환경 · 재현성과 검증 범위
 
@@ -660,7 +661,7 @@ ZIP: 소스·규격·고정 신뢰 설정·의존성 라이선스
 
 **범위·한계:** 실행 보고서에는 판정·해시·조회 블록·검사 시각을 보존한다. 공식 접근 권한·신뢰 목록 배포·RPC 운영과 새 서명 비교 사례는 미확정 또는 미구현이다.
 
-
+이 슬라이드의 공개 02·03 회귀 기록과 기본 배포 패키지는 기존 한울 증명서에 대한 것이다. 2026-11-06 인하테크홀딩스 신규 발급본은 별도로 finalized·원본 match·변경본 file-mismatch를 확인했다. 공개 기본 자료와 03 번들의 신규 파일 교체·재검수는 아직 남아 있으며 두 증거를 혼동하지 않는다.
 
 **공식 근거**
 
@@ -668,9 +669,9 @@ ZIP: 소스·규격·고정 신뢰 설정·의존성 라이선스
 
 **현재 구현**
 
-- [tools/external-verifier/verify.ts](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/tools/external-verifier/verify.ts)
-- [docs/external-verification/IMPLEMENTATION.md](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/docs/external-verification/IMPLEMENTATION.md)
-- [apps/web/public/external-verifier/manifest.json](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/public/external-verifier/manifest.json)
+- [tools/external-verifier/verify.ts](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/tools/external-verifier/verify.ts)
+- [docs/external-verification/IMPLEMENTATION.md](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/docs/external-verification/IMPLEMENTATION.md)
+- [apps/web/public/external-verifier/manifest.json](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/public/external-verifier/manifest.json)
 
 ## 15. viem client · 발급자 지갑과 제3자 조회의 분리
 
@@ -699,12 +700,13 @@ verifyDocument() → readContract()
 → RPC 노드에서 EVM getter 실행
 → ABI 디코딩 → 브라우저 대조
 
-authorizedIssuer()와
-records(documentId)는 같은
-finalized 블록 번호를 사용한다.
+authorizedIssuer()와 records(ID)는
+같은 finalized 블록 번호로 조회한다.
 
-발급자의 서명·등록에는
-signTypedData·writeContract를 쓴다.
+화면: RPC 조회 / 등록 기록 응답
+두 경로의 설명을 계속 표시한다.
+해시·서명 복구는 브라우저에서 실행.
+발급에는 signTypedData·writeContract.
 
 **범위·한계:** Public Client가 “공개”라는 뜻은 무신뢰 노드라는 뜻이 아니다. 현재는 단일 공개 RPC를 사용한다. ABI·계약 주소·고정 신뢰 목록의 정확성은 별도 전제다.
 
@@ -718,8 +720,8 @@ viem 공식 문서는 Public Client의 readContract가 ABI-encoded data로 call 
 
 **현재 구현**
 
-- [apps/web/src/live/wallet.ts#L1](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L1)
-- [apps/web/src/live/verification.ts#L237](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L237)
+- [apps/web/src/live/wallet.ts#L1](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/wallet.ts#L1)
+- [apps/web/src/live/verification.ts#L237](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L237)
 
 ## 16. 실행 비용 · 오프체인 서명과 등록 거래의 구분
 
@@ -743,18 +745,18 @@ viem 공식 문서는 Public Client의 readContract가 ABI-encoded data로 call 
 
 ### 가스·영수증·API 비용
 
-온체인 거래 수수료의 사후 계산:
-  receipt.gasUsed × receipt.effectiveGasPrice
+실제 등록 거래의 가스 사용량: 245,032
+effectiveGasPrice: 1,500,000,018 wei
+수수료 = 두 값의 곱
+0.000367548004410576 Sepolia ETH
 
-지갑이 승인한 등록 거래의
-송신자가 Sepolia ETH 가스를 낸다.
-문서 EIP-712 서명과 eth_call은
-온체인 가스를 내지 않는다.
+지갑이 승인한 거래의 송신자가 낸다.
+EIP-712 서명·eth_call에는
+온체인 가스 납부가 없다.
 
-현재 검증기는 receipt의 상태·블록·
-이벤트를 대조한다. 수수료를 계산·
-표시하거나 합산하지는 않는다.
-RPC 사업자 API 요금은 별도다.
+증거 수집 스크립트가 비용을 보존한다.
+현재 데모 UI는 비용을 표시하지 않는다.
+RPC 사업자의 API 요금은 별도다.
 
 **범위·한계:** Sepolia ETH는 테스트 자산이며 상용 비용 추정 근거가 아니다. 실제 운영의 발급량·가스 예산·누가 비용을 부담할지는 KODA의 운영 결정이 필요하다.
 
@@ -768,5 +770,5 @@ Ethereum 공식 문서는 실제 가스비를 사용 가스량과 단위 가스 
 
 **현재 구현**
 
-- [apps/web/src/live/wallet.ts#L89](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/wallet.ts#L89)
-- [apps/web/src/live/verification.ts#L252](https://github.com/KODA-INHA-2026/koda-project/blob/74ff79940a79657c3f72bdd39aeb41058450bf23/apps/web/src/live/verification.ts#L252)
+- [apps/web/src/live/wallet.ts#L89](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/wallet.ts#L89)
+- [apps/web/src/live/verification.ts#L252](https://github.com/KODA-INHA-2026/koda-project/blob/90ee1d38662700bf810332e5c5061529a38201b5/apps/web/src/live/verification.ts#L252)

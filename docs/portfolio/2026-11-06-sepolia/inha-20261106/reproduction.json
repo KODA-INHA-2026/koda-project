@@ -1,0 +1,13 @@
+{
+  "capturedAtUtc": "2026-11-06T10:52:24.497Z",
+  "customer": "인하테크홀딩스㈜",
+  "method": "Deterministic reproduction from public transaction arguments and the current PDF generator; not a browser download.",
+  "transactionHash": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb",
+  "documentId": "0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe",
+  "registeredHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+  "reproducedHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+  "exactRegisteredHashMatch": true,
+  "alteredHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+  "verificationJsonParsed": true,
+  "publicDefaultChanged": false
+}

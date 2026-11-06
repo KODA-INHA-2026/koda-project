@@ -1,0 +1,154 @@
+{
+  "capturedAtUtc": "2026-11-06T10:59:13.971Z",
+  "chainId": 11155111,
+  "network": "Ethereum Sepolia",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "trustedDeployment": {
+    "contractAddress": "0xC13083047C0657FF576A972469d982b51E43dCB3",
+    "authorizedIssuer": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+    "deploymentTransaction": "0x2bf8e548990c8e391430c7f2f3344a955e912bf1efc915740617a8d51bb80de7",
+    "deploymentEvidence": "deployment-latest.json",
+    "deploymentSourceSha256": "5271a02774144231bb73020011d9da18c53fd03528c0b53cfff88357724bd159",
+    "deploymentChecksAllPassed": true
+  },
+  "contractSource": {
+    "path": "packages/chain/contracts/DocumentRegistry.sol",
+    "currentSha256": "5271a02774144231bb73020011d9da18c53fd03528c0b53cfff88357724bd159",
+    "deployedSourceSha256": "5271a02774144231bb73020011d9da18c53fd03528c0b53cfff88357724bd159",
+    "matchesPinnedDeployment": true
+  },
+  "registrationTransaction": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb",
+  "explorerTransaction": "https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb",
+  "explorerContract": "https://sepolia.etherscan.io/address/0xC13083047C0657FF576A972469d982b51E43dCB3",
+  "registrationBlock": "12076051",
+  "registrationBlockHash": "0xeaac522c7044a2961fef8e946a63830b055a6f2e78f202d9dd4392103626e269",
+  "registrationBlockTimeUtc": "2026-11-06T10:44:00.000Z",
+  "latestBlock": "12076125",
+  "finalizedBlock": "12076039",
+  "finalizedBlockTimeUtc": "2026-11-06T10:41:24.000Z",
+  "status": "INCLUDED_PENDING_FINALITY",
+  "actualGate": true,
+  "finalizedGate": false,
+  "checks": {
+    "chainIsSepolia": true,
+    "transactionTargetsTrustedContract": true,
+    "transactionSenderIsTrustedIssuer": true,
+    "zeroEthValue": true,
+    "receiptSuccessful": true,
+    "receiptTargetsTrustedContract": true,
+    "receiptSenderIsTrustedIssuer": true,
+    "canonicalIncludedBlock": true,
+    "registrationEventMatches": true,
+    "recoveredSignerIsTrustedIssuer": true,
+    "latestIssuerMatches": true,
+    "latestRecordMatches": true,
+    "contractSourceMatchesPinnedDeployment": true,
+    "includedAtOrBeforeFinalized": false,
+    "finalizedIssuerReadAvailable": true,
+    "finalizedIssuerMatches": true,
+    "finalizedRecordReadAvailable": true,
+    "finalizedRecordExists": false,
+    "finalizedRecordMatches": false
+  },
+  "proof": {
+    "documentId": "0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe",
+    "documentHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+    "issuedAt": "1793961780",
+    "signature": "0xc1073390159d8f163b444be0065aa6950f5982fcaa8a0beba9102fb9f345f6d544c438d0d0f6a313758d07706c919160b8212d51151f533af03f94501b07e5ea1c",
+    "transactionHash": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"
+  },
+  "eip712": {
+    "domain": {
+      "name": "KodaDocumentRegistryDemo",
+      "version": "1",
+      "chainId": 11155111,
+      "verifyingContract": "0xC13083047C0657FF576A972469d982b51E43dCB3"
+    },
+    "primaryType": "Document",
+    "types": {
+      "Document": [
+        {
+          "name": "documentId",
+          "type": "bytes32"
+        },
+        {
+          "name": "documentHash",
+          "type": "bytes32"
+        },
+        {
+          "name": "issuedAt",
+          "type": "uint64"
+        }
+      ]
+    },
+    "recoveredSigner": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+  },
+  "records": {
+    "latest": {
+      "documentHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+      "issuedAt": "1793961780"
+    },
+    "finalized": {
+      "available": true,
+      "exists": false,
+      "documentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "issuedAt": "0"
+    }
+  },
+  "finalizedIssuer": {
+    "available": true,
+    "address": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+    "matchesTrustedIssuer": true
+  },
+  "transactionCost": {
+    "gasUsed": "245032",
+    "effectiveGasPriceWei": "1500000018",
+    "feeWei": "367548004410576"
+  },
+  "receipt": {
+    "status": "success",
+    "from": "0x5994abf9b20319213c384a814f5c804fcf6bf9a7",
+    "to": "0xc13083047c0657ff576a972469d982b51e43dcb3",
+    "blockNumber": "12076051",
+    "blockHash": "0xeaac522c7044a2961fef8e946a63830b055a6f2e78f202d9dd4392103626e269",
+    "transactionIndex": 18
+  },
+  "fileValidation": {
+    "performed": true,
+    "original": {
+      "supplied": true,
+      "validationClaimed": true,
+      "fileName": "inha-original.pdf",
+      "byteLength": 6856650,
+      "result": {
+        "fileHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "signedHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "recoveredAddress": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+        "status": "pending",
+        "message": "등록은 블록에 포함됐지만 아직 finalized 상태가 아닙니다.",
+        "signatureValid": true,
+        "finalizedBlock": "12076039",
+        "receiptBlockNumber": "12076051",
+        "receiptBlockTime": "2026-11-06T10:44:00.000Z"
+      }
+    },
+    "altered": {
+      "supplied": true,
+      "validationClaimed": true,
+      "fileName": "inha-altered-120-btc.pdf",
+      "byteLength": 6856650,
+      "result": {
+        "fileHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+        "signedHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "recoveredAddress": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+        "status": "pending",
+        "message": "등록은 블록에 포함됐지만 아직 finalized 상태가 아닙니다.",
+        "signatureValid": true,
+        "finalizedBlock": "12076039",
+        "receiptBlockNumber": "12076051",
+        "receiptBlockTime": "2026-11-06T10:44:00.000Z"
+      }
+    },
+    "note": "File results were produced from the exact local bytes supplied to this capture command."
+  }
+}

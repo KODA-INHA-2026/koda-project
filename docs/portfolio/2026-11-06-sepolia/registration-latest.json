@@ -1,5 +1,5 @@
 {
-  "capturedAtUtc": "2026-11-05T19:11:08.440Z",
+  "capturedAtUtc": "2026-11-06T11:01:32.346Z",
   "chainId": 11155111,
   "network": "Ethereum Sepolia",
   "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
@@ -17,15 +17,15 @@
     "deployedSourceSha256": "5271a02774144231bb73020011d9da18c53fd03528c0b53cfff88357724bd159",
     "matchesPinnedDeployment": true
   },
-  "registrationTransaction": "0x6c0d68e1f292a3ba9322e733291c0b2fb8da4fbbfe505d0466613438b0c2d1e8",
-  "explorerTransaction": "https://sepolia.etherscan.io/tx/0x6c0d68e1f292a3ba9322e733291c0b2fb8da4fbbfe505d0466613438b0c2d1e8",
+  "registrationTransaction": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb",
+  "explorerTransaction": "https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb",
   "explorerContract": "https://sepolia.etherscan.io/address/0xC13083047C0657FF576A972469d982b51E43dCB3",
-  "registrationBlock": "12071362",
-  "registrationBlockHash": "0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c",
-  "registrationBlockTimeUtc": "2026-11-05T18:49:36.000Z",
-  "latestBlock": "12071467",
-  "finalizedBlock": "12071385",
-  "finalizedBlockTimeUtc": "2026-11-05T18:54:12.000Z",
+  "registrationBlock": "12076051",
+  "registrationBlockHash": "0xeaac522c7044a2961fef8e946a63830b055a6f2e78f202d9dd4392103626e269",
+  "registrationBlockTimeUtc": "2026-11-06T10:44:00.000Z",
+  "latestBlock": "12076136",
+  "finalizedBlock": "12076070",
+  "finalizedBlockTimeUtc": "2026-11-06T10:47:48.000Z",
   "status": "FINALIZED_VERIFIED",
   "actualGate": true,
   "finalizedGate": true,
@@ -51,11 +51,11 @@
     "finalizedRecordMatches": true
   },
   "proof": {
-    "documentId": "0x603157e939369a0a8b69499c6849e26ea0938b394a099130c9fb71e7303af32a",
-    "documentHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
-    "issuedAt": "1793904567",
-    "signature": "0x02e3dfd1671896ecbd43e7fbd5b8066d6fde80a2512d47c9a648123ba9c3e5b350eddb0e928acc4824a405a8a37db2ae149df95aa721656a07c3800a642ab9351b",
-    "transactionHash": "0x6c0d68e1f292a3ba9322e733291c0b2fb8da4fbbfe505d0466613438b0c2d1e8"
+    "documentId": "0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe",
+    "documentHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+    "issuedAt": "1793961780",
+    "signature": "0xc1073390159d8f163b444be0065aa6950f5982fcaa8a0beba9102fb9f345f6d544c438d0d0f6a313758d07706c919160b8212d51151f533af03f94501b07e5ea1c",
+    "transactionHash": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"
   },
   "eip712": {
     "domain": {
@@ -85,14 +85,14 @@
   },
   "records": {
     "latest": {
-      "documentHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
-      "issuedAt": "1793904567"
+      "documentHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+      "issuedAt": "1793961780"
     },
     "finalized": {
       "available": true,
       "exists": true,
-      "documentHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
-      "issuedAt": "1793904567"
+      "documentHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+      "issuedAt": "1793961780"
     }
   },
   "finalizedIssuer": {
@@ -102,55 +102,59 @@
   },
   "transactionCost": {
     "gasUsed": "245032",
-    "effectiveGasPriceWei": "1500000019",
-    "feeWei": "367548004655608"
+    "effectiveGasPriceWei": "1500000018",
+    "feeWei": "367548004410576"
   },
   "receipt": {
     "status": "success",
     "from": "0x5994abf9b20319213c384a814f5c804fcf6bf9a7",
     "to": "0xc13083047c0657ff576a972469d982b51e43dcb3",
-    "blockNumber": "12071362",
-    "blockHash": "0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c",
-    "transactionIndex": 150
+    "blockNumber": "12076051",
+    "blockHash": "0xeaac522c7044a2961fef8e946a63830b055a6f2e78f202d9dd4392103626e269",
+    "transactionIndex": 18
   },
   "fileValidation": {
     "performed": true,
     "original": {
       "supplied": true,
       "validationClaimed": true,
-      "fileName": "registered-original.pdf",
-      "byteLength": 6856652,
+      "fileName": "inha-original.pdf",
+      "byteLength": 6856650,
       "result": {
-        "fileHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
-        "signedHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
-        "chainHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+        "fileHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "signedHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "recoveredAddress": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+        "chainHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "chainIssuedAt": "1793961780",
         "status": "match",
         "message": "제출 PDF가 발급 원본 및 확정된 체인 기록과 일치합니다.",
         "signatureValid": true,
         "chainRecordValid": true,
         "fileMatch": true,
-        "finalizedBlock": "12071385",
-        "receiptBlockNumber": "12071362",
-        "receiptBlockTime": "2026-11-05T18:49:36.000Z"
+        "finalizedBlock": "12076070",
+        "receiptBlockNumber": "12076051",
+        "receiptBlockTime": "2026-11-06T10:44:00.000Z"
       }
     },
     "altered": {
       "supplied": true,
       "validationClaimed": true,
-      "fileName": "altered-120-btc.pdf",
-      "byteLength": 6856652,
+      "fileName": "inha-altered-120-btc.pdf",
+      "byteLength": 6856650,
       "result": {
-        "fileHash": "0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f",
-        "signedHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
-        "chainHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+        "fileHash": "0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e",
+        "signedHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "recoveredAddress": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+        "chainHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+        "chainIssuedAt": "1793961780",
         "status": "file-mismatch",
         "message": "제출 PDF가 발급 원본과 다릅니다.",
         "signatureValid": true,
         "chainRecordValid": true,
         "fileMatch": false,
-        "finalizedBlock": "12071385",
-        "receiptBlockNumber": "12071362",
-        "receiptBlockTime": "2026-11-05T18:49:36.000Z"
+        "finalizedBlock": "12076070",
+        "receiptBlockNumber": "12076051",
+        "receiptBlockTime": "2026-11-06T10:44:00.000Z"
       }
     },
     "note": "File results were produced from the exact local bytes supplied to this capture command."

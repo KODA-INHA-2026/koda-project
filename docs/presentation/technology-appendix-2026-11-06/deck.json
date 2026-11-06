@@ -1,10 +1,17 @@
 {
   "title": "KODA 증빙 검증 · 기술 부록 구현 명세와 근거",
   "pageId": "page_e2ea284cc66c81918bfacd219cb82695",
-  "artifactRef": "artifact_external_a99db12d-6311-4794-96e9-91547a301461",
+  "artifactRef": "artifact_external_fc9f3d79-ceb9-4884-898b-c780ad8564e3",
+  "stateVersion": 19,
   "slideCount": 16,
-  "reviewedAt": "2026-11-06T08:24:42.7668120Z",
+  "reviewedAt": "2026-11-06T11:03:47.489311+00:00",
   "format": "saved editable Spaces presentation",
   "source": "technical-reference-slides.mjs",
-  "note": "Existing 14 technical reference slides preserved. Added and visually reviewed slides 15-16: actual viem client source, RPC getter execution, issuer wallet, off-chain signatures, transaction fees and RPC service costs. New registration confirmation pending transaction hash."
+  "implementationSource": "90ee1d38662700bf810332e5c5061529a38201b5",
+  "checks": {
+    "renderedSlides": 16,
+    "layoutBoxesWithinSlide": true,
+    "sourceFooterUpdated": true
+  },
+  "note": "Current persistent RPC labels, new Inha registration evidence, actual gas cost, finality polling limitation, and unimplemented re-signed alternate scenario documented. Product code and published fixtures unchanged."
 }
