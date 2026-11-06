@@ -1,9 +1,9 @@
 {
-  "network": "Ethereum Sepolia",
-  "builtAtUtc": "2026-11-06T05:10:15.2594257Z",
+  "purpose": "Continuous third-party request, registry response and PDF comparison",
+  "sourceCommit": "df982fff4bb38a332b8c7eb4343aec6c0bc7c857",
   "sourceBranch": "feat/first-demo",
-  "purpose": "Two connected acts: issuance and third-party verification",
+  "builtAtUtc": "2026-11-06T05:42:58.4998639Z",
   "designNetwork": "Ethereum L1",
-  "sourceCommit": "00b8a79ffe3fb522387bda1b1db130ca67154c3c",
-  "asset": "native BTC (fictional certificate)"
+  "asset": "native BTC (fictional certificate)",
+  "network": "Ethereum Sepolia"
 }
