@@ -117,3 +117,11 @@
 - 공개 HTTPS 페이지에서도 실제 응답 이동·원본 match·변경본 file-mismatch 확인. 새 서명·등록 거래 없음. 기존 eth_accounts 자동 복원과 승인·서명 요청을 구분해 검사했다.
 - [설계·기여 기록](../../design/continuous-verification-2026-11-06.md), [브라우저 검사](../../design/continuous-verification-2026-11-06/browser-check.json), [공개 확인](../../design/continuous-verification-2026-11-06/public-check.json).
 - 지정 작업 폴더와 G: 볼트에 `검증 요청과 응답의 연속 동작 개선 기록.md`를 보존했다. 최종 기록의 두 사본 SHA-256 일치를 확인했다.
+
+## 실제 자료 전달과 수신자 입력 — 2026-11-06
+
+- 대표님 최종 답변의 발급·서명·블록체인 기록·제3자 대조를 기준으로, 고객사가 PDF와 검증정보를 받아 제출하는 구간을 실제 다운로드·파일 입력으로 연결했다. JSON 동봉은 우리 기술 설계이며 대표님이 지정한 파일 형식이라고 주장하지 않는다. 외부 재현 코드·규격 패키지는 보류 상태다.
+- 구현 소스 `f1559be8f9fcf9c5c360fcbe568adcbbf7fd3119`, Pages `5adec458c51f1f0bc697a80fa3b2fc02706ccbe3`. [공유 링크](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=f1559be), [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42174535827).
+- live 회귀 47/47, TypeScript·빌드, 실제 새 브라우저 수신 입력과 RPC 원본·변경본 판정, 잘못된 파일·읽기 경합·등록 실패·무관 거래·localStorage 신뢰 경계 확인. 기존 번들 크기 경고는 남음.
+- 공개 HTTPS에서 실제 파일 다운로드 → 깨끗한 수신자 세션 → 원본 일치·변경본 불일치를 2026-11-06 15:28 KST 확인. 새 서명·등록 거래 없음.
+- [설계·기여 기록](../../design/document-handoff-2026-11-06.md), [공개 확인](../../design/document-handoff-2026-11-06/public-check.json). 같은 기여 기록을 지정 작업 폴더와 G: 볼트에 `PDF와 검증정보 전달 및 제3자 입력 구현 기록.md`로 보존한다.

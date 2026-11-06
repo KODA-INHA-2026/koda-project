@@ -1,0 +1,20 @@
+{
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=f1559be",
+  "checkedAt": "2026-11-06T06:28:26.946Z",
+  "build": {
+    "sourceBranch": "feat/first-demo",
+    "sourceCommit": "f1559be8f9fcf9c5c360fcbe568adcbbf7fd3119",
+    "builtAtUtc": "2026-11-06T06:26:56.4389315Z",
+    "designNetwork": "Ethereum L1",
+    "network": "Ethereum Sepolia",
+    "asset": "native BTC (fictional certificate)",
+    "purpose": "Actual PDF and verification JSON handoff to KODA receiver dashboard"
+  },
+  "proof": "0x603157e939369a0a8b69499c6849e26ea0938b394a099130c9fb71e7303af32a",
+  "findings": [
+    "Public page actual PDF/JSON downloads → fresh empty receiver → real RPC original match and changed PDF mismatch",
+    "Original and verification JSON are user-selected inputs, not issuer state transferred into the receiver",
+    "No browser exceptions"
+  ],
+  "errors": []
+}
