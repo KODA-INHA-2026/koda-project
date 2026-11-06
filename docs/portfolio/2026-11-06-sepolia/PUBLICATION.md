@@ -47,3 +47,11 @@
 - 발표는 KODA 대시보드를 가정한 제3자 검증 화면에 집중한다. 운영 대시보드 연동은 아니며, 외부 검증 패키지는 미구현 확장 방향으로만 설명한다.
 - [연출 설계·기여 기록](../../design/architecture-led-storyboard.md), [로컬 화면 검수](architecture-led/browser-qa.json)를 함께 보존한다.
 - 공개 HTTPS 페이지에서 새 구조도·장면 구성이 표시되는 것을 확인했다. 실제 공개 RPC 대조에서 원본은 `발급 원본과 일치해요`, 변경본은 `발급 원본과 달라요`로 표시됐다. [공개 검수 기록](architecture-led/public-browser-qa.json)과 [공개 첫 화면](architecture-led/public-page.jpg)을 보존했다.
+
+## Ethereum 기획 체인과 테스트 실행 표현 구분
+
+- 사용자가 구조도 중심 버전을 다음 고도화의 초안으로 정했다. 화면의 주된 체인 표기를 Ethereum으로 정리하고 실제 실행 환경만 Sepolia 테스트넷으로 구분했다.
+- 소스 `e6ffa69`, Pages `26aa78822f39363ecaa7b3d12d797b0c276639d1`. [Pages 실행 #11](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42138946905)은 2026-11-06 09:44:37 KST 성공했다.
+- 같은 공유 주소를 Chrome에서 새로고침해 `KODA · Ethereum 증빙 검증` 제목과 별도 실행 환경 표기를 확인했다. 실제 chainId·RPC·지갑·등록 증거·검증 조건은 변경하지 않았다.
+- 웹 TypeScript·배포 빌드·diff 검사와 로컬 첫 화면/서명/블록/제3자 장면 확인을 수행했다. 동작 변경이 없는 표기 수정이므로 전체 컨트랙트 테스트와 실제 RPC 대조를 이번 수정에서 반복하지 않았다. 직전 공개본의 검증 결과는 위 기록을 따른다.
+- [고도화 검토](../../design/refinement-review-2026-11-06.md), [PPT 기술 부록 초안](../../presentation/blockchain-technology-appendix-draft.md)을 함께 남겼다.
