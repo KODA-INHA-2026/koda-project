@@ -3,7 +3,7 @@
 ## Source of truth
 - Status: Active. Last refreshed: 2026-11-06.
 - Surface: `/live.html`, the BTC document verification presentation and working Sepolia verifier.
-- Latest user correction (2026-11-06): content governs design. This is a technical demonstration of what we built, not simplified product marketing. Apply Toss research to faithful expression of our process; never hide implementation behind friendly copy.
+- Latest user correction (2026-11-06, after first publication): the dense technical version is tiring and loses the point. Keep the overall architecture visible beside a focused scene, activate the current actor/location/data path, and make the blockchain's role and added value visible through operations. Technical names and long hashes alone do not explain the system.
 - Authority: user's latest directions, the revised 윤다현 proposal, CEO/COO scope. Older USDC demos are not functional or visual authority.
 - Evidence: `apps/web/src/live`, actual receipts under `docs/portfolio/2026-11-06-sepolia`, local Pretendard/OFL, local DFY Typography/Icon/Grid and PlusX Interaction `.fig` thumbnails. Thumbnails only establish layout/type/icon/motion reference availability; they do not justify claiming the full course was studied.
 - Official references: [Toss writing principles](https://toss.tech/article/8-writing-principles-of-toss), [one message per page](https://toss.tech/article/design-motivation), [interaction communicates feedback and process](https://toss.tech/article/interaction), [error writing](https://toss.tech/article/how-to-write-error-message), [progress stepper](https://tossmini-docs.toss.im/tds-mobile/components/progress-stepper/). This is our application of published principles, not an official Toss UI or endorsement. No private Toss assets or course files are distributed.
@@ -29,11 +29,12 @@
 - A compact presentation transport offers play/pause, previous/next and jump to verifier. It is not a pretend KODA product navigation.
 - The whole journey is one technical process. KODA, the customer and the third party are business actors; Ethereum is shared infrastructure used for registration AND third-party reads, not a fourth business actor or a customer asset destination.
 - Technical stage is an open neutral/mint canvas with explicit inputs, operations, outputs and arrows crossing named boundaries. Only the third party gets a product window. That window remains connected to visible local hashing/signature recovery and public JSON-RPC reads; the last scene is not detached from the technical demonstration.
-- Presenter wallet controls may be collapsed. Essential hashes, typed data, signing domain, contract checks/storage, receipt/finality and verifier RPC operations must be visible in the relevant scene, not hidden in details.
+- Persistent architecture occupies roughly one third of desktop width. The other two thirds show the current operation. The map remains spatially stable across every scene, including the third-party UI. Mobile stacks the map and scene without horizontal overflow.
+- The first visual level is actor/location plus input → operation → output. The second level names the actual algorithm, contract action and observed result. Complete hashes, typed data, signatures and detailed traces remain available in that scene's expandable evidence; do not give every byte the same visual weight.
 - KODA is shown issuing the BTC balance certificate in the opening context. Mark existing issuance/delivery as existing business and hash/sign/register/verify as the implemented addition. Demonstration issuer processing actually runs in the browser + MetaMask; production KODA server placement is undecided.
 
 ## Design principles
-- One coherent operation per scene, with exact technical names and its actual data dependencies in view. No fixed information-reduction rule may remove important content.
+- One coherent operation per scene with a short purpose-led heading, visible technical mechanism and actual data dependencies. Reduce repeated prose and raw payload density, not the technical process.
 - Actor/processing location stays visible, with current actor emphasized.
 - Visual continuity: the exact PDF becomes a hash; hash plus ID/time becomes signed typed data; contract checks lead to a transaction/block; the original is then compared with a submitted file.
 - Real data and state precede spectacle. Replay is always labeled; playback time is never presented as network execution time.
@@ -47,7 +48,7 @@
 
 ## Components
 - Reuse existing wallet, PDF, verification and persistence modules without changing their trust rules.
-- New presentation component/CSS, focused scene objects, actor rail, playback transport and third-party verifier.
+- Focused scene objects, persistent ArchitectureMap, playback transport and third-party verifier. Actual trace IDs drive the map during verification; local receipt decoding and finality comparison must not masquerade as new chain calls.
 - Controller owns live data and wallet calls. Presentation owns local replay position, visual transitions and copy.
 - Tokens live in presentation CSS; avoid another styling dependency.
 
@@ -82,7 +83,7 @@
 - Validate tests/typecheck/build, desktop/mobile browser views, original and altered files, keyboard and reduced-motion behavior.
 
 ## Open questions
-- First feedback snapshot (2026-11-06): publish the current complete technical presentation. For the next visual iteration, the user wants a midpoint between the earlier simpler presentation and this technical version. Keep actor boundaries and the full technical verification flow explicit; do not redesign the snapshot before collecting feedback.
+- Sharing route: `/sepolia-20261106/`. The user requested publishing the verified architecture-led iteration at this route for team feedback; the earlier snapshot remains in Git history.
 - [ ] User wallet approval for a new 인하테크홀딩스㈜ certificate; collect for next session, do not prompt during overnight work.
 - [ ] Production issuer identity governance, key rotation/revocation and chosen RPC trust policy remain future decisions, not implemented claims.
 - [ ] External verifier distribution/JSON handoff remains deferred as requested. Internal proof data is still needed by the demo.

@@ -1,0 +1,137 @@
+{
+  "checkedAtUtc": "2026-11-06T00:22:31.841Z",
+  "url": "http://127.0.0.1:5190/live.html",
+  "desktop": [
+    {
+      "heading": "발급한 문서를, 제3자가 직접 확인합니다",
+      "location": "전체 구조에서 현재 위치전체 흐름업무 주체와 공개 검증기록의 연결",
+      "pageWidth": 1425,
+      "transportBottom": 817.2396087646484,
+      "visibleMap": 96,
+      "width": 1440
+    },
+    {
+      "heading": "기준시점이 담긴 원본 PDF를 발급합니다",
+      "location": "전체 구조에서 현재 위치KODA · 증명서 발급BTC 잔고 증명서 PDF 확정",
+      "pageWidth": 1425,
+      "transportBottom": 900.0000457763672,
+      "visibleMap": 96,
+      "width": 1440
+    },
+    {
+      "heading": "원본 파일 전체를 하나의 해시로 만듭니다",
+      "location": "전체 구조에서 현재 위치KODA · 해시 계산PDF 전체 바이트 → SHA-256",
+      "pageWidth": 1425,
+      "transportBottom": 816.3750457763672,
+      "visibleMap": 102,
+      "width": 1440
+    },
+    {
+      "heading": "어느 발급키의 기록인지 서명으로 연결합니다",
+      "location": "전체 구조에서 현재 위치KODA · 발급서명문서 ID·해시·발급시각에 서명",
+      "pageWidth": 1425,
+      "transportBottom": 798.6458587646484,
+      "visibleMap": 102,
+      "width": 1440
+    },
+    {
+      "heading": "검사에 통과한 검증정보를 체인에 남깁니다",
+      "location": "전체 구조에서 현재 위치KODA → Ethereumregister(...) 검증 후 기록",
+      "pageWidth": 1425,
+      "transportBottom": 828.3125457763672,
+      "visibleMap": 102,
+      "width": 1440
+    },
+    {
+      "heading": "블록에 포함된 뒤, 최종 확정을 확인합니다",
+      "location": "전체 구조에서 현재 위치Ethereum · 포함과 확정등록 블록 #12071362",
+      "pageWidth": 1425,
+      "transportBottom": 872.1458587646484,
+      "visibleMap": 90.66667175292967,
+      "width": 1440
+    },
+    {
+      "heading": "원본은 고객사에, 검증 기준은 체인에",
+      "location": "전체 구조에서 현재 위치고객사 · 원본 보관·제출PDF는 체인 밖에서 제3자에게 전달",
+      "pageWidth": 1425,
+      "transportBottom": 817.3125457763672,
+      "visibleMap": 69.33333587646484,
+      "width": 1440
+    },
+    {
+      "heading": "제출받은 PDF를 공개 기록과 직접 대조합니다",
+      "location": "전체 구조에서 현재 위치제3자 · 검증 준비PDF 선택 후 공개 기록 조회",
+      "pageWidth": 1425,
+      "transportBottom": 900.0000457763672,
+      "visibleMap": 69.33333587646484,
+      "width": 1440
+    }
+  ],
+  "mobile": [
+    {
+      "hasChain": true,
+      "heading": "발급한 문서를, 제3자가 직접 확인합니다",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    },
+    {
+      "hasChain": true,
+      "heading": "기준시점이 담긴 원본 PDF를 발급합니다",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    },
+    {
+      "hasChain": true,
+      "heading": "원본 파일 전체를 하나의 해시로 만듭니다",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    },
+    {
+      "hasChain": true,
+      "heading": "어느 발급키의 기록인지 서명으로 연결합니다",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    },
+    {
+      "hasChain": true,
+      "heading": "검사에 통과한 검증정보를 체인에 남깁니다",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    },
+    {
+      "hasChain": true,
+      "heading": "블록에 포함된 뒤, 최종 확정을 확인합니다",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    },
+    {
+      "hasChain": true,
+      "heading": "원본은 고객사에, 검증 기준은 체인에",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    },
+    {
+      "hasChain": true,
+      "heading": "제출받은 PDF를 공개 기록과 직접 대조합니다",
+      "mapWidth": 325.3333435058594,
+      "pageWidth": 375,
+      "width": 390
+    }
+  ],
+  "original": "KODA\n증빙 전달·검증 기술 데모\n실제 Sepolia 조회 · 지갑 불필요\n전체 아키텍처\n누가 · 어디서 · 어떤 동작을\n전체 구조에서 현재 위치\n검증 완료 · 원본 일치\n\n확정된 공개 기록과 제출 PDF 대조 완료\n\n업무 주체\nKODA\n발급 · 서명\n검증정보 등록\n고객사\n원본 보관\n업무상 제출\n제3자\nPDF 선택\n독립 대조\nPDF 원본 전달 · 체인 밖\nregister(...)\nID · 해시 · 발급시각\n공개 조회\nJSON-RPC · eth_call\n조회 응답\n공개 검증 인프라\nEthereum Sepolia\n고객 BTC가 올라가는 체인이 아님\n블록 구조 · 개념도\nDocumentRegistry\nrecords[documentId] → hash · issuedAt\n체인 밖\nPDF 원문 · 고객명 · BTC 수량\n\n업무 주체와 처리 위치를 연결한 구조입니다.\nKODA 측 처리는 데모 브라우저·MetaMask에서 모사합니다.\n\n07 · 제3자 ↔ Ethereum / 실제 조회\n제출받은 PDF를 공개 기록과 직접 대조합니다\n\n버튼을 누르면 로컬 계산과 실제 Sepolia 조회가 실행됩니다. 지갑·가스비는 필요 없습니다.\n\nKODA\n제출 문서 검증\n제3자 화면\nBTC 잔고 증명서\n발급 원본\n100 BTC\n변경본\n120 BTC\n내 PDF 선택\nBTC잔고_원본.pdf\n공개 체인에서 대조하기\n발급 원본과 일치해요\n원본 기준의 시험 발급서명\n확인\n발급 당시 원본과 일치\n일치\n원본 기준과 차이\n없음\n실제 BTC 보유량·현재 유효성은 증명하지 않습니다.\n버튼 뒤에서 일어나는 일\n제출 PDF에서 해시 계산\n브라우저 · SHA-256\n공개된 발급 기준 조회\nEthereum · JSON-RPC / eth_call\n세 해시의 일치 여부 대조\n브라우저 · Hfile / Hsigned / Hchain\n이번 조회 결과\n발급 원본과 일치해요\n제출 PDF 해시\n0x4ffadf441f…dd2c2842\n=\n확정된 체인 해시\n0x4ffadf441f…dd2c2842\n발급서명도 복구·검증합니다.\n조회 노드: PublicNode · 파일은 외부 전송하지 않음\n블록체인으로 더해지는 검증 경로\n\n발급기관의 현재 응답에만 의존하지 않고, 공개된 확정 기록을 제3자가 다시 읽고 제출 파일과 대조합니다.\n\n실제 등록 거래 ↗\n실제 컨트랙트 ↗\n전체 해시·서명자·실제 RPC 로그 보기\n펼치기\n08 / 08\n전체 흐름\nPDF 발급\n해시 생성\n발급서명\n체인 등록\n블록 확정\n보관·제출\n독립 검증\n발표자 실행 준비\n실행 알림·전체 로그",
+  "altered": "KODA\n증빙 전달·검증 기술 데모\n실제 Sepolia 조회 · 지갑 불필요\n전체 아키텍처\n누가 · 어디서 · 어떤 동작을\n전체 구조에서 현재 위치\n검증 완료 · 제출본 불일치\n\n확정 기록은 유효하고 제출 PDF만 원본과 다름\n\n업무 주체\nKODA\n발급 · 서명\n검증정보 등록\n고객사\n원본 보관\n업무상 제출\n제3자\nPDF 선택\n독립 대조\nPDF 원본 전달 · 체인 밖\nregister(...)\nID · 해시 · 발급시각\n공개 조회\nJSON-RPC · eth_call\n조회 응답\n공개 검증 인프라\nEthereum Sepolia\n고객 BTC가 올라가는 체인이 아님\n블록 구조 · 개념도\nDocumentRegistry\nrecords[documentId] → hash · issuedAt\n체인 밖\nPDF 원문 · 고객명 · BTC 수량\n\n업무 주체와 처리 위치를 연결한 구조입니다.\nKODA 측 처리는 데모 브라우저·MetaMask에서 모사합니다.\n\n07 · 제3자 ↔ Ethereum / 실제 조회\n제출받은 PDF를 공개 기록과 직접 대조합니다\n\n버튼을 누르면 로컬 계산과 실제 Sepolia 조회가 실행됩니다. 지갑·가스비는 필요 없습니다.\n\nKODA\n제출 문서 검증\n제3자 화면\nBTC 잔고 증명서\n발급 원본\n100 BTC\n변경본\n120 BTC\n내 PDF 선택\nBTC잔고_120BTC_변경본.pdf\n공개 체인에서 대조하기\n발급 원본과 달라요\n원본 기준의 시험 발급서명\n확인\n발급 당시 원본과 일치\n불일치\n원본 기준과 차이\n있음\n실제 BTC 보유량·현재 유효성은 증명하지 않습니다.\n버튼 뒤에서 일어나는 일\n제출 PDF에서 해시 계산\n브라우저 · SHA-256\n공개된 발급 기준 조회\nEthereum · JSON-RPC / eth_call\n3\n세 해시의 일치 여부 대조\n브라우저 · Hfile / Hsigned / Hchain\n이번 조회 결과\n발급 원본과 달라요\n제출 PDF 해시\n0xf0dd8c574a…f5d3331f\n≠\n확정된 체인 해시\n0x4ffadf441f…dd2c2842\n발급서명도 복구·검증합니다.\n조회 노드: PublicNode · 파일은 외부 전송하지 않음\n블록체인으로 더해지는 검증 경로\n\n발급기관의 현재 응답에만 의존하지 않고, 공개된 확정 기록을 제3자가 다시 읽고 제출 파일과 대조합니다.\n\n실제 등록 거래 ↗\n실제 컨트랙트 ↗\n전체 해시·서명자·실제 RPC 로그 보기\n펼치기\n08 / 08\n전체 흐름\nPDF 발급\n해시 생성\n발급서명\n체인 등록\n블록 확정\n보관·제출\n독립 검증\n발표자 실행 준비\n실행 알림·전체 로그",
+  "queryLocation": "전체 구조에서 현재 위치\n제3자 → Ethereum\n\n컨트랙트 코드·발급자 확인",
+  "evidence": "제출 PDF · Hfile\n0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f\n서명된 해시 · Hsigned\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n확정 체인 해시 · Hchain\n0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842\n복구한 발급자\n0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\nfinalized block\n12072889\n전체 판정\nfile-mismatch\n✓ 배포 코드·고정 발급자 검증\n런타임 코드·배포 트랜잭션·고정 발급자 일치\n✓ PDF·검증정보 형식 검사\nPDF 헤더·크기·bytes32·uint64·서명 길이 확인\n✓ 제출 PDF 전체 바이트 SHA-256\n0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f\n✓ EIP-712 서명자 주소 복구\n복원 주소 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\n✓ eth_chainId 조회\nchainId 11155111\n✓ eth_getBlockByNumber(finalized)\nfinalized #12072889 · 0x2ada388c4d9c89c107dbd9070412eebd3817a6541e940224f0bca2a2a89e49a3\n✓ eth_getTransactionByHash · register 입력 대조\n등록 입력과 제출 검증정보 일치\n✓ eth_getTransactionReceipt 조회\nsuccess · block #12071362\n✓ eth_getBlockByNumber · 포함 블록 정식 체인 대조\n0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c\n✓ 영수증의 DocumentRegistered 이벤트 해석·대조\nDocumentRegistered 값 일치\n✓ 등록 블록과 finalized 블록 높이 비교\n등록 블록이 finalized 범위에 포함\n✓ viem readContract → eth_call authorizedIssuer()\n허용 발급자 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\n✓ viem readContract → eth_call records(documentId)\nhash 0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842 · issuedAt 1793904567\n! 제출·서명·체인 해시 최종 대조\n제출 PDF 해시만 발급서명·체인 기록과 불일치\n\n디지털서명만으로도 신뢰할 공개키와 서명 패키지가 있다면 원본 대조가 가능합니다. 이번 구현은 공개 등록 기준과 재조회 경로를 더합니다. 공식 KODA 신원 인증·모든 변경 이력·철회 상태를 검증하지 않으며 단일 공개 RPC에 대한 신뢰 가정은 남습니다.",
+  "playback": {
+    "enabled": true,
+    "observed": "어느 발급키의 기록인지 서명으로 연결합니다"
+  },
+  "keyboard": "기준시점이 담긴 원본 PDF를 발급합니다"
+}

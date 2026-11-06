@@ -1,0 +1,82 @@
+import type { VerificationResult, VerificationTraceEvent } from './verification';
+import { architectureMapState, type SceneId } from './architecture-state';
+import './architecture-map.css';
+
+export type { SceneId } from './architecture-state';
+
+export interface ArchitectureMapProps {
+  scene: SceneId;
+  busy: boolean;
+  trace?: VerificationTraceEvent[];
+  result?: VerificationResult;
+  receiptBlock?: string;
+}
+
+function actorClass(active: boolean) { return `kam-actor${active ? ' is-active' : ''}`; }
+function pathClass(active: boolean, complete = false) { return `kam-path${active ? ' is-active' : ''}${complete ? ' is-complete' : ''}`; }
+
+export function ArchitectureMap(props: ArchitectureMapProps) {
+  const state = architectureMapState(props);
+  const resultComplete = props.scene === 'verify' && state.chainReadComplete;
+  const kodaActive = ['koda', 'write'].includes(state.focus);
+  const customerActive = state.focus === 'handoff';
+  const thirdActive = ['third-party', 'query', 'response'].includes(state.focus);
+  const ethereumActive = ['ethereum', 'write', 'query', 'response'].includes(state.focus);
+
+  return <aside className="kam" aria-label={`전체 아키텍처. 현재 위치: ${state.label}. ${state.detail}`}>
+    <header className="kam-current">
+      <span>전체 구조에서 현재 위치</span>
+      <strong>{state.label}</strong>
+      <p>{state.detail}</p>
+    </header>
+    <svg className="kam-diagram" viewBox="0 0 420 390" role="img" aria-labelledby="kam-title kam-desc">
+      <title id="kam-title">KODA 문서 검증 전체 아키텍처</title>
+      <desc id="kam-desc">KODA가 만든 PDF는 고객사를 거쳐 제3자에게 전달되고, KODA는 문서 검증정보를 Ethereum에 기록하며 제3자는 공개 기록을 다시 조회합니다.</desc>
+      <defs>
+        <marker id="kam-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
+        <marker id="kam-arrow-active" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
+      </defs>
+
+      <text className="kam-kicker" x="18" y="25">업무 주체</text>
+      <g className={actorClass(kodaActive)} transform="translate(18 40)">
+        <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">KODA</text><text x="14" y="50">발급 · 서명</text><text x="14" y="68">검증정보 등록</text>
+      </g>
+      <g className={actorClass(customerActive)} transform="translate(154 40)">
+        <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">고객사</text><text x="14" y="50">원본 보관</text><text x="14" y="68">업무상 제출</text>
+      </g>
+      <g className={actorClass(thirdActive)} transform="translate(290 40)">
+        <rect width="112" height="78" rx="3" /><circle cx="18" cy="20" r="5" /><text className="kam-name" x="31" y="25">제3자</text><text x="14" y="50">PDF 선택</text><text x="14" y="68">독립 대조</text>
+      </g>
+
+      <path className={pathClass(state.focus === 'handoff')} d="M130 79 H154" markerEnd="url(#kam-arrow)" />
+      <path className={pathClass(state.focus === 'handoff')} d="M266 79 H290" markerEnd="url(#kam-arrow)" />
+      <text className="kam-route-label" x="210" y="144" textAnchor="middle">PDF 원본 전달 · 체인 밖</text>
+
+      <path className={pathClass(state.focus === 'write')} d="M74 118 V214 C74 233 96 242 122 242" markerEnd="url(#kam-arrow-active)" />
+      <text className={`kam-route-label${state.focus === 'write' ? ' is-active' : ''}`} x="22" y="173">register(...)</text>
+      <text className="kam-route-note" x="22" y="191">ID · 해시 · 발급시각</text>
+
+      <path className={pathClass(state.focus === 'query', resultComplete)} d="M346 118 V186 C346 210 321 222 296 230" markerEnd="url(#kam-arrow-active)" />
+      <text className={`kam-route-label${state.focus === 'query' ? ' is-active' : ''}`} x="321" y="173" textAnchor="end">공개 조회</text>
+      <text className="kam-route-note" x="321" y="191" textAnchor="end">JSON-RPC · eth_call</text>
+      <path className={pathClass(state.focus === 'response', resultComplete)} d="M302 259 C332 250 365 230 365 195 V120" markerEnd="url(#kam-arrow-active)" />
+      <text className={`kam-route-label${state.focus === 'response' ? ' is-active' : ''}`} x="399" y="215" textAnchor="end">조회 응답</text>
+
+      <g className={`kam-chain${ethereumActive ? ' is-active' : ''}`} transform="translate(42 225)">
+        <rect className="kam-chain-boundary" width="336" height="128" rx="4" />
+        <text className="kam-kicker" x="16" y="25">공개 검증 인프라</text>
+        <text className="kam-chain-title" x="16" y="50">Ethereum Sepolia</text>
+        <text className="kam-chain-sub" x="16" y="70">고객 BTC가 올라가는 체인이 아님</text>
+        <text className="kam-block-label" x="260" y="20" textAnchor="middle">블록 구조 · 개념도</text>
+        <g className="kam-blocks" transform="translate(194 24)"><rect x="0" y="8" width="36" height="36" /><path d="M36 26h12" /><rect x="48" y="8" width="36" height="36" /><path d="M84 26h12" /><rect x="96" y="8" width="36" height="36" /></g>
+        <line x1="16" y1="78" x2="320" y2="78" />
+        <text className="kam-contract" x="16" y="99">DocumentRegistry</text>
+        <text className="kam-record" x="16" y="118">records[documentId] → hash · issuedAt</text>
+      </g>
+
+      <g className="kam-boundary" transform="translate(18 365)">
+        <text x="0" y="14">체인 밖</text><text className="kam-boundary-value" x="58" y="14">PDF 원문 · 고객명 · BTC 수량</text>
+      </g>
+    </svg>
+  </aside>;
+}
