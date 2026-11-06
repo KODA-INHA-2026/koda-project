@@ -69,3 +69,14 @@
 - [리서치·반영 상세](../../design/toss-research-application-2026-11-06.md), [공개 확인 기록](../../design/content-refinement-2026-11-06/public-check.json), [공개 첫 화면](../../design/content-refinement-2026-11-06/public-intro.jpg), [공개 원본 검증 화면](../../design/content-refinement-2026-11-06/public-original-match.jpg).
 
 실제 청중의 이해도·피로도 개선은 아직 조사하지 않았다. 문구와 처리 상태의 정확성을 검증한 단계이며, 기존 등록 증거·컨트랙트·검증 함수·지갑 로직은 유지했다.
+
+## 검증 과정 다시 보기와 자산 범위 설명 — 2026-11-06
+
+사용자가 검증 과정의 빠른 전환과 ‘체인 밖 BTC 수량’의 오해 가능성을 지적했다. 실제 결과는 즉시 표시하고, 실행한 기록만 단계당 3.5초씩 다시 보여주는 동작을 추가했다. 일시정지·수동 선택을 지원하며 재생 중 추가 RPC는 없다. 구조도에는 Bitcoin의 BTC와 Ethereum의 문서 검증정보를 구분하고, 등록·조회·응답은 직각 경로로 정리했다.
+
+- 소스: [`9c04fce`](https://github.com/KODA-INHA-2026/koda-project/commit/9c04fceb2396f5c4f26232df78d126c76b4edb05).
+- Pages: `faa2a495f52e7bd47163cc750912225d73d20f48`. [Pages 실행 #13](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42148219287)은 2026-11-06 **11:07:57 KST** 성공했다.
+- 전체 live 테스트 30/30, TypeScript·배포 빌드 통과. 브라우저에서 재생 간격·정지·수동 조작·초기화·추가 RPC 없음·오류 상태·동작 줄이기·키보드·1280px/390px 레이아웃을 확인했다. 기존 번들 크기 경고는 남는다.
+- 공개 HTTPS 페이지에서 새 소스 커밋과 문구, 기록 선택과 구조도 연동을 확인했다. 실제 원본은 일치, 변경본은 불일치. 새 지갑 서명이나 거래는 제출하지 않았다.
+- [설계·기여 기록](../../design/verification-review-2026-11-06.md), [공개 관측 기록](../../design/verification-review-2026-11-06/public-check.json), [공개 검증 화면](../../design/verification-review-2026-11-06/public-review.png).
+- 설계 기록은 작업 폴더와 지정된 G: 볼트 최종결과물 폴더에 `검증 과정 재생과 체인 역할 표현 개선 기록.md`로 보존했고 두 사본의 SHA-256 일치를 확인했다. 피그마 작업은 중단 상태를 유지했다.
