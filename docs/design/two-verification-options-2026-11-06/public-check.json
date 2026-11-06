@@ -1,0 +1,25 @@
+{
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=74ff799",
+  "checkedAt": "2026-11-06T07:27:27.738Z",
+  "build": {
+    "sourceBranch": "feat/first-demo",
+    "sourceCommit": "74ff79940a79657c3f72bdd39aeb41058450bf23",
+    "builtAtUtc": "2026-11-06T07:24:45.6544700Z",
+    "designNetwork": "Ethereum L1",
+    "network": "Ethereum Sepolia",
+    "asset": "native BTC (fictional certificate)",
+    "purpose": "KODA dashboard and standalone external verification draft"
+  },
+  "packageSha256": "ed58e56606bb0d63042968108a45675f73bd123f3a558b5b142ff66a9a02aec1",
+  "findings": [
+    "Published 3 scenes and KODA dashboard shell",
+    "Actual PDF/JSON downloads into a fresh receiver; real RPC original match and changed PDF mismatch",
+    "03 actual saved reports match/mismatch; downloaded public ZIP matches tested package; no fresh RPC for saved report display",
+    "No browser exceptions or interactive wallet requests"
+  ],
+  "errors": [],
+  "walletRequests": [
+    "eth_accounts"
+  ],
+  "rpcRequests": 28
+}
