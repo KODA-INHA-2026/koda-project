@@ -10,9 +10,16 @@ export interface PresentationProps {
   asOf: string;
   proof?: Partial<Proof>;
   trusted?: TrustedDeployment;
+  verificationProof?: Proof;
+  verificationTrust?: TrustedDeployment;
   originalSize?: number;
   pdfHeaderHex?: string;
   selectedName?: string;
+  selectedProofName?: string;
+  inputSource?: 'received' | 'sample';
+  inputError: string;
+  inputLoading: boolean;
+  canDownload: boolean;
   selectedVariant: 'original' | 'altered' | 'upload';
   result?: VerificationResult;
   verificationTrace?: VerificationTraceEvent[];
@@ -24,6 +31,8 @@ export interface PresentationProps {
   evidence: ReactNode;
   onVerify: () => void;
   onSelectSample: (variant: 'original' | 'altered') => void;
-  onSelectFile: (file?: File) => void;
+  onSelectFiles: (files: File[]) => void;
+  onClearFiles: () => void;
   onDownload: (variant: 'original' | 'altered') => void;
+  onDownloadProof: () => void;
 }

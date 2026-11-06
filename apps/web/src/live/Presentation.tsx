@@ -8,7 +8,7 @@ import type { VerificationResult, VerificationTraceEvent } from './verification'
 import './presentation.css';
 
 export function Presentation(props: PresentationProps) {
-  const [act, setAct] = useState(0);
+  const [act, setAct] = useState(() => new URLSearchParams(window.location.search).get('view') === 'verify' ? 1 : 0);
   const [frame, setFrame] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [motion, setMotion] = useState<{ step: MotionStep; paused: boolean; replay: boolean; enteredAt: number; elapsed: number; previousResult?: VerificationResult; previousTrace?: VerificationTraceEvent[] }>();
@@ -55,10 +55,12 @@ export function Presentation(props: PresentationProps) {
     previousResult: replay ? undefined : props.result, previousTrace: replay ? undefined : props.verificationTrace });
   const verifierProps: PresentationProps = {
     ...props,
+    proof: props.verificationProof, trusted: props.verificationTrust,
     result: observedResult, verificationTrace: observedTrace,
     onVerify: () => { setAct(1); setPlaying(false); begin(false); props.onVerify(); },
     onSelectSample: variant => { setMotion(undefined); props.onSelectSample(variant); },
-    onSelectFile: file => { if (file) setMotion(undefined); props.onSelectFile(file); },
+    onSelectFiles: files => { if (files.length) setMotion(undefined); props.onSelectFiles(files); },
+    onClearFiles: () => { setMotion(undefined); props.onClearFiles(); },
   };
   const mapMotion = act === 1 ? { focus: motionFocus(step), label: MOTION_LABEL[step],
     detail: observedResult ? '관측한 처리 결과' : '조회·검증 진행', playing: Boolean(motion && !motion.paused && step !== 'result'),
@@ -82,7 +84,7 @@ export function Presentation(props: PresentationProps) {
         {props.error && props.mode === 'live' && act === 0 && <p className="kp-error" role="alert">발급·등록을 완료하지 못했습니다. 실행 로그에서 원인을 확인해 주세요.</p>}
       </section>
     </div>
-    <footer className="kp-footer"><span>가상 증명서 · 시험 발급자 · 실행 환경 Ethereum Sepolia</span><details><summary>데모 범위</summary><p>KODA 운영 시스템과 연동한 화면은 아닙니다. 기존 등록 문서로 문서의 출처·원본 일치를 검증합니다. 실제 BTC 잔고의 사실성, 공식 KODA 신원, 중간 변경 이력 전체를 증명하지 않습니다. 고객사 전달 장면은 업무 흐름 설명입니다.</p></details></footer>
+    <footer className="kp-footer"><span>가상 증명서 · 시험 발급자 · 실행 환경 Ethereum Sepolia</span><details><summary>데모 범위</summary><p>KODA 운영 시스템과 연동한 화면은 아닙니다. PDF와 검증정보의 다운로드·불러오기로 전달 과정을 재현하며, 받은 파일을 실제 체인 기록과 대조합니다. 실제 BTC 잔고의 사실성, 공식 KODA 신원, 중간 변경 이력 전체를 증명하지 않습니다.</p></details></footer>
     <div className="kp-secondary"><details><summary>발표자 실행 준비</summary>{props.setup}</details><details><summary>실행 알림·전체 로그</summary>{props.error && <p>{props.error}</p>}{props.notice && <p role="status">{props.notice}</p>}{props.evidence}</details></div>
   </main>;
 }

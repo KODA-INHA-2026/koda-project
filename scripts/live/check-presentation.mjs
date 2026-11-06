@@ -1,13 +1,35 @@
 import { chromium, expect } from '@playwright/test';
 import { toFunctionSelector } from 'viem';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile, mkdtemp } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 
 const base = process.env.KODA_PREVIEW_URL ?? 'http://127.0.0.1:5190/live.html';
-const output = process.env.KODA_REVIEW_OUTPUT ?? 'docs/design/continuous-verification-2026-11-06';
+const output = process.env.KODA_REVIEW_OUTPUT ?? 'docs/design/document-handoff-2026-11-06';
 await mkdir(output, { recursive: true });
+await mkdir('tmp', { recursive: true });
+const downloads = await mkdtemp('tmp/handoff-');
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const findings = [];
 try {
+  const issuer = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await issuer.goto(base);
+  await expect(issuer.getByRole('button', { name: '증명서 PDF 받기', exact: false })).toBeEnabled();
+  await issuer.evaluate(() => document.fonts.ready);
+  await issuer.screenshot({ path: `${output}/01-issue.png`, fullPage: true });
+  async function downloadFrom(target, button, name) {
+    const pending = target.waitForEvent('download');
+    await target.getByRole('button', { name: button, exact: false }).click();
+    const file = await pending;
+    const path = `${downloads}/${name}`;
+    await file.saveAs(path);
+    return path;
+  }
+  const pdfPath = await downloadFrom(issuer, '증명서 PDF 받기', 'BTC잔고_원본.pdf');
+  const jsonPath = await downloadFrom(issuer, '검증정보 JSON 받기', 'BTC잔고_검증정보.json');
+  const receivedJson = JSON.parse(await readFile(jsonPath, 'utf8'));
+  expect(`0x${createHash('sha256').update(await readFile(pdfPath)).digest('hex')}`).toBe(receivedJson.proof.documentHash);
+  await issuer.close();
+  // A separate BrowserContext has none of the issuer page's storage or in-memory data.
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const errors = [];
   let rpcRequests = 0;
@@ -19,16 +41,49 @@ try {
   await page.addInitScript(() => { Object.defineProperty(window, 'ethereum', { value: { request: async ({ method }) => { await window.qaWalletRequest(method); if (method === 'eth_accounts') return []; throw new Error('Unexpected interactive wallet call'); } } }); });
   const shot = async name => { await page.evaluate(() => window.scrollTo(0, 0)); await page.screenshot({ path: `${output}/${name}.png`, fullPage: !['03-request', '04-return'].includes(name), animations: 'allow' }); };
   const stage = page.locator('.ve-experience');
-  await page.goto(base);
-  await page.getByRole('button', { name: '제3자가 검증하기', exact: true }).waitFor();
+  const receiverUrl = new URL(base); receiverUrl.searchParams.set('view', 'verify');
+  await page.goto(receiverUrl.href);
+  await page.getByLabel('전달받은 PDF와 검증정보 선택').waitFor({ state: 'attached' });
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('.kp-acts button')).toHaveCount(2);
   for (const route of ['koda-bitcoin', 'customer-bitcoin', 'koda-customer-pdf', 'customer-third-party-pdf', 'koda-ethereum-register', 'third-party-ethereum-query', 'ethereum-third-party-response']) await expect(page.getByTestId(route)).toHaveCount(1);
-  await shot('01-issue');
-  await page.getByRole('button', { name: '제3자가 검증하기', exact: true }).click();
   await expect(page.locator('.ve-app-header')).toContainText('대시보드');
   await expect(page.locator('.ve-evidence')).not.toHaveAttribute('open');
+  const input = page.getByLabel('전달받은 PDF와 검증정보 선택');
+  const verifyButton = page.getByRole('button', { name: '문서 검증하기', exact: true });
+  await expect(verifyButton).toBeDisabled();
+  await expect(page.locator('.ve-file-row.is-loaded')).toHaveCount(0);
+  await shot('02-empty-receiver');
+  await input.setInputFiles(jsonPath);
+  await expect(page.locator('.ve-file-row.is-loaded')).toHaveCount(1);
+  await expect(verifyButton).toBeDisabled();
+  await input.setInputFiles(pdfPath);
+  await expect(verifyButton).toBeEnabled();
+  const attacker = structuredClone(receivedJson); attacker.chain.contract = `0x${'12'.repeat(20)}`;
+  const callsBeforeInput = rpcRequests;
+  await input.setInputFiles({ name: 'untrusted.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(attacker)) });
+  await expect(page.locator('.ve-input-error')).toContainText('사전에 확인한');
+  await expect(verifyButton).toBeDisabled();
+  await expect(page.locator('.ve-file-row.is-loaded')).toHaveCount(0);
+  expect(rpcRequests).toBe(callsBeforeInput);
+  await page.evaluate(() => {
+    const read = File.prototype.text;
+    File.prototype.text = async function () {
+      if (this.name === 'slow.json') await new Promise(resolve => { window.releaseSlowFile = resolve; });
+      return read.call(this);
+    };
+  });
+  await input.setInputFiles({ name: 'slow.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(attacker)) });
+  await expect(page.locator('.ve-input-status')).toContainText('파일 읽는 중');
+  await input.setInputFiles([pdfPath, jsonPath]);
+  await expect(verifyButton).toBeEnabled();
+  await page.evaluate(() => window.releaseSlowFile());
+  await expect(page.locator('.ve-input-error')).toHaveCount(0);
+  await expect(page.locator('.ve-file-row.is-loaded')).toHaveCount(2);
+  await expect(page.locator('.ve-input-status')).toContainText('수신자가 선택한 파일');
   await shot('02-ready');
+  findings.push('Real PDF and JSON downloads preserve the registered file hash. A fresh receiver BrowserContext starts empty and verifies only the uploaded pair; either file can be loaded first.');
+  findings.push('An untrusted registry JSON is rejected before RPC and clears stale inputs. A late earlier file-read cannot overwrite a newer accepted pair.');
   await page.locator('.ve-dashboard').evaluate(element => { element.dataset.qaIdentity = 'same-dashboard'; });
   await stage.evaluate(element => {
     window.qaSteps = ['ready'];
@@ -87,7 +142,10 @@ try {
   await expect(page.locator('.ve-outcome')).toHaveClass(/is-match/);
   expect(rpcRequests).toBe(callsAtResult);
   await page.getByRole('button', { name: '과정 다시 보기', exact: true }).click();
-  await page.getByRole('button', { name: '변경본 120 BTC', exact: true }).click();
+  await page.locator('.ve-demo-input summary').click();
+  const alteredPath = await downloadFrom(page, '변경본 PDF 받기', 'BTC잔고_120BTC_변경본.pdf');
+  await page.locator('.ve-demo-input summary').click();
+  await input.setInputFiles(alteredPath);
   await expect(stage).toHaveAttribute('data-motion-step', 'ready');
   await expect(page.locator('.ve-outcome')).toHaveCount(0);
   await expect(page.locator('.ve-return-slot')).not.toContainText('0x');
@@ -105,6 +163,7 @@ try {
   await expect(page.locator('.ve-outcome')).toHaveClass(/is-mismatch/);
 
   await page.unroute(rpcRoute);
+  await page.locator('.ve-demo-input summary').click();
   await page.getByRole('button', { name: '발급 원본 100 BTC', exact: true }).click();
   let injected = 0, releaseFailure;
   const failureGate = new Promise(resolve => { releaseFailure = resolve; });

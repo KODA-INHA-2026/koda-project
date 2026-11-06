@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active. Last refreshed: 2026-11-06.
-- Current work boundary (latest): continuous dashboard → Ethereum → dashboard verification motion is the approved focus. New comparison cases and customer file/package handoff remain deferred. Earlier context: the user rejected the seven-chapter version as dense and fragmented. Rebuild the presentation around TWO acts: issuance/registration/customer delivery, then third-party verification. After local review the user requested a link, authorizing publication of this two-act version. The CEO's external-document verification brief remains the content authority. Research informs communication, not new business or proof claims.
+- Current work boundary (latest): the CEO-directed issuance → customer handoff → third-party verification is the focus. Export the actual PDF plus verification JSON, then import them in the KODA receiver dashboard. An external reproducibility/code package remains deferred; the re-signed conflict case stays a later auxiliary scenario. Earlier context: the user rejected the seven-chapter version as dense and fragmented. Rebuild the presentation around TWO acts: issuance/registration/customer delivery, then third-party verification. After local review the user requested a link, authorizing publication of this two-act version. The CEO's external-document verification brief remains the content authority. Research informs communication, not new business or proof claims.
 - Refinement baseline: the user accepted the architecture-led version as the draft to improve. Primary architecture and narrative labels use Ethereum, the planned document registry chain. Identify Sepolia separately as the actual test execution environment; preserve the real chain ID, RPC, wallet checks and explorer destinations. Never imply that existing test transactions were executed on Ethereum mainnet.
 - Surface: `/live.html`, the BTC document verification presentation and working Sepolia verifier.
 - Latest user correction (2026-11-06, after first publication): the dense technical version is tiring and loses the point. Keep the overall architecture visible beside a focused scene, activate the current actor/location/data path, and make the blockchain's role and added value visible through operations. Technical names and long hashes alone do not explain the system.
@@ -24,13 +24,13 @@
 ## Personas and jobs
 - Presenter explains the technical sequence; issuer controls belong in a collapsible presenter area.
 - Customer keeps and submits its PDF; do not invent a separate customer app.
-- Third party selects a PDF and verifies without a wallet. Only this surface uses product UI.
+- Third party imports the received PDF and verification JSON in the KODA dashboard and verifies without a wallet. Start with empty input; only explicit presenter examples preload files. Only this surface uses product UI.
 
 ## Information architecture
 - Exactly two presentation acts: (1) KODA issues a PDF, registers verification information on Ethereum, and delivers the PDF to the customer; (2) the third party verifies the submitted PDF in a single KODA dashboard. Internal technical phases do not create more pages or numbered chapters.
 - The verification dashboard stays in place. Show a visual event beside it: a request travels to Ethereum, the existing registry record is highlighted, the response returns and is compared with the submitted file. A new block must not appear when reading. One evidence-gated visual sequence starts at the verification click. The real result is immediately accessible in a status line if it finishes first; the main verdict follows the visible request, record response and comparison. Explicit replay adds no RPC.
 - Put each business actor in the architecture ONCE. Connect KODA and the customer directly to Bitcoin for custody/asset attribution, and connect KODA and the third party directly to Ethereum for registration/query. No separate custody-background box, no third-party path to Bitcoin, no bridge between the two chains.
-- The first act gives the context briefly and offers immediate access to the verifier. The second act is the core demonstration. Original and altered files are two inputs to the same UI, not additional scenes.
+- The first act gives the context briefly, offers actual PDF/JSON downloads as presenter controls, then opens the receiver dashboard. Do not build a customer product UI. The second act is the core demonstration. Original and altered files are two inputs to the same UI, not additional scenes.
 - A compact presentation transport offers play/pause, previous/next and jump to verifier. It is not a pretend KODA product navigation.
 - The whole journey is one technical process. KODA, the customer and the third party are business actors; Ethereum is shared infrastructure used for registration AND third-party reads, not a fourth business actor or a customer asset destination.
 - Technical stage is an open neutral/mint canvas with explicit inputs, operations, outputs and arrows crossing named boundaries. Only the third party gets a product window. That window remains connected to visible local hashing/signature recovery and public JSON-RPC reads; the last scene is not detached from the technical demonstration.
@@ -54,7 +54,7 @@
 - Small original SVG icons with consistent 24px viewBox and 2px rounded strokes. No Toss asset copying.
 
 ## Components
-- Reuse existing wallet, PDF, verification and persistence modules without changing their trust rules.
+- Reuse existing wallet, PDF, verification and persistence modules without changing their trust rules. Incoming JSON requires the registration transaction hash and identifies the fixed publicly configured registry. Issuer localStorage cannot expand receiver trust. Handoff downloads require successful block inclusion; verification independently checks finality. A newly deployed registry needs a separate public allowlist update before handoff; it cannot supply a new issuer, contract trust anchor, RPC endpoint or executable code. Receiver proof and PDF state are separate from issuer state, including on a fresh browser visit.
 - Focused scene objects, persistent ArchitectureMap, playback transport and third-party verifier. Actual trace IDs drive the map during verification; local receipt decoding and finality comparison must not masquerade as new chain calls.
 - Controller owns live data and wallet calls. Presentation owns local replay position, visual transitions and copy.
 - Tokens live in presentation CSS; avoid another styling dependency.
@@ -96,4 +96,4 @@
 - Sharing route remains `/sepolia-20261106/`. The user subsequently requested a link to the locally reviewed two-act version; publish the verified build at this route and check the public version.
 - [ ] User wallet approval for a new 인하테크홀딩스㈜ certificate; collect for next session, do not prompt during overnight work.
 - [ ] Production issuer identity governance, key rotation/revocation and chosen RPC trust policy remain future decisions, not implemented claims.
-- [ ] External verifier distribution/JSON handoff remains deferred as requested. Internal proof data is still needed by the demo.
+- [ ] External verifier/code distribution remains deferred. PDF plus verification JSON handoff is implemented inside the existing KODA demo, as our technical design rather than a CEO-prescribed file format.

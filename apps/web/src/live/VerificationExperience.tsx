@@ -31,6 +31,8 @@ export function VerificationExperience(props: Props) {
   const compared = returned && trace.some(event => event.id === 'hash-comparison');
   const isMatch = compared && props.result?.status === 'match';
   const isMismatch = compared && props.result?.status === 'file-mismatch';
+  const readyTitle = props.inputLoading ? '파일을 불러오는 중입니다' : !props.selectedName && !props.selectedProofName ? '고객사에서 받은 자료를 불러오세요'
+    : !props.selectedName ? '증명서 PDF도 선택해 주세요' : !props.selectedProofName ? '검증정보 JSON도 선택해 주세요' : '받은 자료를 검증할 준비가 됐습니다';
   const caption = step === 'ready' ? '검증 버튼을 눌러 발급 기록을 확인해 보세요'
     : step === 'prepare' ? 'PDF와 발급정보를 확인합니다'
       : step === 'request' ? '문서 ID로 Ethereum의 발급 기록을 조회합니다'
@@ -73,13 +75,15 @@ export function VerificationExperience(props: Props) {
   const packetPath = step === 'request' ? routes.request : routes.response;
   const packetStyle = { offsetPath: `path('${packetPath}')`, animationDuration: `${MOTION_MS[step]}ms`, animationPlayState: paused ? 'paused' : 'running' } as CSSProperties;
   return <article className="ve-root">
-    <header className="ve-stage-heading"><span>02 · 제3자 검증</span><h1>제출받은 증명서를 발급 기록과 대조합니다</h1><p>Ethereum에서 등록된 원본의 기준을 읽어, 제출받은 PDF와 비교합니다.</p></header>
-    <div className="ve-demo-input" role="group" aria-label="시연 파일 선택"><span>시연 파일</span><button aria-pressed={props.selectedVariant === 'original'} disabled={props.busy} onClick={() => props.onSelectSample('original')}>발급 원본 <small>100 BTC</small></button><button aria-pressed={props.selectedVariant === 'altered'} disabled={props.busy} onClick={() => props.onSelectSample('altered')}>변경본 <small>120 BTC</small></button></div>
+    <header className="ve-stage-heading"><span>02 · 외부 수신자 — KODA 문서 검증</span><h1>전달받은 증명서를 발급 기록과 대조합니다</h1><p>고객사에서 받은 PDF와 검증정보를 불러와, Ethereum의 등록 기록과 확인합니다.</p></header>
+    <div className="ve-demo-tools"><span>고객사에서 외부 수신자로</span><details className="ve-demo-input"><summary>발표용 예시</summary><div role="group" aria-label="시연 파일 선택"><p>직접 파일을 불러오는 대신 예시 자료를 사용합니다.</p>{(['original', 'altered'] as const).map(variant => <button key={variant} aria-pressed={props.inputSource === 'sample' && props.selectedVariant === variant} disabled={props.busy || props.inputLoading || !props.canDownload} onClick={event => { props.onSelectSample(variant); event.currentTarget.closest('details')!.open = false; }}>{variant === 'original' ? '발급 원본' : '변경본'} <small>{variant === 'original' ? '100 BTC' : '120 BTC'}</small></button>)}<button disabled={props.busy || !props.canDownload} onClick={() => props.onDownload('altered')}>변경본 PDF 받기</button></div></details></div>
     <div ref={canvasRef} className={`ve-experience step-${step}${paused ? ' is-paused' : ''}${isMatch ? ' is-match' : ''}${isMismatch ? ' is-mismatch' : ''}`} data-motion-step={step}>
       <section className="ve-dashboard" aria-label="제3자가 이용하는 KODA 대시보드">
         <header className="ve-app-header"><strong>KODA <span>대시보드</span></strong><span>제3자 · 증빙 검증</span></header>
         <div className="ve-app-body">
-          <label className="ve-upload"><Icon name="file" /><span><b>BTC 잔고 증명서</b><small>{props.selectedVariant === 'upload' ? props.selectedName : props.selectedVariant === 'original' ? '발급 원본 · 100 BTC' : '변경본 · 120 BTC'}</small></span><em>PDF 선택</em><input aria-label="검증할 PDF 선택" disabled={props.busy} type="file" accept="application/pdf,.pdf" onChange={event => props.onSelectFile(event.target.files?.[0])} /></label>
+          <label className="ve-upload"><span className="ve-upload-heading"><b>전달받은 두 파일</b><em>파일 불러오기</em></span><span className={`ve-file-row${props.selectedName ? ' is-loaded' : ''}`}><Icon name="file" /><span><b>증명서 PDF</b><small>{props.selectedName ?? '선택 전'}</small></span><small>{props.selectedName ? '불러옴' : '필요'}</small></span><span className={`ve-file-row${props.selectedProofName ? ' is-loaded' : ''}`}><span className="ve-json-icon" aria-hidden="true">{'{ }'}</span><span><b>검증정보 JSON</b><small>{props.selectedProofName ?? '문서 ID·원본 해시·발급서명'}</small></span><small>{props.selectedProofName ? '불러옴' : '필요'}</small></span><input aria-label="전달받은 PDF와 검증정보 선택" disabled={props.busy} type="file" multiple accept="application/pdf,application/json,.pdf,.json" onChange={event => { props.onSelectFiles(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label>
+          {props.inputError && <p className="ve-input-error" role="alert">{props.inputError}</p>}
+          {(props.selectedName || props.selectedProofName || props.inputLoading) && <div className="ve-input-status"><span>{props.inputLoading ? '파일 읽는 중' : props.inputSource === 'sample' ? '발표용 예시 자료' : '수신자가 선택한 파일'}</span><button disabled={props.busy} onClick={props.onClearFiles}>다시 선택</button></div>}
           <button ref={buttonRef} className="ve-primary" disabled={!props.canVerify || props.busy || running} onClick={props.onVerify}>{props.busy ? '검증 중' : running ? '처리 흐름 표시 중' : props.result ? '다시 검증하기' : '문서 검증하기'}<Icon name="arrow" /></button>
           <div className={`ve-compare-tray${returned ? ' has-record' : ''}`} aria-label="제출 PDF와 등록 기록 대조">
             <div className={`ve-file-digest${fileHash ? ' has-hash' : ''}`}><span>제출 PDF <small>SHA-256</small></span><code>{short(fileHash)}</code></div>
@@ -91,9 +95,9 @@ export function VerificationExperience(props: Props) {
               <div className="ve-verdict"><div className="ve-outcome-icon"><Icon name={outcome.kind === 'match' ? 'check' : outcome.kind === 'mismatch' ? 'close' : 'alert'} /></div><h2>{outcome.title}</h2></div>
               {(outcome.kind === 'failure' || outcome.kind === 'pending') && <p className="ve-error-reason">{outcome.description}</p>}
               <ol className="ve-questions">{outcome.questions.map(question => <li key={question.label} className={`is-${question.state}`}><span>{question.label}</span><strong>{question.state === 'confirmed' ? <Icon name="check" /> : null}{question.value}</strong></li>)}</ol>
-            </section> : <div className="ve-live-state" aria-live="polite"><span className={running ? 'is-working' : ''} /><div><h2>{step === 'ready' ? '제출받은 PDF를 확인하세요' : MOTION_LABEL[step]}</h2><p>{step === 'ready' ? '발급서명과 등록된 원본을 함께 확인합니다.' : step === 'prepare' ? '발급서명과 조회 기준을 확인하는 중입니다.' : step === 'request' ? 'PDF는 보내지 않고 문서 ID로 조회합니다.' : step === 'record' ? '이미 등록된 기록을 읽습니다.' : step === 'return' ? '이 기록이 PDF를 대조할 기준입니다.' : '두 해시가 같은지 확인합니다.'}</p></div></div>}
+            </section> : <div className="ve-live-state" aria-live="polite"><span className={running ? 'is-working' : ''} /><div><h2>{step === 'ready' ? readyTitle : MOTION_LABEL[step]}</h2><p>{step === 'ready' ? '검증정보의 발급서명과 등록된 원본을 확인합니다.' : step === 'prepare' ? '발급서명과 조회 기준을 확인하는 중입니다.' : step === 'request' ? 'PDF는 보내지 않고 문서 ID로 조회합니다.' : step === 'record' ? '이미 등록된 기록을 읽습니다.' : step === 'return' ? '이 기록이 PDF를 대조할 기준입니다.' : '두 해시가 같은지 확인합니다.'}</p></div></div>}
           </div>
-          <p className="ve-app-note">미리 불러온 발급정보 사용 · 현재 제출본과 원본 비교</p>
+          <p className="ve-app-note">파일은 이 브라우저에서 처리하고, Ethereum에서는 등록 기록을 조회합니다.</p>
         </div>
       </section>
 

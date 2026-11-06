@@ -1,0 +1,14 @@
+{
+  "base": "http://127.0.0.1:5190/live.html",
+  "checkedAt": "2026-11-06T06:21:45.919Z",
+  "findings": [
+    "Real PDF and JSON downloads preserve the registered file hash. A fresh receiver BrowserContext starts empty and verifies only the uploaded pair; either file can be loaded first.",
+    "An untrusted registry JSON is rejected before RPC and clears stale inputs. A late earlier file-read cannot overwrite a newer accepted pair.",
+    "Actual original: click → prepare → request → observed registry record → return → comparison → match, in one stable dashboard. Delayed records RPC cannot fabricate a response.",
+    "Actual result is accessible while visual motion is paused. Left map highlights query then response in sync; no new block or transaction on reads.",
+    "Replay and keyboard skip add no RPC. Changing the file cancels motion and clears stale evidence. Reduced motion shows real mismatch immediately without animation waits.",
+    "Injected RPC error remains incomplete: no returned hash, comparison or successful answer fabricated.",
+    "Reduced-motion changes during and after verification do not rewind to ready or trigger automatic replay. Pause stops block and arrival effects as well as packets.",
+    "1440/1280/390px: both acts without horizontal overflow or browser exceptions. Only passive eth_accounts restoration; no wallet connection/signature/transaction requests. Mobile keeps results and captions; packet motion is desktop only."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "base": "http://127.0.0.1:5190/live.html",
+  "checkedAt": "2026-11-06T06:25:23.812Z",
+  "findings": [
+    "pending: restored issuance without a matching trusted registration cannot enable either handoff download.",
+    "reverted: restored issuance without a matching trusted registration cannot enable either handoff download.",
+    "unrelated-success: restored issuance without a matching trusted registration cannot enable either handoff download.",
+    "altered-issuer: restored issuance without a matching trusted registration cannot enable either handoff download.",
+    "Issuer localStorage cannot add a trusted registry to the receiver. Fresh and reused browsers share the same public allowlist."
+  ]
+}

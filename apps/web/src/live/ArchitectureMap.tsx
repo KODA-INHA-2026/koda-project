@@ -54,18 +54,18 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
       </g>
       <g className={actorClass(customerActive)} transform="translate(188 148)">
         <rect width="130" height="78" rx="4" /><circle cx="18" cy="20" r="5" />
-        <text className="kam-name" x="31" y="25">고객사</text><text x="14" y="51">원본 보관</text><text x="14" y="68">업무상 제출</text>
+        <text className="kam-name" x="31" y="25">고객사</text><text x="14" y="51">두 파일 보관</text><text x="14" y="68">업무상 제출</text>
       </g>
 
       <path data-testid="koda-customer-pdf" className={pathClass(state.focus === 'handoff', false, state.focus === 'handoff' && reviewFlowing)} d="M148 187 H188" markerEnd={pathMarker(state.focus === 'handoff')} />
-      <text className="kam-route-label" x="168" y="177" textAnchor="middle">PDF</text>
+      <text className="kam-route-label" x="168" y="177" textAnchor="middle">PDF·JSON</text>
 
       <g className={actorClass(thirdActive)} transform="translate(188 298)">
         <rect width="130" height="82" rx="4" /><circle cx="18" cy="20" r="5" />
-        <text className="kam-name" x="31" y="25">제3자</text><text x="14" y="52">KODA 대시보드</text><text x="14" y="70">제출 문서 검증</text>
+        <text className="kam-name" x="31" y="25">제3자</text><text x="14" y="52">KODA 대시보드</text><text x="14" y="70">전달 자료 검증</text>
       </g>
       <path data-testid="customer-third-party-pdf" className={pathClass(state.focus === 'handoff', false, state.focus === 'handoff' && reviewFlowing)} d="M253 226 V298" markerEnd={pathMarker(state.focus === 'handoff')} />
-      <text className="kam-route-label" x="264" y="265">PDF 제출</text>
+      <text className="kam-route-label" x="264" y="265">PDF·JSON 제출</text>
 
       <path data-testid="koda-ethereum-register" className={pathClass(state.focus === 'write', false, state.focus === 'write' && reviewFlowing)} d="M83 226 V458" markerEnd={pathMarker(state.focus === 'write')} />
       <text className={`kam-route-label${state.focus === 'write' ? ' is-active' : ''}`} x="94" y="346">등록</text>

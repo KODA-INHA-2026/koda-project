@@ -15,7 +15,7 @@ type IssueJourneyProps = PresentationProps & {
 const BEATS = [
   { label: '발급', detail: 'BTC 잔고 증명서 원본을 확정합니다' },
   { label: '등록', detail: '나중에 대조할 검증정보를 Ethereum에 남깁니다' },
-  { label: '전달', detail: '원본 PDF는 고객사가 보관하고 제출합니다' },
+  { label: '전달', detail: 'PDF와 검증정보를 고객사가 받아 함께 제출합니다' },
 ] as const;
 
 const short = (value?: string) => value ? `${value.slice(0, 10)}…${value.slice(-6)}` : '준비 전';
@@ -48,8 +48,8 @@ export function IssueJourney(props: IssueJourneyProps) {
   return <article className="ij-root">
     <header className="ij-heading">
       <span>01 · KODA 발급과 검증정보 등록</span>
-      <h1>증명서는 고객사에, 검증정보는 Ethereum에</h1>
-      <p>고객사는 BTC 잔고 증명서 원본을 보관하고, 제3자는 별도로 등록된 기준을 나중에 조회합니다.</p>
+      <h1>KODA가 발급하고, 고객사가 받아 제출합니다</h1>
+      <p>고객사는 BTC 잔고 증명서와 검증정보를 함께 받고, 제3자는 전달받은 자료를 Ethereum 기록과 대조합니다.</p>
     </header>
 
     <section className={`ij-canvas is-frame-${frame}`} aria-label="증명서 발급, 검증정보 등록, 고객사 전달 흐름">
@@ -59,11 +59,12 @@ export function IssueJourney(props: IssueJourneyProps) {
           <marker id="ij-arrow-active" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" /></marker>
         </defs>
         <path className="ij-route ij-route-delivery" d="M275 170 C440 160 590 125 740 125" markerEnd="url(#ij-arrow-muted)" />
+        <path className="ij-route ij-route-proof-delivery" d="M555 248 C640 232 670 172 740 150" markerEnd="url(#ij-arrow-muted)" />
         <path className="ij-route ij-route-register" d="M255 230 C365 285 455 328 610 338" markerEnd="url(#ij-arrow-muted)" />
         {props.playing && !props.reducedMotion && frame > 0 && <circle key={`${frame}-${props.playing}`} className="ij-moving-packet" r="6">
           <animateMotion dur="2.2s" repeatCount="1" path={frame === 1
             ? 'M255 230 C365 285 455 328 610 338'
-            : 'M275 170 C440 160 590 125 740 125'} />
+            : 'M555 248 C640 232 670 172 740 150'} />
         </circle>}
       </svg>
 
@@ -81,12 +82,13 @@ export function IssueJourney(props: IssueJourneyProps) {
         <small>Bitcoin 네트워크의 네이티브 BTC</small>
       </section>
 
-      <div className="ij-delivery-label">원본 PDF</div>
-      <section className="ij-customer" aria-label="고객사가 원본 PDF를 보관하고 제출하는 업무 흐름">
+      <div className="ij-delivery-label">증명서 PDF</div>
+      <div className="ij-proof-delivery-label">검증정보 JSON</div>
+      <section className="ij-customer" aria-label="고객사가 증명서 PDF와 검증정보를 받아 보관하고 제출하는 업무 흐름">
         <Icon name="person" />
         <span>고객사</span>
-        <h2>원본 PDF 보관</h2>
-        <p>필요한 업무에서 제3자에게 제출</p>
+        <h2>두 파일을 받아 보관</h2>
+        <p>증명서 PDF · 검증정보 JSON<br />필요한 업무에서 제3자에게 제출</p>
       </section>
 
       <section className="ij-proof" aria-label="PDF에서 만든 검증정보">
@@ -120,16 +122,23 @@ export function IssueJourney(props: IssueJourneyProps) {
         </li>)}</ol>
         <p><b>{activeBeat.label}</b>{activeBeat.detail}</p>
       </div>
-      <button type="button" className="ij-verify" disabled={!props.canVerify || props.busy} onClick={props.onVerifyScene}>
-        제3자가 검증하기 <Icon name="arrow" />
-      </button>
+      <div className="ij-scene-actions">
+        <span>시연 자료 받기 · 고객사 수령 자료</span>
+        <div className="ij-downloads">
+          <button type="button" disabled={!props.canDownload || props.busy} onClick={() => props.onDownload('original')}><b>PDF</b>증명서 PDF 받기</button>
+          <button type="button" disabled={!props.canDownload || props.busy} onClick={props.onDownloadProof}><b>JSON</b>검증정보 JSON 받기</button>
+        </div>
+        <button type="button" className="ij-verify" disabled={props.busy} onClick={props.onVerifyScene}>
+          외부 수신자 화면으로 <Icon name="arrow" />
+        </button>
+      </div>
     </footer>
 
     <p className="ij-evidence-note">
       {hasRecordedRegistration
-        ? <>등록은 보존된 테스트넷 거래로 확인했습니다. 고객사 전달은 실제 업무 흐름을 설명한 것입니다. <a href={transactionUrl(props.proof!.transactionHash!)} target="_blank" rel="noreferrer">등록 거래 보기 ↗</a></>
+        ? <>등록은 보존된 테스트넷 거래로 확인했습니다. 두 파일은 실제로 내려받아 제3자 화면에 불러올 수 있으며, 전달 채널은 업무 흐름을 설명한 것입니다. <a href={transactionUrl(props.proof!.transactionHash!)} target="_blank" rel="noreferrer">등록 거래 보기 ↗</a></>
         : hasSubmittedRegistration
-          ? <>등록 거래는 제출됐으며 블록 포함은 아직 확인되지 않았습니다. 고객사 전달은 실제 업무 흐름을 설명한 것입니다. <a href={transactionUrl(props.proof!.transactionHash!)} target="_blank" rel="noreferrer">제출 거래 보기 ↗</a></>
+          ? <>등록 거래는 제출됐으며 블록 포함은 아직 확인되지 않았습니다. 발급 자료는 등록 확인 후 함께 받을 수 있습니다. <a href={transactionUrl(props.proof!.transactionHash!)} target="_blank" rel="noreferrer">제출 거래 보기 ↗</a></>
           : '등록과 고객사 전달은 현재 처리 단계에 따라 표시합니다.'}
     </p>
   </article>;
