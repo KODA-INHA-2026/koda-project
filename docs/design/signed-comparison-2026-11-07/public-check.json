@@ -1,0 +1,17 @@
+{
+  "at": "2026-11-06T16:14:02.524Z",
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?view=verify&revision=7d543a2",
+  "checks": [
+    "Approved signed comparison is selectable, with no precomputed verdict",
+    "Original matches after actual RPC and both observed request/response paths remain",
+    "PDF-only change still fails and preserves its distinct signature meaning",
+    "Genuine user-approved signature + PDF match, actual finalized registered hash differs; paused paths and distinct verdict verified",
+    "Downloaded comparison JSON and PDF can be received separately and freshly verified without wallet",
+    "Signing is explicit and presenter-only, disabled without a wallet",
+    "1280px and 390px have no page overflow",
+    "RPC failure cannot retain a previous conflict verdict or fabricate returned record",
+    "01 handoff and 03 saved external result remain available"
+  ],
+  "errors": [],
+  "realComparisonSignature": "user-approved, verified against finalized Sepolia registration"
+}

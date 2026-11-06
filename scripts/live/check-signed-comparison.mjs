@@ -51,6 +51,8 @@ try {
   await page.getByRole('button', { name: '다시 선택', exact: true }).click();
   const input = page.getByLabel('전달받은 PDF와 검증정보 선택');
   await input.setInputFiles('docs/portfolio/2026-11-06-sepolia/inha-20261106/inha-altered-120-btc.pdf');
+  await expect(page.locator('.ve-file-row').first()).toContainText('inha-altered-120-btc.pdf');
+  await expect(page.locator('.ve-input-status')).toContainText('수신자가 선택한 파일');
   await input.setInputFiles('docs/portfolio/2026-11-07-signed-comparison/signed-comparison.json');
   await expect(page.locator('.ve-input-status')).toContainText('수신자가 선택한 파일');
   await page.getByRole('button', { name: '문서 검증하기', exact: true }).click();

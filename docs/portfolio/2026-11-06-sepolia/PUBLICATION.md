@@ -1,5 +1,14 @@
 # 1차 피드백 공유 — 2026-11-06
 
+## 최신: 02의 실제 재서명 비교 사례 (2026-11-07)
+
+- 소스 `7d543a2ee778011381631c268c45a9e3d14acbe0`, Pages `4019dd13731841203a83f2993fdc6f26d46c2864`.
+- [02 공유 화면](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?view=verify&revision=7d543a2), [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42249102827) 성공.
+- 같은 화면에 원본 / PDF만 변경 / 다시 서명한 문서 선택을 추가했다. 실제 시험 발급자가 새 메시지 서명을 승인했으며, 새 등록 거래는 없다. 제3자 시연에는 지갑 연결이 필요하지 않다.
+- 새 서명·PDF 일치와 기존 확정 등록 원본 불일치를 실제 RPC로 확인했다. 기존 등록 원본의 거래·영수증·이벤트·finality·발급자 확인을 유지하며 01·03과 전체 업무 주체·경로를 바꾸지 않았다.
+- 전체 54개 회귀 및 이후 trace 문구 회귀를 포함한 관련 11개 검사, TypeScript·공유 빌드 통과. 기존 번들 크기 경고는 유지된다.
+- [설계·기여](../../design/signed-comparison-2026-11-07.md), [사용자 승인과 실제 검증](../2026-11-07-signed-comparison/verification.json), [공개 브라우저 확인](../../design/signed-comparison-2026-11-07/public-check.json).
+
 ## 최신: 인하 기본 자료와 수탁정보 연결
 
 - 소스 `74bca57b4f24f5f01abdcc4deef0a35c8523a4f0`, Pages `59369b16d9385bcabef84c38e421c2b0ff28bfcd`. [공유 링크](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=74bca57), [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42209157949) 성공.
