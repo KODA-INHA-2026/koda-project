@@ -8,15 +8,6 @@ import './verification-experience.css';
 type Motion = { step: MotionStep; paused: boolean; replay: boolean; reducedMotion: boolean; replayRun: () => void; finish: () => void; toggle: () => void };
 type Props = PresentationProps & { motion: Motion; verificationBusy: boolean };
 const short = (value?: string) => value ? `${value.slice(0, 10)}…${value.slice(-6)}` : '—';
-const EXECUTION_VIEW: Record<MotionStep, { owner: string; title: string; code: string; note: string }> = {
-  ready: { owner: '브라우저', title: '검증 버튼이 실행을 시작합니다', code: 'onClick → verifyDocument(pdfBytes, proof, trusted)', note: '파일을 고른 뒤 버튼을 누를 때만 실제 검증을 실행합니다.' },
-  prepare: { owner: '브라우저', title: 'PDF와 발급서명을 먼저 확인합니다', code: "sha256(pdfBytes)\nrecoverTypedDataAddress({ domain, message, signature })", note: 'PDF 전체 바이트의 해시를 계산하고 EIP-712 서명에서 발급자 주소를 복구합니다.' },
-  request: { owner: 'viem → JSON-RPC', title: '확정된 블록의 계약 상태를 요청합니다', code: "client.readContract({\n  functionName: 'records', args: [documentId],\n  blockNumber: finalized.number\n})", note: 'viem이 ABI 호출을 eth_call 요청으로 인코딩합니다. 지갑 연결·서명·가스비가 없는 읽기 요청입니다.' },
-  record: { owner: 'EVM · DocumentRegistry', title: 'public getter가 저장된 레코드를 읽습니다', code: 'mapping(bytes32 => DocumentRecord) public records;\nrecords(documentId) → (documentHash, issuedAt)', note: '컨트랙트 코드를 변경하거나 새 블록을 만들지 않고, 지정한 확정 블록의 상태를 실행해 읽습니다.' },
-  return: { owner: 'JSON-RPC → viem', title: 'ABI 응답을 문서 해시와 발급시각으로 해석합니다', code: 'const [chainHash, chainIssuedAt] = record', note: 'RPC의 반환값을 viem이 ABI에 따라 디코딩해 브라우저 검증 코드로 돌려줍니다.' },
-  compare: { owner: '브라우저', title: '제출 파일·서명·체인 기록을 대조합니다', code: 'Hfile === proof.documentHash\nproof.documentHash === chainHash', note: '같은 문서 ID의 확정된 등록값과 제출 PDF 전체 바이트가 이어지는지 확인합니다.' },
-  result: { owner: '브라우저', title: '실제 판정 결과를 세 질문으로 표시합니다', code: 'result.status', note: '성공·불일치·대기·확인 불가 등 실제 종료 상태를 표시합니다. 과정 다시 보기는 RPC를 다시 호출하지 않습니다.' },
-};
 function Icon({ name }: { name: 'file' | 'check' | 'close' | 'alert' | 'arrow' | 'play' | 'pause' }) {
   const paths = {
     file: 'M6 3h8l4 4v14H6ZM14 3v5h4M9 12h6M9 16h6',
@@ -41,7 +32,6 @@ export function VerificationExperience(props: Props) {
   const outcome = verifierOutcome(props.result, props.verificationBusy);
   const running = step !== 'ready' && step !== 'result';
   const finished = step === 'result' && Boolean(props.result) && !props.verificationBusy;
-  const currentTrace = [...trace].reverse().find(event => event.state === 'running') ?? trace.at(-1);
   const fileHash = trace.findLast(event => event.id === 'sha256' && event.state === 'success')?.detail ?? props.result?.fileHash;
   const hasRecord = props.result?.chainRecordValid === true && Boolean(props.result.chainHash);
   const recordVisible = hasRecord && ['record', 'return', 'compare', 'result'].includes(step);
@@ -61,17 +51,12 @@ export function VerificationExperience(props: Props) {
                 : isMismatch ? '제출 PDF가 등록된 원본과 다릅니다'
                   : props.result?.status === 'not-registered' ? '이 문서 ID의 등록 기록을 찾지 못했습니다'
                     : '검증을 완료하지 못했습니다. 확인된 범위는 아래에 남겼습니다';
-  const execution = EXECUTION_VIEW[step];
-  const executionStatus = replay ? '완료된 실행 기록 재생 · 추가 요청 없음'
-    : props.verificationBusy ? '실제 검증 함수 실행 중'
-      : props.result ? '실제 실행 완료' : '실행 전';
-
   // Connect the real button, registry record and comparison slot, including after resize.
   const canvasRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const registryRef = useRef<HTMLDivElement>(null);
   const slotRef = useRef<HTMLDivElement>(null);
-  const [routes, setRoutes] = useState({ width: 1, height: 1, request: '', response: '' });
+  const [routes, setRoutes] = useState({ width: 1, height: 1, request: '', response: '', labelX: 0, requestY: 0, responseY: 0 });
   useLayoutEffect(() => {
     const canvas = canvasRef.current, button = buttonRef.current, registry = registryRef.current, slot = slotRef.current;
     if (!canvas || !button || !registry || !slot) return;
@@ -81,7 +66,7 @@ export function VerificationExperience(props: Props) {
       const rx = r.left - c.left - 5, ry = r.top - c.top + r.height / 2;
       const sx = s.right - c.left + 4, sy = s.top - c.top + s.height / 2;
       const stacked = r.top > b.bottom + 150;
-      setRoutes({ width: c.width, height: c.height,
+      setRoutes({ width: c.width, height: c.height, labelX: (bx + rx) / 2, requestY: (by + ry - 24) / 2 - 25, responseY: (ry + 24 + sy) / 2 + 25,
         request: stacked ? `M${bx} ${by} C${c.width - 6} ${by},${c.width - 6} ${ry},${r.right - c.left} ${ry}`
           : `M${bx} ${by} C${bx + 55} ${by},${rx - 55} ${ry - 24},${rx} ${ry - 24}`,
         response: stacked ? `M${r.right - c.left} ${ry + 20} C${c.width - 4} ${ry + 20},${c.width - 4} ${sy},${sx} ${sy}`
@@ -114,6 +99,7 @@ export function VerificationExperience(props: Props) {
           {props.inputError && <p className="ve-input-error" role="alert">{props.inputError}</p>}
           {(props.selectedName || props.selectedProofName || props.inputLoading) && <div className="ve-input-status"><span>{props.inputLoading ? '파일 읽는 중' : props.inputSource === 'sample' ? '발표용 예시 자료' : '수신자가 선택한 파일'}</span><button disabled={props.busy} onClick={props.onClearFiles}>다시 선택</button></div>}
           <button ref={buttonRef} className="ve-primary" disabled={!props.canVerify || props.busy || running} onClick={props.onVerify}>{props.verificationBusy ? '검증 중' : running ? '처리 흐름 표시 중' : props.result ? '다시 검증하기' : '문서 검증하기'}<Icon name="arrow" /></button>
+          <p className={`ve-local-operation${step === 'prepare' ? ' is-active' : ''}`}>브라우저에서 PDF 해시·발급서명 확인</p>
           <div className={`ve-compare-tray${returned ? ' has-record' : ''}`} aria-label="제출 PDF와 등록 기록 대조">
             <div className={`ve-file-digest${fileHash ? ' has-hash' : ''}`}><span>제출 PDF <small>SHA-256</small></span><code>{short(fileHash)}</code></div>
             <div className="ve-comparison-sign" aria-label={compared ? isMatch ? '해시 일치' : '해시 불일치' : '대조 전'}>{compared ? isMatch ? '=' : '≠' : '·'}</div>
@@ -138,24 +124,20 @@ export function VerificationExperience(props: Props) {
           <g className="ve-block-neighbor"><path d="M5 55 18 43h38L43 55ZM43 55 56 43v46L43 101ZM5 55h38v46H5Z" /><path d="M224 55 237 43h38L262 55ZM262 55 275 43v46L262 101ZM224 55h38v46h-38Z" /></g>
           <g className="ve-current-block"><path className="ve-block-top" d="M89 33 111 13h83L172 33Z" /><path className="ve-block-side" d="M172 33 194 13v88l-22 20Z" /><path className="ve-block-face" d="M89 33h83v88H89Z" /><path className="ve-block-lines" d="M106 55h49M106 70h49M106 85h32" /></g>
         </svg>
-        <div ref={registryRef} className="ve-registry-record"><span>{recordVisible ? '등록된 원본 해시' : props.result?.status === 'not-registered' && finished ? '등록 기록 없음' : '문서 ID로 찾을 발급 기록'}</span><code>{recordVisible ? short(props.result?.chainHash) : 'documentHash'}</code><small>DocumentRegistry · 스마트컨트랙트</small></div>
-        <p className="ve-chain-note">기존 기록 조회 · 새 거래 없음</p>
-        <section className={`ve-code-cutaway is-${step}`} aria-label="검증 버튼 뒤에서 실행되는 코드와 호출 요약">
-          <header><span>현재 실행 · {execution.owner}</span><small>{executionStatus}</small></header>
-          <div className="ve-code-current"><b>{execution.title}</b><code>{execution.code}</code><p>{execution.note}</p></div>
-          <details className="ve-code-details"><summary>전체 경로·관측 상태</summary>
-            <div className="ve-code-route" aria-label="브라우저 코드부터 스마트컨트랙트 조회까지의 실행 경로"><span>브라우저</span><i>›</i><span>viem</span><i>›</i><span>eth_call</span><i>›</i><span>Registry</span></div>
-            <p className="ve-code-prerequisites">실제 관측: {currentTrace ? `${currentTrace.operation} · ${currentTrace.state}` : '실행 전'}. 화면 단계는 완료된 trace를 느리게 재생할 수 있습니다. 검증 함수는 거래·영수증·이벤트·finality도 대조합니다.</p>
-          </details>
-        </section>
+        <div ref={registryRef} className="ve-registry-record"><span>등록된 원본 해시</span><code>{recordVisible ? short(props.result?.chainHash) : props.result?.status === 'not-registered' && finished ? '등록 기록 없음' : '조회 전'}</code><small>스마트컨트랙트에서 기록 읽기</small></div>
+        <p className="ve-chain-note">확정된 블록 기준 · 조회 가스비 없음</p>
       </section>
 
+      <div className="ve-route-labels" aria-label="브라우저와 Ethereum 사이의 조회 경로">
+        <span className={`ve-route-label is-query${['request', 'record'].includes(step) ? ' is-active' : ''}${recordVisible ? ' is-observed' : ''}`} style={{ left: routes.labelX, top: routes.requestY }}><b>RPC 조회</b><small>문서 ID 전달</small></span>
+        <span className={`ve-route-label is-response${step === 'return' ? ' is-active' : ''}${returned ? ' is-observed' : ''}`} style={{ left: routes.labelX, top: routes.responseY }}><b>등록 기록 응답</b><small>원본 해시 수신</small></span>
+      </div>
       <div className="ve-transfer-layer" aria-hidden="true">
         <svg viewBox={`0 0 ${routes.width} ${routes.height}`} preserveAspectRatio="none"><defs><marker id="ve-route-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="m1 1 5 2.5-5 2.5" /></marker></defs>
-          <path className={`ve-transfer-path ve-request-path${['request', 'record'].includes(step) ? ' is-active' : ''}`} d={routes.request} markerEnd="url(#ve-route-arrow)" />
-          <path className={`ve-transfer-path ve-response-path${['return', 'compare'].includes(step) ? ' is-active' : ''}`} d={routes.response} markerEnd="url(#ve-route-arrow)" />
+          <path className={`ve-transfer-path ve-request-path${['request', 'record'].includes(step) ? ' is-active' : ''}${recordVisible ? ' is-observed' : ''}`} d={routes.request} markerEnd="url(#ve-route-arrow)" />
+          <path className={`ve-transfer-path ve-response-path${['return', 'compare'].includes(step) ? ' is-active' : ''}${returned ? ' is-observed' : ''}`} d={routes.response} markerEnd="url(#ve-route-arrow)" />
         </svg>
-        {!reducedMotion && (step === 'request' || step === 'return') && packetPath && <div key={step} className={`ve-travel-packet is-${step}`} style={packetStyle}>{step === 'request' ? <><b>조회 요청</b><small>문서 ID</small></> : <><b>등록된 원본 해시</b><code>{short(props.result?.chainHash)}</code></>}</div>}
+        {!reducedMotion && (step === 'request' || step === 'return') && packetPath && <div key={step} className={`ve-travel-packet is-${step}`} style={packetStyle}>{step === 'request' ? <b>문서 ID</b> : <code>{short(props.result?.chainHash)}</code>}</div>}
       </div>
     </div>
     <div className="ve-flow-footer">

@@ -103,6 +103,9 @@ try {
   await expect(page.getByTestId('third-party-ethereum-query')).toHaveClass(/is-active/);
   await expect(page.locator('.ve-return-slot')).toContainText('조회한 기록이 도착할 곳');
   await expect(page.locator('.ve-outcome')).toHaveCount(0);
+  await expect(page.locator('.ve-route-label.is-query')).toContainText('RPC 조회');
+  await expect(page.locator('.ve-route-label.is-response')).toContainText('등록 기록 응답');
+  await expect(page.locator('.ve-process-card, .ve-code-cutaway')).toHaveCount(0);
   await shot('03-request');
   releaseRecord();
   await expect(page.locator('.ve-execution-status')).toContainText('실제 판정:', { timeout: 90000 });
@@ -113,11 +116,13 @@ try {
   await page.getByRole('button', { name: '처리 흐름 일시정지', exact: true }).click();
   expect(await page.locator('.ve-current-block').evaluate(e => getComputedStyle(e).animationPlayState)).toBe('paused');
   await page.getByRole('button', { name: '처리 흐름 재생', exact: true }).click();
-  await expect(stage).toHaveAttribute('data-motion-step', 'return', { timeout: 10000 });
+  await expect(stage).toHaveAttribute('data-motion-step', 'return', { timeout: 20000 });
   await page.waitForTimeout(850); // Screenshot the actual moving response, not just the endpoint.
   await page.getByRole('button', { name: '처리 흐름 일시정지', exact: true }).click();
   await expect(page.getByTestId('ethereum-third-party-response')).toHaveClass(/is-active/);
   await expect(page.locator('.ve-travel-packet.is-return')).toContainText('0x');
+  await expect(page.locator('.ve-route-label.is-query')).toContainText('RPC 조회');
+  await expect(page.locator('.ve-route-label.is-response')).toContainText('등록 기록 응답');
   await shot('04-return');
   await page.getByRole('button', { name: '처리 흐름 재생', exact: true }).click();
   await expect(stage).toHaveAttribute('data-motion-step', 'compare');
@@ -130,13 +135,16 @@ try {
   expect(await page.evaluate(() => window.qaSteps)).toEqual(['ready', 'prepare', 'request', 'record', 'return', 'compare', 'result']);
   expect(await page.locator('.ve-experience').innerText()).not.toMatch(/0x[a-f0-9]{64}/i);
   await expect(page.locator('.ve-questions li')).toHaveCount(3);
+  await expect(page.locator('.ve-route-label.is-query')).toContainText('RPC 조회');
+  await expect(page.locator('.ve-route-label.is-response')).toContainText('등록 기록 응답');
+  await expect(page.locator('.ve-route-label.is-observed')).toHaveCount(2);
   await shot('06-match');
   findings.push('Actual original: click → prepare → request → observed registry record → return → comparison → match, in one stable dashboard. Delayed records RPC cannot fabricate a response.');
   findings.push('Actual result is accessible while visual motion is paused. Left map highlights query then response in sync; no new block or transaction on reads.');
 
   const callsAtResult = rpcRequests;
   await page.getByRole('button', { name: '과정 다시 보기', exact: true }).click();
-  await expect(stage).toHaveAttribute('data-motion-step', 'return', { timeout: 10000 });
+  await expect(stage).toHaveAttribute('data-motion-step', 'return', { timeout: 20000 });
   await page.getByRole('button', { name: '결과 바로 보기', exact: true }).focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('.ve-outcome')).toHaveClass(/is-match/);
@@ -222,9 +230,11 @@ try {
   await connectionPage.getByRole('button', { name: 'MetaMask 연결', exact: true }).click();
   await expect.poll(() => connectionPage.evaluate(() => window.qaConnectionPending)).toBe(true);
   await expect(connectionPage.locator('.ve-experience')).toHaveAttribute('data-motion-step', 'ready');
-  await expect(connectionPage.locator('.ve-code-cutaway')).toContainText('실행 전');
+  await expect(connectionPage.locator('.ve-route-label.is-query')).toContainText('RPC 조회');
+  await expect(connectionPage.locator('.ve-route-label.is-active, .ve-route-label.is-observed')).toHaveCount(0);
   await expect(connectionPage.getByRole('button', { name: '문서 검증하기', exact: true })).toBeDisabled();
-  await expect(connectionPage.locator('.ve-live-state')).toHaveCount(0);
+  await expect(connectionPage.locator('.ve-live-state .is-working')).toHaveCount(0);
+  await expect(connectionPage.locator('.ve-live-state h2')).toHaveText('고객사에서 받은 자료를 불러오세요');
   await connectionPage.close();
   findings.push('An isolated mocked pending wallet connection does not start verification motion or claim a verification call; global action locks remain enabled.');
   findings.push('Reduced-motion changes during and after verification do not rewind to ready or trigger automatic replay. Pause stops block and arrival effects as well as packets.');

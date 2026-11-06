@@ -93,10 +93,10 @@ export function IssueJourney(props: IssueJourneyProps) {
 
       <section className="ij-proof" aria-label="PDF에서 만든 검증정보">
         <span>PDF 원본에서 생성</span>
-        <strong>SHA-256 · 발급서명</strong>
-        <code>{short(props.proof?.documentHash)}</code>
+        <div className="ij-proof-tech"><p><b>PDF 전체 바이트 · SHA-256</b><code>{short(props.proof?.documentHash)}</code></p>
+          <p><b>발급자 서명 · EIP-712</b><code>{short(props.proof?.signature)}</code></p></div>
       </section>
-      <div className="ij-register-label">검증정보만 등록</div>
+      <div className="ij-register-label">등록 거래 · 발급자 가스 부담</div>
 
       <section className="ij-ethereum" aria-label={`Ethereum 문서 검증정보 ${registrationLabel}`}>
         <div className="ij-chain-blocks" aria-hidden="true"><i /><i /><i /></div>
@@ -105,6 +105,8 @@ export function IssueJourney(props: IssueJourneyProps) {
           <h2>문서 검증정보</h2>
           <p>문서 ID · 원본 해시 · 발급시각</p>
         </div>
+        <p className="ij-contract-rule"><b>등록 규칙</b>고정 발급자만 · 같은 문서 ID 덮어쓰기 없음</p>
+        <div className="ij-chain-evidence"><span>블록 포함 <b>{props.receiptBlock ? `#${props.receiptBlock}` : '확인 전'}</b></span><span>finality <b>최종 확정은 조회 시 확인</b></span></div>
         <small>PDF 원문과 고객 정보는 등록하지 않습니다</small>
       </section>
     </section>
