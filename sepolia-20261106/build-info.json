@@ -1,8 +1,8 @@
 {
-  "network": "Ethereum Sepolia",
-  "purpose": "first feedback",
   "sourceBranch": "feat/first-demo",
-  "sourceCommit": "b688772f327d77328f0004d744f21ee388914053",
-  "builtAtUtc": "2026-11-05T21:16:05.8655976Z",
-  "asset": "native BTC (fictional certificate)"
+  "asset": "native BTC (fictional certificate)",
+  "network": "Ethereum Sepolia",
+  "builtAtUtc": "2026-11-06T00:27:46.9849533Z",
+  "sourceCommit": "cf3e37e6a2309791c1d233db2dcfc902e31cdb29",
+  "purpose": "architecture-led team feedback"
 }
