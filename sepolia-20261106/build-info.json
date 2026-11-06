@@ -1,9 +1,9 @@
 {
-  "network": "Ethereum Sepolia",
-  "asset": "native BTC (fictional certificate)",
-  "sourceCommit": "eaceaa33c571b1f3c5d25f2a5090bc1129aa694c",
-  "purpose": "Content-led presentation; actual verification progress",
-  "sourceBranch": "feat/first-demo",
   "designNetwork": "Ethereum L1",
-  "builtAtUtc": "2026-11-06T01:27:16.9779670Z"
+  "network": "Ethereum Sepolia",
+  "sourceCommit": "9c04fceb2396f5c4f26232df78d126c76b4edb05",
+  "asset": "native BTC (fictional certificate)",
+  "builtAtUtc": "2026-11-06T02:06:20.5182215Z",
+  "sourceBranch": "feat/first-demo",
+  "purpose": "Immediate verification results and paced review of observed processing"
 }
