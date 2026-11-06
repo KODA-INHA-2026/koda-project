@@ -1,9 +1,9 @@
 {
   "sourceBranch": "feat/first-demo",
-  "sourceCommit": "f1559be8f9fcf9c5c360fcbe568adcbbf7fd3119",
-  "builtAtUtc": "2026-11-06T06:26:56.4389315Z",
+  "sourceCommit": "74ff79940a79657c3f72bdd39aeb41058450bf23",
+  "builtAtUtc": "2026-11-06T07:24:45.6544700Z",
   "designNetwork": "Ethereum L1",
   "network": "Ethereum Sepolia",
   "asset": "native BTC (fictional certificate)",
-  "purpose": "Actual PDF and verification JSON handoff to KODA receiver dashboard"
+  "purpose": "KODA dashboard and standalone external verification draft"
 }
