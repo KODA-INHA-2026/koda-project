@@ -1,7 +1,7 @@
 import type { ArchitectureFocus } from './architecture-state';
 import type { VerificationResult, VerificationTraceEvent } from './verification';
 
-export const ACTS = ['발급·등록·전달', '제3자 검증'] as const;
+export const ACTS = ['발급·등록·전달', '대시보드 검증', '외부 검증 초안'] as const;
 export type MotionStep = 'ready' | 'prepare' | 'request' | 'record' | 'return' | 'compare' | 'result';
 export const MOTION_MS: Record<MotionStep, number> = {
   ready: 0, prepare: 900, request: 1600, record: 1100, return: 1800, compare: 1500, result: 0,

@@ -5,8 +5,8 @@ import type { VerificationResult, VerificationTraceEvent } from '../../apps/web/
 const event = (id: VerificationTraceEvent['id'], state: VerificationTraceEvent['state'] = 'success'): VerificationTraceEvent => ({ id, state, operation: id, location: 'local' });
 const matched: VerificationResult = { status: 'match', message: 'ok', chainRecordValid: true, chainHash: `0x${'ab'.repeat(32)}` };
 
-test('two acts, one causal read-and-compare sequence; fast RPC does not skip intermediate motion', () => {
-  assert.equal(ACTS.length, 2);
+test('two core acts plus an external verification draft; fast RPC does not skip intermediate motion', () => {
+  assert.equal(ACTS.length, 3);
   const evidence = { trace: [event('sha256'), event('record'), event('hash-comparison')], result: matched };
   let step: MotionStep = 'prepare';
   for (const expected of ['request', 'record', 'return', 'compare', 'result']) {

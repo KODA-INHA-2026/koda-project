@@ -17,6 +17,14 @@ function Icon({ name }: { name: 'file' | 'check' | 'close' | 'alert' | 'arrow' |
   };
   return <svg className="ve-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={paths[name]} /></svg>;
 }
+function ProductIcon({ name }: { name: 'building' | 'audit' | 'verify' }) {
+  const paths = {
+    building: 'M4 21V4h11v17M15 9h5v12M8 8h3m-3 4h3m-3 4h3m9 5H2',
+    audit: 'M6 3h12v18H6ZM9 7h6m-6 4h6m-6 4h3',
+    verify: 'M4 4h10v5h6v11H4Zm10 0v5h6m-12 6 2 2 4-5',
+  };
+  return <svg className="ve-product-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={paths[name]} /></svg>;
+}
 
 export function VerificationExperience(props: Props) {
   const { step, paused, replay, reducedMotion } = props.motion;
@@ -75,12 +83,19 @@ export function VerificationExperience(props: Props) {
   const packetPath = step === 'request' ? routes.request : routes.response;
   const packetStyle = { offsetPath: `path('${packetPath}')`, animationDuration: `${MOTION_MS[step]}ms`, animationPlayState: paused ? 'paused' : 'running' } as CSSProperties;
   return <article className="ve-root">
-    <header className="ve-stage-heading"><span>02 · 외부 수신자 — KODA 문서 검증</span><h1>전달받은 증명서를 발급 기록과 대조합니다</h1><p>고객사에서 받은 PDF와 검증정보를 불러와, Ethereum의 등록 기록과 확인합니다.</p></header>
-    <div className="ve-demo-tools"><span>고객사에서 외부 수신자로</span><details className="ve-demo-input"><summary>발표용 예시</summary><div role="group" aria-label="시연 파일 선택"><p>직접 파일을 불러오는 대신 예시 자료를 사용합니다.</p>{(['original', 'altered'] as const).map(variant => <button key={variant} aria-pressed={props.inputSource === 'sample' && props.selectedVariant === variant} disabled={props.busy || props.inputLoading || !props.canDownload} onClick={event => { props.onSelectSample(variant); event.currentTarget.closest('details')!.open = false; }}>{variant === 'original' ? '발급 원본' : '변경본'} <small>{variant === 'original' ? '100 BTC' : '120 BTC'}</small></button>)}<button disabled={props.busy || !props.canDownload} onClick={() => props.onDownload('altered')}>변경본 PDF 받기</button></div></details></div>
+    <header className="ve-stage-heading"><span>02 · KODA 대시보드에서 검증</span><h1>전달받은 증명서를 KODA 발급 기록과 대조합니다</h1><p>외부 수신자가 PDF와 검증정보를 불러오면, Ethereum의 등록 기록을 조회해 결과를 확인합니다.</p></header>
+    <div className="ve-demo-tools"><span><b>KODA 대시보드 적용안</b> · 서비스 화면 제안</span><details className="ve-demo-input"><summary>발표용 예시</summary><div role="group" aria-label="시연 파일 선택"><p>직접 파일을 불러오는 대신 예시 자료를 사용합니다.</p>{(['original', 'altered'] as const).map(variant => <button key={variant} aria-pressed={props.inputSource === 'sample' && props.selectedVariant === variant} disabled={props.busy || props.inputLoading || !props.canDownload} onClick={event => { props.onSelectSample(variant); event.currentTarget.closest('details')!.open = false; }}>{variant === 'original' ? '발급 원본' : '변경본'} <small>{variant === 'original' ? '100 BTC' : '120 BTC'}</small></button>)}<button disabled={props.busy || !props.canDownload} onClick={() => props.onDownload('altered')}>변경본 PDF 받기</button></div></details></div>
     <div ref={canvasRef} className={`ve-experience step-${step}${paused ? ' is-paused' : ''}${isMatch ? ' is-match' : ''}${isMismatch ? ' is-mismatch' : ''}`} data-motion-step={step}>
       <section className="ve-dashboard" aria-label="제3자가 이용하는 KODA 대시보드">
-        <header className="ve-app-header"><strong>KODA <span>대시보드</span></strong><span>제3자 · 증빙 검증</span></header>
-        <div className="ve-app-body">
+        <aside className="ve-product-nav" aria-label="KODA 대시보드 메뉴 예시">
+          <div className="ve-product-org"><ProductIcon name="building" /><strong>외부 수신자</strong></div>
+          <div className="ve-product-nav-section"><span><ProductIcon name="verify" />문서 검증</span><strong aria-current="page">증빙 문서 검증</strong></div>
+          <div className="ve-product-nav-section is-muted"><span><ProductIcon name="audit" />감사</span><small>메시지 서명 검증</small></div>
+          <p>KODA</p>
+        </aside>
+        <div className="ve-app-main">
+          <header className="ve-app-header"><div><small>감사</small><strong>증빙 문서 검증</strong></div><span>제3자 검증</span></header>
+          <div className="ve-app-body">
           <label className="ve-upload"><span className="ve-upload-heading"><b>전달받은 두 파일</b><em>파일 불러오기</em></span><span className={`ve-file-row${props.selectedName ? ' is-loaded' : ''}`}><Icon name="file" /><span><b>증명서 PDF</b><small>{props.selectedName ?? '선택 전'}</small></span><small>{props.selectedName ? '불러옴' : '필요'}</small></span><span className={`ve-file-row${props.selectedProofName ? ' is-loaded' : ''}`}><span className="ve-json-icon" aria-hidden="true">{'{ }'}</span><span><b>검증정보 JSON</b><small>{props.selectedProofName ?? '문서 ID·원본 해시·발급서명'}</small></span><small>{props.selectedProofName ? '불러옴' : '필요'}</small></span><input aria-label="전달받은 PDF와 검증정보 선택" disabled={props.busy} type="file" multiple accept="application/pdf,application/json,.pdf,.json" onChange={event => { props.onSelectFiles(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label>
           {props.inputError && <p className="ve-input-error" role="alert">{props.inputError}</p>}
           {(props.selectedName || props.selectedProofName || props.inputLoading) && <div className="ve-input-status"><span>{props.inputLoading ? '파일 읽는 중' : props.inputSource === 'sample' ? '발표용 예시 자료' : '수신자가 선택한 파일'}</span><button disabled={props.busy} onClick={props.onClearFiles}>다시 선택</button></div>}
@@ -98,6 +113,7 @@ export function VerificationExperience(props: Props) {
             </section> : <div className="ve-live-state" aria-live="polite"><span className={running ? 'is-working' : ''} /><div><h2>{step === 'ready' ? readyTitle : MOTION_LABEL[step]}</h2><p>{step === 'ready' ? '검증정보의 발급서명과 등록된 원본을 확인합니다.' : step === 'prepare' ? '발급서명과 조회 기준을 확인하는 중입니다.' : step === 'request' ? 'PDF는 보내지 않고 문서 ID로 조회합니다.' : step === 'record' ? '이미 등록된 기록을 읽습니다.' : step === 'return' ? '이 기록이 PDF를 대조할 기준입니다.' : '두 해시가 같은지 확인합니다.'}</p></div></div>}
           </div>
           <p className="ve-app-note">파일은 이 브라우저에서 처리하고, Ethereum에서는 등록 기록을 조회합니다.</p>
+          </div>
         </div>
       </section>
 

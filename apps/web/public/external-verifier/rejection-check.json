@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-06T07:11:05.207Z",
+  "cases": [
+    {
+      "name": "wrong-cli-args",
+      "exitCode": 1,
+      "status": "error",
+      "message": "사용법: node verify.mjs <증명서.pdf> <검증정보.json>",
+      "traceEvents": 0
+    },
+    {
+      "name": "missing-transaction-hash",
+      "exitCode": 1,
+      "status": "error",
+      "message": "검증정보의 문서 ID·해시·서명·발급시각 형식을 확인해 주세요.",
+      "traceEvents": 0
+    },
+    {
+      "name": "rogue-contract",
+      "exitCode": 1,
+      "status": "error",
+      "message": "사전에 확인한 발급 계약의 검증정보가 아닙니다. 제출 파일의 주소를 새 신뢰 기준으로 사용하지 않습니다.",
+      "traceEvents": 0
+    },
+    {
+      "name": "rogue-issuer",
+      "exitCode": 1,
+      "status": "error",
+      "message": "이 데모가 지원하는 검증정보 파일이 아닙니다. PDF와 함께 받은 JSON을 선택해 주세요.",
+      "traceEvents": 0
+    },
+    {
+      "name": "oversized-json",
+      "exitCode": 1,
+      "status": "error",
+      "message": "검증정보 JSON은 64 KiB 이하여야 합니다.",
+      "traceEvents": 0
+    },
+    {
+      "name": "invalid-pdf",
+      "exitCode": 1,
+      "status": "error",
+      "message": "PDF 파일 형식이 아닙니다.",
+      "traceEvents": 0
+    }
+  ],
+  "walletOrWriteOperations": false
+}

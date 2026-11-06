@@ -4,7 +4,7 @@ import { mkdir, writeFile, readFile, mkdtemp } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
 const base = process.env.KODA_PREVIEW_URL ?? 'http://127.0.0.1:5190/live.html';
-const output = process.env.KODA_REVIEW_OUTPUT ?? 'docs/design/document-handoff-2026-11-06';
+const output = process.env.KODA_REVIEW_OUTPUT ?? 'docs/design/two-verification-options-2026-11-06';
 await mkdir(output, { recursive: true });
 await mkdir('tmp', { recursive: true });
 const downloads = await mkdtemp('tmp/handoff-');
@@ -45,9 +45,9 @@ try {
   await page.goto(receiverUrl.href);
   await page.getByLabel('전달받은 PDF와 검증정보 선택').waitFor({ state: 'attached' });
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator('.kp-acts button')).toHaveCount(2);
+  await expect(page.locator('.kp-acts button')).toHaveCount(3);
   for (const route of ['koda-bitcoin', 'customer-bitcoin', 'koda-customer-pdf', 'customer-third-party-pdf', 'koda-ethereum-register', 'third-party-ethereum-query', 'ethereum-third-party-response']) await expect(page.getByTestId(route)).toHaveCount(1);
-  await expect(page.locator('.ve-app-header')).toContainText('대시보드');
+  await expect(page.locator('.ve-product-nav')).toContainText('KODA');
   await expect(page.locator('.ve-evidence')).not.toHaveAttribute('open');
   const input = page.getByLabel('전달받은 PDF와 검증정보 선택');
   const verifyButton = page.getByRole('button', { name: '문서 검증하기', exact: true });
@@ -159,7 +159,7 @@ try {
   await expect(stage).toHaveAttribute('data-motion-step', 'result');
   findings.push('Replay and keyboard skip add no RPC. Changing the file cancels motion and clears stale evidence. Reduced motion shows real mismatch immediately without animation waits.');
   await page.locator('.kp-acts button').first().click();
-  await page.locator('.kp-acts button').last().click();
+  await page.locator('.kp-acts button').nth(1).click();
   await expect(page.locator('.ve-outcome')).toHaveClass(/is-mismatch/);
 
   await page.unroute(rpcRoute);
@@ -181,9 +181,23 @@ try {
   await expect(page.locator('.ve-comparison-sign')).toHaveText('·');
   await shot('08-unavailable');
   findings.push('Injected RPC error remains incomplete: no returned hash, comparison or successful answer fabricated.');
+  const beforeExternal = rpcRequests;
+  await page.locator('.kp-acts button').nth(2).click();
+  await expect(page.locator('.ev-verdict')).toHaveClass(/is-match/);
+  await expect(page.locator('.kam-diagram')).toContainText('자체 실행 환경');
+  await page.getByRole('button', { name: '120 BTC 변경본', exact: true }).click();
+  await expect(page.locator('.ev-verdict')).toHaveClass(/is-mismatch/);
+  const packageDownload = page.waitForEvent('download');
+  await page.getByRole('link', { name: '외부 검증 초안 받기' }).click();
+  const packageFile = await packageDownload;
+  await packageFile.saveAs(`${downloads}/external-verifier.zip`);
+  expect((await readFile(`${downloads}/external-verifier.zip`)).subarray(0, 2).toString()).toBe('PK');
+  expect(rpcRequests).toBe(beforeExternal);
+  await shot('09-external-draft');
+  findings.push('03 displays actual saved external CLI reports, switches original/mismatch without fabricating a new RPC run, and downloads the real standalone verifier ZIP.');
   for (const width of [1440, 1280, 390]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
-    for (let act = 0; act < 2; act++) {
+    for (let act = 0; act < 3; act++) {
       await page.locator('.kp-acts button').nth(act).click();
       expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
       if (width !== 1440) await shot(`${width}-act-${act + 1}`);
@@ -192,7 +206,7 @@ try {
   expect(errors).toEqual([]);
   expect(walletRequests.filter(method => method !== 'eth_accounts')).toEqual([]);
   findings.push('Reduced-motion changes during and after verification do not rewind to ready or trigger automatic replay. Pause stops block and arrival effects as well as packets.');
-  findings.push('1440/1280/390px: both acts without horizontal overflow or browser exceptions. Only passive eth_accounts restoration; no wallet connection/signature/transaction requests. Mobile keeps results and captions; packet motion is desktop only.');
+  findings.push('1440/1280/390px: all three scenes without horizontal overflow or browser exceptions. Only passive eth_accounts restoration; no wallet connection/signature/transaction requests. Mobile keeps results and captions; packet motion is desktop only.');
   await writeFile(`${output}/browser-check.json`, JSON.stringify({ base, checkedAt: new Date().toISOString(), findings }, null, 2));
   console.log(JSON.stringify({ base, findings }, null, 2));
 } finally { await browser.close(); }

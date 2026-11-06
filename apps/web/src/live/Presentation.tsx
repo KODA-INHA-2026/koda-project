@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { ArchitectureMap } from './ArchitectureMap';
 import { IssueJourney } from './IssuerScenes';
 import { VerificationExperience } from './VerificationExperience';
+import { ExternalVerification } from './ExternalVerification';
 import { ACTS, MOTION_LABEL, MOTION_MS, motionFocus, nextMotionStep, type MotionStep } from './presentation-sequence';
 import type { PresentationProps } from './presentation-types';
 import type { VerificationResult, VerificationTraceEvent } from './verification';
 import './presentation.css';
 
 export function Presentation(props: PresentationProps) {
-  const [act, setAct] = useState(() => new URLSearchParams(window.location.search).get('view') === 'verify' ? 1 : 0);
+  const [act, setAct] = useState(() => { const view = new URLSearchParams(window.location.search).get('view'); return view === 'external' ? 2 : view === 'verify' ? 1 : 0; });
   const [frame, setFrame] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [motion, setMotion] = useState<{ step: MotionStep; paused: boolean; replay: boolean; enteredAt: number; elapsed: number; previousResult?: VerificationResult; previousTrace?: VerificationTraceEvent[] }>();
@@ -20,7 +21,7 @@ export function Presentation(props: PresentationProps) {
     : motion?.step ?? (props.busy ? 'prepare' : props.result ? 'result' : 'ready');
   const next = nextMotionStep(step, { trace: observedTrace, result: observedResult });
   const scene = act === 0 ? (['custody', 'register', 'delivery'] as const)[frame]!
-    : step === 'ready' ? 'receive' : step === 'prepare' ? 'inspect' : ['compare', 'result'].includes(step) ? 'compare' : 'lookup';
+    : act === 2 || step === 'ready' ? 'receive' : step === 'prepare' ? 'inspect' : ['compare', 'result'].includes(step) ? 'compare' : 'lookup';
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -66,17 +67,17 @@ export function Presentation(props: PresentationProps) {
     detail: observedResult ? '관측한 처리 결과' : '조회·검증 진행', playing: Boolean(motion && !motion.paused && step !== 'result'),
     chainReadComplete: step === 'result' && observedResult?.chainRecordValid === true } : undefined;
 
-  return <main className={`kp-root act-${act === 0 ? 'issue' : 'verify'}`}>
+  return <main className={`kp-root act-${act === 0 ? 'issue' : act === 1 ? 'verify' : 'external'}`}>
     <header className="kp-header"><div className="kp-brand"><strong>KODA</strong><span>증빙 검증 서비스</span></div>
       <nav className="kp-acts" aria-label="발표 장면">{ACTS.map((label, index) => <button key={label} aria-current={index === act ? 'step' : undefined} disabled={props.busy} onClick={() => go(index)}><small>0{index + 1}</small>{label}</button>)}</nav>
       <span className="kp-demo-label">산학협력 프로젝트 · 기술 데모</span>
     </header>
     <div className="kp-workspace">
-      <aside className="kp-map-panel"><span className="kp-map-label">전체 흐름</span><ArchitectureMap scene={scene} busy={props.busy} trace={trace} result={props.result} receiptBlock={props.receiptBlock} motion={mapMotion} /></aside>
+      <aside className="kp-map-panel"><span className="kp-map-label">전체 흐름</span><ArchitectureMap scene={scene} busy={props.busy} trace={act === 2 ? [] : trace} result={act === 2 ? undefined : props.result} receiptBlock={props.receiptBlock} motion={mapMotion} external={act === 2} /><p className="kp-recipient-note">제3자: 은행·거래상대방·외부 감사인 등</p></aside>
       <section className="kp-stage" aria-label="현재 발표 장면">
         {act === 0 ? <IssueJourney {...props} frame={frame} playing={playing} reducedMotion={reducedMotion}
           onFrame={next => { setPlaying(false); setFrame(next); }} onToggle={() => { if (frame === 2 && !playing) setFrame(0); setPlaying(value => !value); }} onVerifyScene={() => go(1)} />
-          : <VerificationExperience {...verifierProps} motion={{ step, paused: motion?.paused ?? false, replay: motion?.replay ?? false, reducedMotion,
+          : act === 2 ? <ExternalVerification /> : <VerificationExperience {...verifierProps} motion={{ step, paused: motion?.paused ?? false, replay: motion?.replay ?? false, reducedMotion,
             replayRun: () => begin(true), finish: () => setMotion(undefined),
             toggle: () => setMotion(value => value && { ...value, paused: !value.paused, enteredAt: performance.now(),
               elapsed: value.elapsed + (value.paused ? 0 : performance.now() - value.enteredAt) }),

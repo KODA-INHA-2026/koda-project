@@ -10,6 +10,7 @@ export interface ArchitectureMapProps {
   trace?: VerificationTraceEvent[];
   result?: VerificationResult;
   receiptBlock?: string;
+  external?: boolean;
   motion?: ArchitectureState & { playing: boolean };
 }
 
@@ -62,7 +63,7 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
 
       <g className={actorClass(thirdActive)} transform="translate(188 298)">
         <rect width="130" height="82" rx="4" /><circle cx="18" cy="20" r="5" />
-        <text className="kam-name" x="31" y="25">제3자</text><text x="14" y="52">KODA 대시보드</text><text x="14" y="70">전달 자료 검증</text>
+        <text className="kam-name" x="31" y="25">제3자</text><text x="14" y="52">{props.external ? '자체 실행 환경' : 'KODA 대시보드'}</text><text x="14" y="70">전달 자료 검증</text>
       </g>
       <path data-testid="customer-third-party-pdf" className={pathClass(state.focus === 'handoff', false, state.focus === 'handoff' && reviewFlowing)} d="M253 226 V298" markerEnd={pathMarker(state.focus === 'handoff')} />
       <text className="kam-route-label" x="264" y="265">PDF·JSON 제출</text>

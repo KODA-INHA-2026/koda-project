@@ -1,0 +1,219 @@
+{
+  "format": "koda-external-verification-report/v1",
+  "checkedAt": "2026-11-06T07:11:04.379Z",
+  "runtime": "Node.js 22.14.0",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "trust": {
+    "chainId": 11155111,
+    "contract": "0xc13083047c0657ff576a972469d982b51e43dcb3",
+    "issuer": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+  },
+  "documentId": "0x603157e939369a0a8b69499c6849e26ea0938b394a099130c9fb71e7303af32a",
+  "result": {
+    "fileHash": "0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f",
+    "signedHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+    "recoveredAddress": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+    "chainHash": "0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842",
+    "chainIssuedAt": "1793904567",
+    "status": "file-mismatch",
+    "message": "제출 PDF가 발급 원본과 다릅니다.",
+    "signatureValid": true,
+    "chainRecordValid": true,
+    "fileMatch": false,
+    "finalizedBlock": "12074940",
+    "receiptBlockNumber": "12071362",
+    "receiptBlockTime": "2026-11-05T18:49:36.000Z"
+  },
+  "trace": [
+    {
+      "id": "deployment-validation",
+      "operation": "고정 신뢰 기준의 배포 코드·발급자 확인",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "0xc13083047c0657ff576a972469d982b51e43dcb3"
+    },
+    {
+      "id": "input",
+      "operation": "PDF·검증정보 형식 검사",
+      "location": "local",
+      "state": "running",
+      "detail": "6856652 bytes"
+    },
+    {
+      "id": "input",
+      "operation": "PDF·검증정보 형식 검사",
+      "location": "local",
+      "state": "success",
+      "detail": "PDF 헤더·크기·bytes32·uint64·서명 길이 확인"
+    },
+    {
+      "id": "sha256",
+      "operation": "제출 PDF 전체 바이트 SHA-256",
+      "location": "local",
+      "state": "running",
+      "detail": "Web Crypto digest"
+    },
+    {
+      "id": "sha256",
+      "operation": "제출 PDF 전체 바이트 SHA-256",
+      "location": "local",
+      "state": "success",
+      "detail": "0xf0dd8c574a41f98cf39554a3dc3c807708ac2bdce6aa0f6b139c1e5cf5d3331f"
+    },
+    {
+      "id": "signature",
+      "operation": "EIP-712 서명자 주소 복구",
+      "location": "local",
+      "state": "running",
+      "detail": "ECDSA secp256k1 · Document(documentId,documentHash,issuedAt)"
+    },
+    {
+      "id": "signature",
+      "operation": "EIP-712 서명자 주소 복구",
+      "location": "local",
+      "state": "success",
+      "detail": "복원 주소 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+    },
+    {
+      "id": "chain-id",
+      "operation": "eth_chainId 조회",
+      "location": "ethereum",
+      "state": "running"
+    },
+    {
+      "id": "chain-id",
+      "operation": "eth_chainId 조회",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "chainId 11155111"
+    },
+    {
+      "id": "finalized-block",
+      "operation": "eth_getBlockByNumber(finalized)",
+      "location": "ethereum",
+      "state": "running"
+    },
+    {
+      "id": "finalized-block",
+      "operation": "eth_getBlockByNumber(finalized)",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "finalized #12074940 · 0xaac051affc3fbc73359efd9d207c7ddb52fd866cd16e13c317fb49a192bb2689"
+    },
+    {
+      "id": "transaction-input",
+      "operation": "eth_getTransactionByHash · register 입력 대조",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "0x6c0d68e1f292a3ba9322e733291c0b2fb8da4fbbfe505d0466613438b0c2d1e8"
+    },
+    {
+      "id": "transaction-input",
+      "operation": "eth_getTransactionByHash · register 입력 대조",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "등록 입력과 제출 검증정보 일치"
+    },
+    {
+      "id": "receipt",
+      "operation": "eth_getTransactionReceipt 조회",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "0x6c0d68e1f292a3ba9322e733291c0b2fb8da4fbbfe505d0466613438b0c2d1e8"
+    },
+    {
+      "id": "receipt",
+      "operation": "eth_getTransactionReceipt 조회",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "success · block #12071362"
+    },
+    {
+      "id": "canonical-block",
+      "operation": "eth_getBlockByNumber · 포함 블록 정식 체인 대조",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "#12071362"
+    },
+    {
+      "id": "canonical-block",
+      "operation": "eth_getBlockByNumber · 포함 블록 정식 체인 대조",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "0x6779bafcd90e39c429b2aaafb19cdaf9d880b49abd9377bb6d3e5d701b2d0e5c"
+    },
+    {
+      "id": "registration-event",
+      "operation": "영수증의 DocumentRegistered 이벤트 해석·대조",
+      "location": "local",
+      "state": "running"
+    },
+    {
+      "id": "registration-event",
+      "operation": "영수증의 DocumentRegistered 이벤트 해석·대조",
+      "location": "local",
+      "state": "success",
+      "detail": "DocumentRegistered 값 일치"
+    },
+    {
+      "id": "finality",
+      "operation": "등록 블록과 finalized 블록 높이 비교",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "등록 #12071362 · finalized #12074940"
+    },
+    {
+      "id": "finality",
+      "operation": "등록 블록과 finalized 블록 높이 비교",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "등록 블록이 finalized 범위에 포함"
+    },
+    {
+      "id": "authorized-issuer",
+      "operation": "viem readContract → eth_call authorizedIssuer()",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "고정 블록 #12074940"
+    },
+    {
+      "id": "authorized-issuer",
+      "operation": "viem readContract → eth_call authorizedIssuer()",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "허용 발급자 0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+    },
+    {
+      "id": "record",
+      "operation": "viem readContract → eth_call records(documentId)",
+      "location": "ethereum",
+      "state": "running",
+      "detail": "고정 블록 #12074940"
+    },
+    {
+      "id": "record",
+      "operation": "viem readContract → eth_call records(documentId)",
+      "location": "ethereum",
+      "state": "success",
+      "detail": "hash 0x4ffadf441fe587839f805dd70cc5836b465b449d1b7836f890716628dd2c2842 · issuedAt 1793904567"
+    },
+    {
+      "id": "hash-comparison",
+      "operation": "제출·서명·체인 해시 최종 대조",
+      "location": "local",
+      "state": "running"
+    },
+    {
+      "id": "hash-comparison",
+      "operation": "제출·서명·체인 해시 최종 대조",
+      "location": "local",
+      "state": "failure",
+      "detail": "제출 PDF 해시만 발급서명·체인 기록과 불일치"
+    }
+  ],
+  "limits": [
+    "시험 발급자와 Sepolia 실증 기록을 검증합니다.",
+    "BTC 잔고의 사실성이나 KODA 공식 운영 신원을 증명하지 않습니다.",
+    "RPC 가용성과 응답의 독립성은 별도 운영 정책이 필요합니다."
+  ]
+}
