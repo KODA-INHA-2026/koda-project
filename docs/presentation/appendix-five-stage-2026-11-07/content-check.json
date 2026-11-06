@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-06T18:13:35.632Z",
+  "sourceCommit": "1e1eaadc20252754ad54ff5723c30b4bf4c2e43d",
+  "slideCount": 18,
+  "pageId": "page_e2ea284cc66c81918bfacd219cb82695",
+  "checks": [
+    "All 18 technical slide bodies preserved except explicit scene-number and revision replacements",
+    "Every official reference and code path preserved",
+    "A17 and A18 transaction and explorer bodies including notes exactly preserved",
+    "Five demo stages are distinct from A01–A18 technical page labels",
+    "Reference Markdown exactly matches source data"
+  ]
+}

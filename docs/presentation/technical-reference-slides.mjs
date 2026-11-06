@@ -1,5 +1,32 @@
-export const sourceCommit = '7d543a2ee778011381631c268c45a9e3d14acbe0';
+export const sourceCommit = '1e1eaadc20252754ad54ff5723c30b4bf4c2e43d';
 const repo = `https://github.com/KODA-INHA-2026/koda-project/blob/${sourceCommit}/`;
+export const demoStages = [
+  ['01 원본 발급', 'KODA의 가상 수탁정보로 PDF를 생성한다. 잔고 기준시점과 발급 기재시각을 구분한다.'],
+  ['02 전자서명·해시 생성', 'PDF 전체 바이트의 SHA-256을 계산하고, 문서 ID·해시·발급시각을 EIP-712 메시지로 서명한다.'],
+  ['03 블록체인 기록', 'DocumentRegistry에 검증정보를 등록한다. 고객사는 PDF와 검증정보 JSON을 받아 보관·제출한다.'],
+  ['04 제3자 대조·검증', 'KODA 대시보드 적용안에서 제출 PDF·서명을 확인하고, Ethereum에 등록된 기준을 RPC로 조회해 대조한다.'],
+  ['05 외부 검증 초안', '04와 다른 실행 환경을 보여주는 대안이다. 화면은 보존된 Node.js 실행 결과이며, 내려받은 도구를 실행하면 새 RPC 조회를 수행한다.'],
+];
+export const slideScenes = [
+  '데모 01–04 본 흐름 · 05 외부 검증 초안',
+  '데모 01–03 데이터 생성·저장 · 04·05 제출 자료 대조',
+  '데모 02 발급 원본 해시 생성 · 04·05 제출 PDF 해시 재계산',
+  '데모 02 EIP-712 서명 · 03 등록 시 확인 · 04·05 수신 검증',
+  '데모 02 발급자 서명 · 03 계약의 주소 복구 · 04·05 수신 검증',
+  '데모 03 register 상태 변경 · 04·05 records 조회',
+  '데모 03 최초 등록 규칙 · 04·05 저장값 대조',
+  '데모 03 등록 증거 생성 · 04·05 거래·영수증·이벤트 확인',
+  '데모 03 블록 포함 · 04·05 finalized 기준 대조',
+  '데모 04 브라우저 RPC 조회 · 05 별도 Node.js 실행',
+  '데모 03 PDF·JSON 전달 · 04·05 수신 파일 파싱',
+  '사전 배포·신뢰 설정 · 데모 03 등록 전 확인 · 04·05 검증 전 확인',
+  '데모 04 재서명 비교 · 05 일반 검증 패키지에는 미포함',
+  '데모 04 대시보드 검증 · 05 외부 검증 초안 (대안 경로)',
+  '데모 02 Wallet 서명 · 03 Wallet 등록 · 04·05 Public 조회',
+  '데모 02 오프체인 서명 · 03 거래 수수료 · 04·05 RPC 비용',
+  '데모 03 인하테크홀딩스 실제 등록 · 04 검증에 쓰는 거래',
+  '데모 03 등록 거래 탐색 · 04·05 PDF와 등록 기록 대조',
+];
 export const references = {
   registration: ["Sepolia Etherscan · 문서 등록 거래","https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"],
   contractExplorer: ["Sepolia Etherscan · 계약 주소","https://sepolia.etherscan.io/address/0xC13083047C0657FF576A972469d982b51E43dCB3"],
@@ -22,7 +49,7 @@ export const slides = [
     title: "기술 부록 · 구현 명세와 검증 근거",
     subtitle: "기술 검토용 참고자료. 표준의 보장, 현재 코드의 동작, 미구현 운영 요건을 분리한다.",
     leftTitle: "검토 기준",
-    left: "기준 소스: 7d543a2 (2026-11-07)\n\nPDF 해시: SHA-256 / Web Crypto\n문서 서명: EIP-712 + ECDSA / secp256k1\n등록 계약: DocumentRegistry / EVM\n컴파일러: Solidity 0.8.28 · optimizer 200 · Cancun\n라이브러리: OpenZeppelin 5.6.1 · viem 2.57.14\n실제 배포·조회: Sepolia, chainId 11155111\n\n02·03 기본 자료: 인하테크홀딩스㈜ 가상 증명서\n02 재서명 비교: 실제 메시지 서명 사용, 새 등록 없음",
+    left: "기준 소스: 1e1eaad (2026-11-07)\n\nPDF 해시: SHA-256 / Web Crypto\n문서 서명: EIP-712 + ECDSA / secp256k1\n등록 계약: DocumentRegistry / EVM\n컴파일러: Solidity 0.8.28 · optimizer 200 · Cancun\n라이브러리: OpenZeppelin 5.6.1 · viem 2.57.14\n실제 배포·조회: Sepolia, chainId 11155111\n\n04·05 기본 자료: 인하테크홀딩스㈜ 가상 증명서\n04 재서명 비교: 실제 메시지 서명 사용, 새 등록 없음",
     rightTitle: "검증 명제",
     right: "제출 PDF의 전체 바이트가\n신뢰 기준에 지정한 발급자가\n서명·등록한 원본과 일치하는가?\n\n체인 기록은 KODA 내부 DB와\n분리된 대조 기준이다.\n\nBTC 실재·법인 신원·RPC 응답의\n정당성은 별도의 신뢰 전제다.",
     limit: "기획은 Ethereum 기반이다. 실증은 Sepolia에서 수행했다. KODA 상용 시스템 연동·공식 발급자 인증·Mainnet 운영을 구현했다는 의미는 없다.",
@@ -159,12 +186,12 @@ export const slides = [
   },
   {
     title: "최종 판정 · 전자서명과 등록 기준의 역할",
-    subtitle: "02에는 유효한 재서명과 기존 등록 원본의 불일치를 보여주는 실제 비교 사례가 있다.",
+    subtitle: "04에는 유효한 재서명과 기존 등록 원본의 불일치를 보여주는 실제 비교 사례가 있다.",
     leftTitle: "verifySignedComparison()의 판정 경로",
     mono: true,
     left: "C = candidate (signed 120 BTC PDF, no txHash)\nP = registeredProof (original proof, with txHash)\nrequire same ID; SHA256(PDF) == C.documentHash\nrequire recover712(C) == trusted.issuer\nR = verifyDocument(PDF, P, trusted, client)\n// includes tx/receipt/event/block/finality/records\nreferenceTrusted = R.signatureValid\n  && R.chainRecordValid\n  && R.status in {match, file-mismatch}\nrequire referenceTrusted\nregistrationConflict = !sameHex(C.documentHash,\n  P.documentHash) || C.issuedAt !== P.issuedAt",
     rightTitle: "실제 관측 결과 · 11월 7일",
-    right: "원본: 100 BTC / 0xba9bca0b…6579f3c\n재서명: 120 BTC / 0x42c75760…df546e\n같은 문서 ID · 같은 발급 기재시각\n\nPDF와 새 서명: 일치\n서명자: 지정한 시험 발급자\n기존 등록 기록: 유효\n기존 등록 원본과 대조: 불일치\n\n새 등록 거래는 보내지 않았다.\n02 비교 사례만 지원하며\n03 일반 검증 패키지에는 미포함.",
+    right: "원본: 100 BTC / 0xba9bca0b…6579f3c\n재서명: 120 BTC / 0x42c75760…df546e\n같은 문서 ID · 같은 발급 기재시각\n\nPDF와 새 서명: 일치\n서명자: 지정한 시험 발급자\n기존 등록 기록: 유효\n기존 등록 원본과 대조: 불일치\n\n새 등록 거래는 보내지 않았다.\n04 비교 사례만 지원하며\n05 일반 검증 패키지에는 미포함.",
     limit: "신뢰 발급자가 다른 내용에 다시 서명한 통제된 비교다. 서명 위조 사례가 아니다. 같은 ID 재등록은 계약이 거절하지만 다른 ID의 새 발급까지 막지는 않는다.",
     refs: ["eip","storage"],
     code: "signed-comparison.ts; verification.ts; 2026-11-07-signed-comparison/verification.json",
@@ -174,14 +201,14 @@ export const slides = [
     title: "두 실행 환경 · 재현성과 검증 범위",
     subtitle: "같은 알고리즘·계약·신뢰 기준을 재사용한다. 별도 실행 가능성과 독립 보안 검증은 구분한다.",
     leftTitle: "실행 경로와 검수 근거",
-    left: "02 브라우저\n  PDF + JSON / 로컬 해시·서명 복구 / 실시간 RPC 조회\n  인하 원본 · PDF 변경본 · 실제 재서명 비교본\n\n03 Node.js 번들 (Node 22 이상)\n  parseVerificationFile / verifyDocument 재사용\n  node verify.mjs <PDF> <JSON>\n  CLI 종료 코드: 0 match, 2 file-mismatch, 1 기타\n\n인하 원본 match / 120 BTC 변경본 file-mismatch\n실행: 11월 6일 20:12:19 KST · finalized 12,076,101\n03 화면은 보존된 실행 결과, 버튼에서 새 RPC 실행 아님",
+    left: "04 브라우저\n  PDF + JSON / 로컬 해시·서명 복구 / 실시간 RPC 조회\n  인하 원본 · PDF 변경본 · 실제 재서명 비교본\n\n05 Node.js 번들 (Node 22 이상)\n  parseVerificationFile / verifyDocument 재사용\n  node verify.mjs <PDF> <JSON>\n  CLI 종료 코드: 0 match, 2 file-mismatch, 1 기타\n\n인하 원본 match / 120 BTC 변경본 file-mismatch\n실행: 11월 6일 20:12:19 KST · finalized 12,076,101\n05 화면은 보존된 실행 결과, 버튼에서 새 RPC 실행 아님",
     rightTitle: "재현의 조건",
     right: "동일 파일·서명·계약을 사용한다.\n조회한 finalized 높이는 실행마다\n달라질 수 있으므로 함께 기록한다.\n\n현재 양쪽 모두 같은 공개 RPC에 의존.\n코드·배포 설정도 공통 신뢰 전제다.\n\n검증 성공이 독립 코드 감사,\n완전한 탈중앙화, 상용 운영 승인을\n뜻하지 않는다.",
-    limit: "03 패키지는 원본·PDF 변경본의 일반 검증을 지원한다. 02의 재서명 비교 전용 포맷은 지원하지 않는다. 공식 접근 권한·신뢰 목록·RPC 운영은 별도 설계 대상이다.",
+    limit: "05 패키지는 원본·PDF 변경본의 일반 검증을 지원한다. 04의 재서명 비교 전용 포맷은 지원하지 않는다. 공식 접근 권한·신뢰 목록·RPC 운영은 별도 설계 대상이다.",
     refs: ["rpc"],
     code: "tools/external-verifier/verify.ts; docs/external-verification/IMPLEMENTATION.md",
     paths: ["tools/external-verifier/verify.ts","docs/external-verification/IMPLEMENTATION.md","apps/web/public/external-verifier/manifest.json"],
-    notes: "공개 기본 자료와 03 패키지는 인하테크홀딩스 발급본으로 교체됐다. manifest.json의 documentId·등록 블록·파일 해시가 신규 Inha 등록과 같다. 화면은 실제 Node 실행 결과를 보존해 보여주며, 별도 환경에서 내려받은 코드를 실행하면 RPC를 새로 조회한다. 코드·규격·고정 신뢰 설정·의존성 라이선스가 패키지에 포함된다. 동일 알고리즘을 다른 환경에서 실행하는 것과 독립적으로 감사를 받은 별도 구현은 구분한다. 두 경로는 같은 공개 RPC와 신뢰 설정을 사용한다.",
+    notes: "공개 기본 자료와 05 패키지는 인하테크홀딩스 발급본으로 교체됐다. manifest.json의 documentId·등록 블록·파일 해시가 신규 Inha 등록과 같다. 화면은 실제 Node 실행 결과를 보존해 보여주며, 별도 환경에서 내려받은 코드를 실행하면 RPC를 새로 조회한다. 코드·규격·고정 신뢰 설정·의존성 라이선스가 패키지에 포함된다. 동일 알고리즘을 다른 환경에서 실행하는 것과 독립적으로 감사를 받은 별도 구현은 구분한다. 두 경로는 같은 공개 RPC와 신뢰 설정을 사용한다.",
   },  {
     title:'viem client · 발급자 지갑과 제3자 조회의 분리',
     subtitle:'Wallet Client는 MetaMask의 시험 발급자만 사용한다. 수신자 검증은 Public Client의 읽기 전용 RPC 경로다.',
@@ -252,6 +279,7 @@ export async function rewriteBatch({presentation,input}) {
     rect(0,44,170,734,372,'#FFFFFF');rect(1,800,170,436,372,'#E9F6F0');
     text(2,'KODA',44,28,132,50,34,ink,true);rect(3,184,28,1,52,line);
     text(4,item.title,208,32,1010,48,30,ink,true);
+    text(16,slideScenes[index],56,84,1168,20,14,green,true);
     text(5,item.subtitle,56,108,1168,52,21,muted);
     text(6,item.leftTitle,64,184,698,30,20,green,true);
     text(7,item.left,64,222,698,308,item.mono?19.5:20,ink,false,item.mono);
@@ -263,12 +291,13 @@ export async function rewriteBatch({presentation,input}) {
     text(12,primary[0]?`[1] ${primary[0][0]}  ${primary[0][1]}`:'',56,635,1168,20,12.7,muted);
     text(13,primary[1]?`[2] ${primary[1][0]}  ${primary[1][1]}`:'',56,656,1168,20,12.7,muted);
     text(14,`구현 근거 @${sourceCommit.slice(0,7)}: ${item.code}`,56,684,1110,20,12.6,muted);
-    text(15,String(index+1).padStart(2,'0'),1182,683,42,24,14,green,true);
-    slide.speakerNotes.text=[item.title,item.subtitle,item.leftTitle,item.left,item.rightTitle,item.right,`범위·한계: ${item.limit}`,item.notes??'', '공식 참고문헌·실증 자료 (정리일 2026-11-07):',...item.refs.map(k=>`${references[k][0]}\n${references[k][1]}`),'현재 코드의 근거 (고정 소스):',...item.paths.map(p=>repo+p)].join('\n\n');
+    text(15,`A${String(index+1).padStart(2,'0')}`,1182,683,42,24,14,green,true);
+    slide.speakerNotes.text=[item.title,slideScenes[index],index===0?demoStages.map(([label,detail])=>`${label}: ${detail}`).join('\n'):'',item.subtitle,item.leftTitle,item.left,item.rightTitle,item.right,`범위·한계: ${item.limit}`,item.notes??'', 'A01–A18은 부록 페이지, 01–05는 데모 장면 번호다. 05는 04 이후의 필수 절차가 아니라 외부 실행 대안이다.', '공식 참고문헌·실증 자료 (정리일 2026-11-07):',...item.refs.map(k=>`${references[k][0]}\n${references[k][1]}`),'현재 코드의 근거 (고정 소스):',...item.paths.map(p=>repo+p)].join('\n\n');
   }
   return {updated:input.indices.map(i=>i+1),slideCount:presentation.slides.items.length};
 }
 
 export function referenceMarkdown() {
-  return '# KODA 증빙 검증 기술 부록 — 구현 명세와 근거\n\n기술 참고용 자료. 정리일: 2026-11-07. 기준 소스: `'+sourceCommit+'`. 현재 데모 기술·동작은 변경하지 않았다.\n\n'+slides.map((s,i)=>`## ${i+1}. ${s.title}\n\n${s.subtitle}\n\n### ${s.leftTitle}\n\n${s.mono?'```text\n'+s.left+'\n```':s.left}\n\n### ${s.rightTitle}\n\n${s.right}\n\n**범위·한계:** ${s.limit}\n\n${s.notes??''}\n\n**공식 문서·실증 근거**\n\n${s.refs.map(k=>`- [${references[k][0]}](${references[k][1]})`).join('\n')}\n\n**현재 구현**\n\n${s.paths.map(p=>`- [${p}](${repo+p})`).join('\n')}\n`).join('\n');
+  const flow='## 데모 01–05와 부록 읽는 순서\n\n01–04는 발급부터 제3자 검증까지의 본 흐름이다. 05는 외부 환경에서 같은 일반 검증을 실행하는 대안이다. A01–A18은 기술 부록 페이지 번호이며 데모 장면 번호와 구분한다.\n\n| 데모 장면 | 처리 내용 |\n| --- | --- |\n'+demoStages.map(([label,detail])=>`| ${label} | ${detail} |`).join('\n');
+  return '# KODA 증빙 검증 기술 부록 — 구현 명세와 근거\n\n기술 참고용 자료. 정리일: 2026-11-07. 기준 소스: `'+sourceCommit+'`. 최신 데모 01–05의 번호·설명을 반영했으며 기술·계약·실제 등록 근거는 유지했다.\n\n'+flow+'\n\n'+slides.map((s,i)=>`## A${String(i+1).padStart(2,'0')}. ${s.title}\n\n**연결 장면:** ${slideScenes[i]}\n\n${s.subtitle}\n\n### ${s.leftTitle}\n\n${s.mono?'```text\n'+s.left+'\n```':s.left}\n\n### ${s.rightTitle}\n\n${s.right}\n\n**범위·한계:** ${s.limit}\n\n${s.notes??''}\n\n**공식 문서·실증 근거**\n\n${s.refs.map(k=>`- [${references[k][0]}](${references[k][1]})`).join('\n')}\n\n**현재 구현**\n\n${s.paths.map(p=>`- [${p}](${repo+p})`).join('\n')}\n`).join('\n');
 }
