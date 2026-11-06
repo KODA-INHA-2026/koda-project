@@ -55,3 +55,17 @@
 - 같은 공유 주소를 Chrome에서 새로고침해 `KODA · Ethereum 증빙 검증` 제목과 별도 실행 환경 표기를 확인했다. 실제 chainId·RPC·지갑·등록 증거·검증 조건은 변경하지 않았다.
 - 웹 TypeScript·배포 빌드·diff 검사와 로컬 첫 화면/서명/블록/제3자 장면 확인을 수행했다. 동작 변경이 없는 표기 수정이므로 전체 컨트랙트 테스트와 실제 RPC 대조를 이번 수정에서 반복하지 않았다. 직전 공개본의 검증 결과는 위 기록을 따른다.
 - [고도화 검토](../../design/refinement-review-2026-11-06.md), [PPT 기술 부록 초안](../../presentation/blockchain-technology-appendix-draft.md)을 함께 남겼다.
+
+## 추가 토스 리서치와 내용 중심 개선 — 2026-11-06
+
+사용자가 기존 리서치로 충분한지 다시 판단하고, 부족하면 추가 조사 후 수정하도록 요청했다. 공식 자료 두 편을 새로 읽고 기존 세 편을 재확인한 뒤 8개 장면의 문구와 제3자 검증 과정 표현을 수정했다. 대표님 답변의 세 질문과 KODA 색상, 문서 검증 범위는 유지했다.
+
+- 소스: [`eaceaa3`](https://github.com/KODA-INHA-2026/koda-project/commit/eaceaa33c571b1f3c5d25f2a5090bc1129aa694c).
+- Pages: `9e07ca2b66d126beeed136c857d7500d55f54e34`. [Pages 실행 #12](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42143954774)은 2026-11-06 **10:28:17 KST**에 성공했다.
+- 구조도에서 Ethereum의 역할을 구체적으로 설명하고 내부 설계 메모 같은 표현을 걷어냈다. 번호는 하단 1~8로 통일했다.
+- 제3자 UI 옆에서 실제 배포 확인·SHA-256·ECDSA 주소 복구·확정 기록 조회·세 해시 대조를 표시한다. 사전 로드된 검증정보, 시험 발급자, 현재 파일 비교의 의미를 명시했다.
+- 전체 live 테스트 **30/30**, TypeScript·배포 빌드 통과. 브라우저에서 8개 장면, 실제 원본/변경본, 강제로 주입한 조회 오류, 1280px·390px 가로 넘침, 키보드·reduced motion을 확인했다. 기존 번들 크기 경고는 남아 있다.
+- 배포 후 공개 HTTPS 페이지에서 소스 커밋과 새 문구를 확인했다. 실제 RPC 재조회 결과 원본은 일치, 변경본은 불일치였다. 새 서명·거래를 제출하지 않았다.
+- [리서치·반영 상세](../../design/toss-research-application-2026-11-06.md), [공개 확인 기록](../../design/content-refinement-2026-11-06/public-check.json), [공개 첫 화면](../../design/content-refinement-2026-11-06/public-intro.jpg), [공개 원본 검증 화면](../../design/content-refinement-2026-11-06/public-original-match.jpg).
+
+실제 청중의 이해도·피로도 개선은 아직 조사하지 않았다. 문구와 처리 상태의 정확성을 검증한 단계이며, 기존 등록 증거·컨트랙트·검증 함수·지갑 로직은 유지했다.
