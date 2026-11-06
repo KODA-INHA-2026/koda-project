@@ -1,0 +1,10 @@
+{
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/",
+  "sourceCommit": "df982fff4bb38a332b8c7eb4343aec6c0bc7c857",
+  "checkedAt": "2026-11-06T05:44:53.023Z",
+  "acts": 2,
+  "continuousResponse": true,
+  "original": "match",
+  "altered": "file-mismatch",
+  "errors": []
+}

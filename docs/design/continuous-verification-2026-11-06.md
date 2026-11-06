@@ -30,3 +30,7 @@
 컨트랙트 포함 회귀 테스트 41개 통과. TypeScript와 프로덕션 빌드 통과. 실제 Sepolia 원본 일치·변경본 불일치, 지연된 조회, 오류, 재생 중 추가 RPC 없음, 상태 취소, 키보드, reduced motion, 1440/1280/390px 브라우저 검증도 통과했다. 상세 결과는 [브라우저 검증 기록](continuous-verification-2026-11-06/browser-check.json)에 남긴다. 기존 단일 번들의 크기 경고는 남는다.
 
 사용자의 기여: 기술 구현의 정확성과 별개로 청중이 제안의 작동을 이해할 수 있어야 한다는 문제를 짚고, 전달·조회 연속 동작을 중심, 추가 비교 사례를 보조로 정했다. AI는 이 기준에 맞춰 화면 구성, 상태 전이, 이동 연출과 검증을 구현했다. 기능 검증 통과를 디자인 만족이나 청중 이해도 검증으로 간주하지 않는다.
+
+## 공유 버전
+
+[공개 데모](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=df982ff). 구현 소스 `df982fff4bb38a332b8c7eb4343aec6c0bc7c857`, Pages `b368df0f2d2bf26777d8d857b21301b117147ba0`. GitHub Pages 게시 성공 후 공개 HTTPS 페이지에서 응답 이동, 원본 일치, 변경본 불일치와 브라우저 오류 없음을 다시 확인했다. [공개 확인 기록](continuous-verification-2026-11-06/public-check.json).

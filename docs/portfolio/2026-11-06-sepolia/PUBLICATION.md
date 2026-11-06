@@ -106,3 +106,14 @@
 - 공유 경로용 TypeScript·빌드 통과. 기존 번들 크기 경고는 남는다. 로컬 기능 검증은 [두 장면 재설계 기록](../../design/two-act-demo-reset-2026-11-06.md)을 따른다.
 - 공개 HTTPS 페이지에서 새 소스 버전·두 장면을 확인하고 실제 RPC 조회로 원본 `match`, 변경본 `file-mismatch`를 확인했다. 브라우저 예외와 새 지갑 요청은 없었다.
 - [공개 관측 기록](../../design/two-act-demo-2026-11-06/public-check.json), [공개 원본 판정](../../design/two-act-demo-2026-11-06/public-match.png), [공개 변경본 판정](../../design/two-act-demo-2026-11-06/public-mismatch.png).
+
+## 조회 요청과 응답의 연속 동작 — 2026-11-06
+
+- 사용자 판단: 두 장면 유지, 전달·조회의 연속 동작을 개선의 중심으로 삼고 새 비교 사례는 보조 시나리오로 미룬다. 이번에는 제3자 검증 버튼부터 Ethereum 응답·PDF 대조·결과까지 이어지는 동작을 구현했다.
+- 구현 소스: `df982fff4bb38a332b8c7eb4343aec6c0bc7c857`. Pages: `b368df0f2d2bf26777d8d857b21301b117147ba0`.
+- [공개 링크](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=df982ff). [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42170052917) 2026-11-06 14:43:47 KST 성공.
+- 실제 trace가 전이를 허용하고 최소 표시시간이 가독성을 확보한다. 실제 결과는 즉시 접근 가능하며 연출이 네트워크 실행시간인 것처럼 표시하지 않는다. 재생은 추가 RPC를 만들지 않는다.
+- 회귀 41/41, TypeScript·빌드 통과. 실제 원본·변경본, 늦은 record 응답, 오류, pause/replay/skip, 입력 교체, reduced motion 전환, 1440/1280/390px를 확인했다. 기존 번들 크기 경고는 남는다.
+- 공개 HTTPS 페이지에서도 실제 응답 이동·원본 match·변경본 file-mismatch 확인. 새 서명·등록 거래 없음. 기존 eth_accounts 자동 복원과 승인·서명 요청을 구분해 검사했다.
+- [설계·기여 기록](../../design/continuous-verification-2026-11-06.md), [브라우저 검사](../../design/continuous-verification-2026-11-06/browser-check.json), [공개 확인](../../design/continuous-verification-2026-11-06/public-check.json).
+- 지정 작업 폴더와 G: 볼트에 `검증 요청과 응답의 연속 동작 개선 기록.md`를 보존했다. 최종 기록의 두 사본 SHA-256 일치를 확인했다.
