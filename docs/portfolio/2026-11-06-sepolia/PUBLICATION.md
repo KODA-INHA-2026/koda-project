@@ -135,3 +135,12 @@
 - 16:27 KST 공개 페이지에서 실제 PDF·JSON 다운로드, 새 수신자 입력과 원본 일치·변경본 불일치, 03 보고서 전환과 ZIP 해시 일치를 확인했다. 브라우저 예외·새 지갑 승인·등록 거래 없음.
 - 기술 기준은 유지하고 기획서 8.7에 최신 두 경로를 기록했다. 기술 부록 14장은 편집 가능한 프레젠테이션으로 저장하고 전 장을 렌더링해 검토했다. 원고·기여 기록과 14장 미리보기를 지정 G: 볼트 폴더에도 보존했다.
 - [설계·기여 기록](../../design/two-verification-options-2026-11-06.md), [공개 관측](../../design/two-verification-options-2026-11-06/public-check.json), [기술 기준](../../presentation/technology-baseline-2026-11-06.md), [외부 검증 구현](../../external-verification/IMPLEMENTATION.md).
+
+## 조회 코드·지갑·가스비 — 2026-11-06
+
+- 구현 소스 `a5797d72355fbf3a88bc27f9d935f1d82f1d2b40`, Pages `bd771eeb0bb448cb65b0c0017de144094db5a607`. [공유 링크](https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=a5797d7), [게시 실행](https://github.com/KODA-INHA-2026/koda-project/actions/runs/42188067814) 성공.
+- 검증 버튼과 실행 코드가 한 화면에 보이도록 Ethereum 옆 기술 영역을 구성했다. 기존 대시보드와 연속 전달·조회 연출을 유지한다. 지갑 연결 대기가 검증 진행처럼 보이던 상태도 분리했다.
+- 기술 부록을 16장으로 확장했다. 실제 viem Public/Wallet Client 코드와 `eth_call`, 오프체인 서명, 등록 거래 수수료, RPC 서비스 비용을 구분하고 공식 근거를 연결했다.
+- 회귀 47/47·TypeScript·공유 빌드·실제 RPC 원본/변경본 판정·반응형·지갑 연결 대기 회귀 통과. 17:30 KST 공개 페이지에서 새 수신자 다운로드·입력·조회와 외부 ZIP 일치를 확인했다. 기존 번들 크기 경고는 남는다.
+- 사용자가 새 등록 승인을 알렸으나 거래 해시는 아직 전달되지 않았다. 17:30 KST 무렵 기존 계약의 최근 2,000블록 조회에서는 새 등록 이벤트를 찾지 못했다. 거래 실패라고 확정하지 않고 해시 확인을 기다린다. 현재 공유 데모는 기존에 검증된 역사적 등록 파일을 유지한다.
+- [설계·기여 기록](../../design/verification-code-2026-11-06.md), [공개 확인](../../design/verification-code-2026-11-06/public-check.json). 원고와 16장 미리보기를 지정 작업 폴더·G: 볼트에 보존했다.
