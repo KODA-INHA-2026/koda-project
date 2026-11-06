@@ -1,20 +1,24 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { CHAPTERS, chapterForStep, chapterForTrace, isVerificationChapter } from '../../apps/web/src/live/presentation-sequence.ts';
+import { ACTS, chapterForTrace, observedReviewPhases, reviewMapStep } from '../../apps/web/src/live/presentation-sequence.ts';
 import type { VerificationTraceEvent } from '../../apps/web/src/live/verification.ts';
-const event = (id: VerificationTraceEvent['id'], state: VerificationTraceEvent['state'] = 'running'): VerificationTraceEvent => ({ id, state, operation: id, location: 'local' });
+const event = (id: VerificationTraceEvent['id'], state: VerificationTraceEvent['state'] = 'success'): VerificationTraceEvent => ({ id, state, operation: id, location: 'local' });
 
-test('three evidence preparation chapters precede four persistent verifier chapters', () => {
-  assert.equal(CHAPTERS.length, 7);
-  assert.ok(CHAPTERS.slice(0, 3).every(item => !isVerificationChapter(item.id)));
-  assert.ok(CHAPTERS.slice(3).every(item => isVerificationChapter(item.id)));
+test('two acts retain internal processing without turning it into extra pages', () => {
+  assert.equal(ACTS.length, 2);
+  assert.equal(chapterForTrace([event('sha256', 'running')]), 'inspect');
+  assert.equal(chapterForTrace([event('record', 'running')]), 'lookup');
+  assert.equal(chapterForTrace([event('hash-comparison')]), 'compare');
 });
-test('verification follows actual work, including early failures, without jumping ahead to comparison', () => {
-  assert.equal(chapterForTrace([]), 'receive');
-  assert.equal(chapterForTrace([event('deployment-validation', 'failure')]), 'receive');
-  assert.equal(chapterForTrace([event('sha256', 'failure')]), 'inspect');
-  assert.equal(chapterForTrace([event('signature', 'success'), event('receipt')]), 'lookup');
-  assert.equal(chapterForTrace([event('finality', 'failure')]), 'lookup');
-  assert.equal(chapterForTrace([event('record', 'success'), event('hash-comparison', 'failure')]), 'compare');
-  assert.deepEqual(['deployment','hash','signature','chain','comparison'].map(chapterForStep), ['receive','inspect','inspect','lookup','compare']);
+test('review only summarizes work actually attempted and keeps failures on their own path', () => {
+  const preflight = event('deployment-validation');
+  assert.deepEqual(observedReviewPhases([]), []);
+  assert.deepEqual(observedReviewPhases([event('deployment-validation', 'failure')]), ['lookup']);
+  assert.deepEqual(observedReviewPhases([preflight, event('input', 'failure')]), ['inspect']);
+  const interrupted = [preflight, event('sha256'), event('signature'), event('receipt', 'failure')];
+  assert.deepEqual(observedReviewPhases(interrupted), ['inspect', 'lookup']);
+  assert.equal(reviewMapStep('lookup', interrupted)?.state, 'failure');
+  const completed = [preflight, event('sha256'), event('signature'), event('record'), event('hash-comparison', 'failure')];
+  assert.deepEqual(observedReviewPhases(completed), ['inspect', 'lookup', 'compare']);
+  assert.equal(reviewMapStep('compare', completed)?.state, 'failure');
 });

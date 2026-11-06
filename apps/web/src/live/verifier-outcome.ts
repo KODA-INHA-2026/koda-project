@@ -24,7 +24,7 @@ const WAITING: VerifierQuestion[] = [
 function questionsFor(result: VerificationResult): VerifierQuestion[] {
   if (result.status === 'match') {
     return [
-      { label: 'KODA가 발급한 문서인지', value: '발급 원본과 연결됨', state: 'confirmed' },
+      { label: 'KODA가 발급한 문서인지', value: '발급서명 확인', state: 'confirmed' },
       { label: '발급 당시 원본과 일치하는지', value: '일치', state: 'confirmed' },
       { label: '이후 변경되지 않았는지', value: '변경 없음', state: 'confirmed' },
     ];
@@ -32,9 +32,9 @@ function questionsFor(result: VerificationResult): VerifierQuestion[] {
   if (result.status === 'file-mismatch') {
     return [
       // A valid signature authenticates the stored issuance data, not this submitted PDF.
-      { label: 'KODA가 발급한 문서인지', value: '제출 PDF는 발급 원본과 연결되지 않음', state: 'warning' },
+      { label: 'KODA가 발급한 문서인지', value: '원본 확인 불가', state: 'warning' },
       { label: '발급 당시 원본과 일치하는지', value: '불일치', state: 'warning' },
-      { label: '이후 변경되지 않았는지', value: '제출본의 바이트가 다름', state: 'warning' },
+      { label: '이후 변경되지 않았는지', value: '원본과 다름', state: 'warning' },
     ];
   }
   if (result.status === 'pending') {
@@ -43,7 +43,7 @@ function questionsFor(result: VerificationResult): VerifierQuestion[] {
   return [
     {
       label: 'KODA가 발급한 문서인지',
-      value: result.signatureValid ? '서명은 확인됐지만 제출 PDF 연결을 확인하지 못함' : '확인 불가',
+      value: '확인 불가',
       state: 'unavailable',
     },
     { label: '발급 당시 원본과 일치하는지', value: '확인 불가', state: 'unavailable' },
@@ -69,7 +69,7 @@ export function verifierOutcome(result?: VerificationResult, busy = false): Veri
     pending: { kind: 'pending', title: result.receiptBlockNumber ? '최종 확정을 기다리고 있습니다' : '거래의 블록 포함을 기다리고 있습니다', description: result.message },
     'signature-mismatch': { kind: 'failure', title: '발급서명을 확인할 수 없습니다', description: '서명자가 신뢰할 시험 발급자와 다르거나, 서명을 해석하지 못했습니다.' },
     'not-registered': { kind: 'failure', title: '확정된 등록 기록을 찾지 못했습니다', description: '문서 ID와 등록 거래 정보를 다시 확인해 주세요.' },
-    unavailable: { kind: 'failure', title: '검증에 필요한 정보를 확인하지 못했습니다', description: 'PDF 계산 또는 Sepolia 공개 기록 조회를 다시 시도해 주세요.' },
+    unavailable: { kind: 'failure', title: '검증에 필요한 정보를 확인하지 못했습니다', description: '문서 처리나 발급 기록 조회를 완료하지 못했습니다. 다시 시도해 주세요.' },
     invalid: { kind: 'failure', title: '문서와 발급 기록의 연결을 확인하지 못했습니다', description: '제출 PDF, 문서 ID, 등록 거래가 같은 발급 건인지 확인해 주세요.' },
   };
   return { ...kinds[result.status], questions: questionsFor(result) };

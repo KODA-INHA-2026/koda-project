@@ -1,0 +1,11 @@
+{
+  "base": "http://127.0.0.1:5190/live.html",
+  "checkedAt": "2026-11-06T05:04:54.923Z",
+  "findings": [
+    "Two acts. One integrated actor map; custody paths go to Bitcoin, registration/read paths to Ethereum. Same dashboard through verification and replay.",
+    "Actual original match is immediate. Observed summary advances after 5 seconds; pause/manual selection work without extra RPC. Full hashes stay in closed details.",
+    "Actual altered PDF mismatches. No original-signature claim authenticates the changed file. Reduced motion and keyboard controls work; act navigation stops replay and retains selected data.",
+    "Injected RPC failure remains incomplete. Only attempted lookup is replayable; no returned hash, comparison or successful answers are fabricated.",
+    "1440/1280/390px: both acts and issuer beats without horizontal overflow or browser exceptions. No wallet requests or new transactions."
+  ]
+}

@@ -1,6 +1,6 @@
 import type { VerificationResult, VerificationTraceEvent, VerificationTraceId } from './verification';
 
-export type SceneId = 'custody' | 'prepare' | 'register' | 'receive' | 'inspect' | 'lookup' | 'compare';
+export type SceneId = 'custody' | 'prepare' | 'register' | 'delivery' | 'receive' | 'inspect' | 'lookup' | 'compare';
 export type ArchitectureFocus = 'none' | 'koda' | 'third-party' | 'ethereum' | 'write' | 'handoff' | 'query' | 'response';
 
 export interface ArchitectureStateInput {
@@ -95,7 +95,8 @@ export function architectureMapState({ scene, busy, trace, result, receiptBlock 
   if (scene === 'custody') return state('koda', '수탁 관계와 증명서 발급', '고객 BTC 수탁·보관 관리와 잔고 증명서 발급');
   if (scene === 'prepare') return state('koda', 'KODA · 검증정보 준비', 'PDF 해시 계산 · 발급자 서명');
   if (scene === 'register') return state('write', 'KODA → Ethereum', receiptBlock ? `검증정보 등록 · 블록 #${receiptBlock}` : '검증정보 등록 · 최종 확정 확인');
-  if (scene === 'receive') return state('handoff', '제3자 · 증명서 접수', '고객사가 제출한 PDF와 검증정보 접수');
+  if (scene === 'delivery') return state('handoff', '고객사 · 원본 보관과 제출', '발급한 PDF를 고객사가 보관하고 제3자에게 제출');
+  if (scene === 'receive') return state('third-party', '제3자 · 증명서 접수', '고객사가 제출한 PDF와 검증정보 접수');
   if (scene === 'inspect') {
     const inspection = lastRelevantTrace(trace, LOCAL_INSPECTION_TRACE_IDS);
     return inspection ? traceState(inspection) : state('third-party', '제3자 대시보드 · 로컬 검사', 'PDF 형식 · 해시 · 발급서명 확인');

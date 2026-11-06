@@ -83,11 +83,12 @@ test('only a validated chain record completes both read paths', () => {
   assert.equal(dishonestMatch.chainReadComplete, false);
 });
 
-test('seven scenes map to the agreed issuer and verifier groups', () => {
+test('internal states keep delivery at the customer and verification at the third party', () => {
   assert.equal(architectureMapState({ scene: 'custody', busy: false }).focus, 'koda');
   assert.equal(architectureMapState({ scene: 'prepare', busy: false }).focus, 'koda');
   assert.equal(architectureMapState({ scene: 'register', busy: false }).focus, 'write');
-  assert.equal(architectureMapState({ scene: 'receive', busy: false }).focus, 'handoff');
+  assert.equal(architectureMapState({ scene: 'delivery', busy: false }).focus, 'handoff');
+  assert.equal(architectureMapState({ scene: 'receive', busy: false }).focus, 'third-party');
   assert.equal(architectureMapState({ scene: 'inspect', busy: false }).focus, 'third-party');
   assert.equal(architectureMapState({ scene: 'lookup', busy: false }).focus, 'query');
   assert.equal(architectureMapState({ scene: 'compare', busy: false }).focus, 'third-party');

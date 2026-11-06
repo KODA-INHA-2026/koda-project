@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active. Last refreshed: 2026-11-06.
-- Current work boundary: after reviewing the content plan, the user authorized implementation following additional Toss research. Apply the scene/copy improvements documented in `docs/design/toss-research-application-2026-11-06.md`. The CEO's external-document verification brief remains the content authority; research informs communication, not new business or proof claims.
+- Current work boundary: the user rejected the seven-chapter version as dense and fragmented. Rebuild the presentation around TWO acts: issuance/registration/customer delivery, then third-party verification. After local review the user requested a link, authorizing publication of this two-act version. The CEO's external-document verification brief remains the content authority. Research informs communication, not new business or proof claims.
 - Refinement baseline: the user accepted the architecture-led version as the draft to improve. Primary architecture and narrative labels use Ethereum, the planned document registry chain. Identify Sepolia separately as the actual test execution environment; preserve the real chain ID, RPC, wallet checks and explorer destinations. Never imply that existing test transactions were executed on Ethereum mainnet.
 - Surface: `/live.html`, the BTC document verification presentation and working Sepolia verifier.
 - Latest user correction (2026-11-06, after first publication): the dense technical version is tiring and loses the point. Keep the overall architecture visible beside a focused scene, activate the current actor/location/data path, and make the blockchain's role and added value visible through operations. Technical names and long hashes alone do not explain the system.
@@ -27,23 +27,23 @@
 - Third party selects a PDF and verifies without a wallet. Only this surface uses product UI.
 
 ## Information architecture
-- One presentation route, seven question-led chapters: custody/certificate → verification information (hash + signature) → registration/finality → third-party receipt → submitted-file inspection → public-record lookup → comparison/result. The first three establish the evidence; the latter four make verification the center of the demonstration.
-- In the four verification chapters, retain the same KODA dashboard proposal surface. Only the adjacent technical explanation changes. Navigation is for the presenter, not a pretend multi-page customer workflow. Actual running trace and labeled completed-record review select the corresponding chapter without delaying the real result.
-- Public-record lookup is a first-class scene: request/document ID → Ethereum DocumentRegistry at a fixed finalized block → returned hash/issuedAt → local comparison. A checklist may navigate evidence but cannot replace this data flow.
-- Show a small, static custody-context relationship: customer BTC entrusted to KODA; KODA manages customer-specific wallets on Bitcoin. Keep it visually separate from document verification and do not imply this demo reads Bitcoin balances or proves reserves.
+- Exactly two presentation acts: (1) KODA issues a PDF, registers verification information on Ethereum, and delivers the PDF to the customer; (2) the third party verifies the submitted PDF in a single KODA dashboard. Internal technical phases do not create more pages or numbered chapters.
+- The verification dashboard stays in place. Show a visual event beside it: a request travels to Ethereum, the existing registry record is highlighted, the response returns and is compared with the submitted file. A new block must not appear when reading. Result feedback is immediate; optional paced replay summarizes observed processing without additional RPC.
+- Put each business actor in the architecture ONCE. Connect KODA and the customer directly to Bitcoin for custody/asset attribution, and connect KODA and the third party directly to Ethereum for registration/query. No separate custody-background box, no third-party path to Bitcoin, no bridge between the two chains.
+- The first act gives the context briefly and offers immediate access to the verifier. The second act is the core demonstration. Original and altered files are two inputs to the same UI, not additional scenes.
 - A compact presentation transport offers play/pause, previous/next and jump to verifier. It is not a pretend KODA product navigation.
 - The whole journey is one technical process. KODA, the customer and the third party are business actors; Ethereum is shared infrastructure used for registration AND third-party reads, not a fourth business actor or a customer asset destination.
 - Technical stage is an open neutral/mint canvas with explicit inputs, operations, outputs and arrows crossing named boundaries. Only the third party gets a product window. That window remains connected to visible local hashing/signature recovery and public JSON-RPC reads; the last scene is not detached from the technical demonstration.
-- Persistent architecture occupies roughly one third of desktop width. The other two thirds show the current operation. The map remains spatially stable across every scene, including the third-party UI. Mobile stacks the map and scene without horizontal overflow.
-- The first visual level is actor/location plus input → operation → output. The second level names the actual algorithm, contract action and observed result. Complete hashes, typed data, signatures and detailed traces remain available in that scene's expandable evidence; do not give every byte the same visual weight.
+- Persistent architecture is a compact orientation aid, roughly one quarter of desktop width. It must not compete with the main demonstration. Mobile stacks it without horizontal overflow.
+- One heading and one main event per act. Short accurate technology labels support the event; algorithms, full hashes, typed fields, contract rules, RPC methods and finality explanations belong to the appendix/closed evidence. Do not repeat the same explanation in the map, scene title, technical panel and footer.
 - KODA is shown issuing the BTC balance certificate in the opening context. Mark existing issuance/delivery as existing business and hash/sign/register/verify as the implemented addition. Demonstration issuer processing actually runs in the browser + MetaMask; production KODA server placement is undecided.
 
 ## Design principles
-- One coherent operation per scene with a short purpose-led heading, visible technical mechanism and actual data dependencies. Reduce repeated prose and raw payload density, not the technical process.
+- The demo explains the proposed idea, not every implementation step. Keep the document, the registered comparison basis, the request/response and the result visually continuous. Technical correctness constrains the visuals but does not require every condition to be printed.
 - Actor/processing location stays visible, with current actor emphasized.
 - Visual continuity: the exact PDF becomes a hash; hash plus ID/time becomes signed typed data; contract checks lead to a transaction/block; the original is then compared with a submitted file.
 - Real data and state precede spectacle. Replay is always labeled; playback time is never presented as network execution time.
-- After verification, show the result immediately and offer a 3.5-second-per-step review of the observed trace. Label this as recorded review, allow pause/manual selection, make no new RPC requests, and never review unexecuted steps. Reduced motion uses manual selection only.
+- After verification, show the result immediately. A small paced replay control may explain the observed local inspection, registry read and comparison, staying on the same screen. Clearly label replay, allow pause/manual movement, never add RPC or unobserved success. Reduced motion uses manual movement only.
 - Map scope notes distinguish the native BTC being certified on Bitcoin from document verification information recorded on Ethereum. The certificate's balance field is not the asset itself. Use distinct orthogonal registration/query/response paths without implying special meaning in their bends.
 
 ## Visual language
@@ -78,7 +78,7 @@
 - Disabled issuer actions explain wallet/setup requirements. Read-only verification does not require connection or payment.
 
 ## Content voice
-- Use concise accurate Korean labels for responsibility and purpose; retain precise technical language for computation and implementation. Prefer “SHA-256 해시 계산”, “EIP-712 구조화 데이터 서명”, “register(...)”, “eth_call”, “ECDSA 서명자 복구” over replacing these with only metaphors such as “문서 지문”.
+- Use concise Korean subject/action/result copy. On stage, retain only relevant short technical labels such as SHA-256, 발급서명, 스마트컨트랙트, Ethereum 기록 조회. Put EIP-712 fields, secp256k1, raw function parameters and full RPC sequence in the appendix. Do not substitute vague marketing metaphors for the actual mechanism.
 - Technical labels stay accurate: SHA-256, EIP-712 / ECDSA secp256k1, Solidity / EVM, JSON-RPC / eth_call / finalized.
 - Network wording: primary map/block labels say Ethereum; an execution note says Sepolia testnet. Real block numbers and explorer links are test execution evidence. The signed domain remains chainId 11155111 and is shown accurately in technical details.
 - Separate why a public blockchain is used from why Ethereum L1 was selected. The former is external access to the registered comparison basis; the latter is the chosen public-L1/EVM design for issuer authorization, first-registration preservation, and fixed-state reads. Do not claim these are unique to Ethereum or establish optimal operating cost.
@@ -93,7 +93,7 @@
 - Validate tests/typecheck/build, desktop/mobile browser views, original and altered files, keyboard and reduced-motion behavior.
 
 ## Open questions
-- Sharing route: `/sepolia-20261106/`. The user requested publishing the verified architecture-led iteration at this route for team feedback; the earlier snapshot remains in Git history.
+- Sharing route remains `/sepolia-20261106/`. The user subsequently requested a link to the locally reviewed two-act version; publish the verified build at this route and check the public version.
 - [ ] User wallet approval for a new 인하테크홀딩스㈜ certificate; collect for next session, do not prompt during overnight work.
 - [ ] Production issuer identity governance, key rotation/revocation and chosen RPC trust policy remain future decisions, not implemented claims.
 - [ ] External verifier distribution/JSON handoff remains deferred as requested. Internal proof data is still needed by the demo.

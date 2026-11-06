@@ -5,7 +5,8 @@ import { verifierOutcome } from '../../apps/web/src/live/verifier-outcome.ts';
 test('file mismatch does not describe a valid issuance signature as proof of this submitted PDF', () => {
   const outcome = verifierOutcome({ status: 'file-mismatch', message: 'different bytes', signatureValid: true, fileMatch: false });
   assert.equal(outcome.kind, 'mismatch');
-  assert.equal(outcome.questions[0]?.value, '제출 PDF는 발급 원본과 연결되지 않음');
+  assert.equal(outcome.questions[0]?.value, '원본 확인 불가');
+  assert.ok(outcome.questions.every(question => question.state !== 'confirmed'));
   assert.equal(outcome.questions[1]?.value, '불일치');
 });
 
@@ -15,7 +16,8 @@ test('pending finality remains distinct from an unavailable verification failure
   assert.equal(pending.kind, 'pending');
   assert.ok(pending.questions.every(question => question.state === 'waiting'));
   assert.equal(unavailable.kind, 'failure');
-  assert.equal(unavailable.questions[0]?.value, '서명은 확인됐지만 제출 PDF 연결을 확인하지 못함');
+  assert.equal(unavailable.questions[0]?.value, '확인 불가');
+  assert.ok(unavailable.questions.every(question => question.state === 'unavailable'));
 });
 
 test('pending distinguishes a missing receipt from an included but non-finalized transaction', () => {
