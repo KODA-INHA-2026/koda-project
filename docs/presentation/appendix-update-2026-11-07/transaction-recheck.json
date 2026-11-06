@@ -1,0 +1,79 @@
+{
+  "evidenceType": "read-only Sepolia transaction recheck",
+  "observedAtUtc": "2026-11-06T16:54:18.241Z",
+  "network": {
+    "name": "Ethereum Sepolia",
+    "chainId": 11155111,
+    "rpc": "https://ethereum-sepolia-rpc.publicnode.com"
+  },
+  "contract": {
+    "address": "0xC13083047C0657FF576A972469d982b51E43dCB3",
+    "explorerUrl": "https://sepolia.etherscan.io/address/0xC13083047C0657FF576A972469d982b51E43dCB3",
+    "authorizedIssuerAtFinalized": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7"
+  },
+  "transaction": {
+    "hash": "0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb",
+    "explorerUrl": "https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb",
+    "from": "0x5994aBF9b20319213c384a814f5C804FCF6bf9a7",
+    "to": "0xC13083047C0657FF576A972469d982b51E43dCB3",
+    "valueWei": "0",
+    "functionName": "register",
+    "blockNumber": "12076051"
+  },
+  "receipt": {
+    "status": "success",
+    "blockNumber": "12076051",
+    "blockHash": "0xeaac522c7044a2961fef8e946a63830b055a6f2e78f202d9dd4392103626e269",
+    "gasUsed": "245032",
+    "effectiveGasPriceWei": "1500000018",
+    "feeWei": "367548004410576",
+    "feeSepoliaEth": "0.000367548004410576"
+  },
+  "includedBlock": {
+    "number": "12076051",
+    "hash": "0xeaac522c7044a2961fef8e946a63830b055a6f2e78f202d9dd4392103626e269",
+    "timestampUtc": "2026-11-06T10:44:00.000Z"
+  },
+  "finalizedBlockObserved": {
+    "number": "12077796",
+    "hash": "0x4bc04328546b4dcf443aaddf48c823cd7e66bb75464aca9f4a2e90baaaef840b",
+    "timestampUtc": "2026-11-06T16:39:48.000Z"
+  },
+  "registeredDocument": {
+    "documentId": "0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe",
+    "documentHash": "0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+    "issuedAtUnixSeconds": "1793961780",
+    "issuedAtUtc": "2026-11-06T10:43:00.000Z"
+  },
+  "localOriginalPdf": {
+    "path": "docs/portfolio/2026-11-06-sepolia/inha-20261106/inha-original.pdf",
+    "sha256": "ba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c",
+    "bytes": 6856650
+  },
+  "checks": {
+    "chainIdMatches": true,
+    "transactionSucceeded": true,
+    "transactionTargetsContract": true,
+    "transactionSenderMatchesConfiguredIssuer": true,
+    "zeroEthValue": true,
+    "transactionCallsRegister": true,
+    "documentIdMatches": true,
+    "documentHashMatches": true,
+    "issuedAtMatches": true,
+    "signatureMatches": true,
+    "receiptMatchesCanonicalBlock": true,
+    "registrationIsWithinFinalizedRange": true,
+    "finalizedIssuerMatchesConfiguredIssuer": true,
+    "finalizedRecordHashMatches": true,
+    "finalizedRecordIssuedAtMatches": true,
+    "localPdfHashMatchesRegisteredHash": true,
+    "allPassed": true
+  },
+  "interpretationBoundaries": {
+    "readOnly": "This recheck only read public RPC state and hashed the preserved local PDF. It did not request a signature or submit a transaction.",
+    "configuredIssuer": "The address matches the demo contract's configured issuer trust anchor. This alone does not prove that the address is an officially certified KODA institutional identity.",
+    "finalized": "At the observation time, the registration block was at or below the finalized head. This establishes finalized inclusion as observed, not the exact time at which that transaction first became finalized.",
+    "onchainScope": "The contract record contains the document identifier, PDF hash, signature-related registration data and issuance time. The PDF file, customer data and BTC balance are not stored on Ethereum.",
+    "immutability": "The deployed contract exposes no update or delete path and rejects registering the same documentId again. This supports non-overwrite of that identifier, not a claim that every possible related document or business fact can never change."
+  }
+}

@@ -1,6 +1,8 @@
-export const sourceCommit = '90ee1d38662700bf810332e5c5061529a38201b5';
+export const sourceCommit = '7d543a2ee778011381631c268c45a9e3d14acbe0';
 const repo = `https://github.com/KODA-INHA-2026/koda-project/blob/${sourceCommit}/`;
 export const references = {
+  registration: ["Sepolia Etherscan · 문서 등록 거래","https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb"],
+  contractExplorer: ["Sepolia Etherscan · 계약 주소","https://sepolia.etherscan.io/address/0xC13083047C0657FF576A972469d982b51E43dCB3"],
   sha: ['NIST FIPS 180-4, §§4.1.2, 5, 6.2', 'https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf'],
   eip: ['EIP-712, Specification / Security Considerations', 'https://eips.ethereum.org/EIPS/eip-712'],
   ec1: ['Standards for Efficient Cryptography 1, v2, §4.1', 'https://www.secg.org/sec1-v2.pdf'],
@@ -17,17 +19,17 @@ export const references = {
 
 export const slides = [
   {
-    title: '기술 부록 · 구현 명세와 검증 근거',
-    subtitle: '기술 검토용 참고자료. 표준의 보장, 현재 코드의 동작, 미구현 운영 요건을 분리한다.',
-    leftTitle: '검토 기준',
-    left: '기준 소스: 90ee1d3 (2026-11-06)\n\nPDF 해시: SHA-256 / Web Crypto\n문서 서명: EIP-712 + ECDSA / secp256k1\n등록 계약: DocumentRegistry / EVM\n컴파일러: Solidity 0.8.28 · optimizer 200 · Cancun\n라이브러리: OpenZeppelin 5.6.1 · viem 2.57.14\n실제 배포·조회: Sepolia, chainId 11155111\n\n최신 등록: 인하테크홀딩스㈜ 가상 BTC 잔고 증명서\n공유 페이지의 기본 파일 교체와는 별도다.',
-    rightTitle: '검증 명제',
-    right: '제출 PDF의 전체 바이트가\n신뢰 기준에 지정한 발급자가\n서명·등록한 원본과 일치하는가?\n\n체인 기록은 KODA 내부 DB와\n분리된 대조 기준이다.\n\nBTC 실재·법인 신원·RPC 응답의\n정당성은 별도의 신뢰 전제다.',
-    limit: '기획은 Ethereum 기반이다. 실증은 Sepolia에서 수행했다. KODA 상용 시스템 연동·공식 발급자 인증·Mainnet 운영을 구현했다는 의미는 없다.',
-    refs: ['eip','rpc'], code: 'package.json; packages/chain/contracts/DocumentRegistry.sol',
-    paths: ['package.json','packages/chain/contracts/DocumentRegistry.sol','apps/web/src/live/verification.ts'],
-  },
-  {
+    title: "기술 부록 · 구현 명세와 검증 근거",
+    subtitle: "기술 검토용 참고자료. 표준의 보장, 현재 코드의 동작, 미구현 운영 요건을 분리한다.",
+    leftTitle: "검토 기준",
+    left: "기준 소스: 7d543a2 (2026-11-07)\n\nPDF 해시: SHA-256 / Web Crypto\n문서 서명: EIP-712 + ECDSA / secp256k1\n등록 계약: DocumentRegistry / EVM\n컴파일러: Solidity 0.8.28 · optimizer 200 · Cancun\n라이브러리: OpenZeppelin 5.6.1 · viem 2.57.14\n실제 배포·조회: Sepolia, chainId 11155111\n\n02·03 기본 자료: 인하테크홀딩스㈜ 가상 증명서\n02 재서명 비교: 실제 메시지 서명 사용, 새 등록 없음",
+    rightTitle: "검증 명제",
+    right: "제출 PDF의 전체 바이트가\n신뢰 기준에 지정한 발급자가\n서명·등록한 원본과 일치하는가?\n\n체인 기록은 KODA 내부 DB와\n분리된 대조 기준이다.\n\nBTC 실재·법인 신원·RPC 응답의\n정당성은 별도의 신뢰 전제다.",
+    limit: "기획은 Ethereum 기반이다. 실증은 Sepolia에서 수행했다. KODA 상용 시스템 연동·공식 발급자 인증·Mainnet 운영을 구현했다는 의미는 없다.",
+    refs: ["eip","rpc"],
+    code: "package.json; packages/chain/contracts/DocumentRegistry.sol",
+    paths: ["package.json","packages/chain/contracts/DocumentRegistry.sol","apps/web/src/live/verification.ts","apps/web/src/live/signed-comparison.ts"],
+  },  {
     title: '데이터 모델 · 자산과 증빙 기록의 분리',
     subtitle: '자산 보관 체인과 문서 검증 체인은 다른 역할이다. BTC 이동·브리지·래핑은 수행하지 않는다.',
     leftTitle: '데이터와 저장 위치',
@@ -98,18 +100,18 @@ export const slides = [
     notes:'records slot 2는 현재 컴파일 산출물의 실제 storageLayout 값이다. 상속된 OpenZeppelin EIP712의 fallback 문자열 슬롯 0,1 다음에 배치된다. immutable authorizedIssuer는 일반 storage 슬롯에 저장되는 변수가 아니다.',
   },
   {
-    title:'등록 증거 · 거래 입력, 영수증, 이벤트, 상태',
-    subtitle:'거래 해시 하나로 성공을 판단하지 않는다. 제출 자료와 연결되는 등록 실행인지 여러 증거를 대조한다.',
-    leftTitle:'현재 검증 순서',
-    left:'1. getTransaction(txHash)\n   to = trusted.contract, from = trusted.issuer\n   register 인수의 ID·해시·issuedAt·서명 일치\n2. getTransactionReceipt(txHash)\n   status = success, from/to 일치\n3. getBlock(receipt.blockNumber)\n   block.hash = receipt.blockHash\n4. DocumentRegistered 이벤트 디코딩\n   계약 주소·ID·해시·issuedAt 일치\n5. 등록 높이 ≤ 조회한 finalized 높이\n6. finalized 높이에서 issuer / records 조회',
-    rightTitle:'새 등록 거래의 실제 관측값',
-    right:'인하테크홀딩스㈜ · 가상 100 BTC\n등록 블록: 12,076,051\n블록 시각: 11월 6일 10:44:00 UTC\n거래: 0xb75fdf3a…16310eb\n\nPDF 재생성 해시 = 등록 해시\n0xba9bca0b…6579f3c\n\n11월 6일 11:01:32 UTC 관측\nfinalized 높이: 12,076,070\n원본 match / 변경본 file-mismatch',
-    limit:'이 구현은 RPC 응답 간 정합성을 검사한다. 거래·receipt의 Merkle-Patricia 포함 증명이나 합의 검증기를 직접 실행하는 구현은 아니다.',
-    refs:['rpc','abi'], code:'apps/web/src/live/verification.ts:252–344',
-    paths:['apps/web/src/live/verification.ts#L252'],
-    notes:'DocumentRegistered(bytes32,bytes32,uint64)의 topic0는 0x6ff0ae8cb7683b055d1eebe67d788ee55ddc6c87bd826eb7f74c23daa95965c8이다. topics[1]은 indexed documentId, data는 ABI(documentHash, issuedAt)다. 이벤트는 실행 로그이고 records는 저장 상태다. 파일 수신 파서는 등록 transactionHash를 필수로 요구한다. verifyDocument 자체 타입에서는 optional이므로 이 조건은 수신 파일 경로의 추가 보장이다. 최신 거래: https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb . 증거는 docs/portfolio/2026-11-06-sepolia/registration-latest.json 및 inha-20261106/reproduction.json. 재생성 PDF의 SHA-256이 실제 등록값과 같음을 확인했으며, 사용자 브라우저에서 내려받은 파일을 직접 수집한 것은 아니다.',
-  },
-  {
+    title: "등록 증거 · 거래 입력, 영수증, 이벤트, 상태",
+    subtitle: "거래 해시 하나로 성공을 판단하지 않는다. 제출 자료와 연결되는 등록 실행인지 여러 증거를 대조한다.",
+    leftTitle: "현재 검증 순서",
+    left: "1. getTransaction(txHash)\n   to = trusted.contract, from = trusted.issuer\n   register 인수의 ID·해시·issuedAt·서명 일치\n2. getTransactionReceipt(txHash)\n   status = success, from/to 일치\n3. getBlock(receipt.blockNumber)\n   block.hash = receipt.blockHash\n4. DocumentRegistered 이벤트 디코딩\n   계약 주소·ID·해시·issuedAt 일치\n5. 등록 높이 ≤ 조회한 finalized 높이\n6. finalized 높이에서 issuer / records 조회",
+    rightTitle: "인하테크홀딩스 등록 관측값",
+    right: "인하테크홀딩스㈜ · 가상 100 BTC\n등록 블록: 12,076,051\n블록 시각: 11월 6일 19:44:00 KST\n거래: 0xb75fdf3a…16310eb\n\nPDF 전체 바이트 해시 = 등록 해시\n0xba9bca0b…6579f3c\n\n11월 6일 20:01:32 KST 관측\nfinalized 높이: 12,076,070\n원본 match / 변경본 file-mismatch",
+    limit: "이 구현은 RPC 응답 간 정합성을 검사한다. 거래·receipt의 Merkle-Patricia 포함 증명이나 합의 검증기를 직접 실행하는 구현은 아니다.",
+    refs: ["rpc","abi"],
+    code: "apps/web/src/live/verification.ts:252–344",
+    paths: ["apps/web/src/live/verification.ts#L252","docs/portfolio/2026-11-06-sepolia/inha-20261106/registration-finalized.json"],
+    notes: "DocumentRegistered(bytes32,bytes32,uint64)의 topic0는 0x6ff0ae8cb7683b055d1eebe67d788ee55ddc6c87bd826eb7f74c23daa95965c8이다. topics[1]은 indexed documentId, data는 ABI(documentHash, issuedAt)다. 이벤트는 실행 로그이고 records는 저장 상태다. 파일 수신 파서는 등록 transactionHash를 필수로 요구한다. verifyDocument 자체 타입에서는 optional이므로 이 조건은 수신 파일 경로의 추가 보장이다. 최신 거래: https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb . 증거는 docs/portfolio/2026-11-06-sepolia/registration-latest.json 및 inha-20261106/reproduction.json. 재생성 PDF의 SHA-256이 실제 등록값과 같음을 확인했으며, 사용자 브라우저에서 내려받은 파일을 직접 수집한 것은 아니다. 이 관측의 finalized 블록 시각과 수집 시각은 정확한 합의 확정 시각이 아니다. 17·18쪽에 전체 거래 해시와 탐색기 확인 절차를 정리했다.",
+  },  {
     title:'PoS finality · 등록 포함과 확정 상태',
     subtitle:'거래 제출·블록 포함·최종 확정은 다르다. 현재 검증기는 노드가 보고한 finalized 기준을 사용한다.',
     leftTitle:'판정 조건과 시간 모델', mono:true,
@@ -156,30 +158,31 @@ export const slides = [
     paths:['apps/web/src/live/wallet.ts#L42','apps/web/src/live/recorded-evidence.ts#L7'],
   },
   {
-    title:'최종 판정 · 전자서명과 등록 기준의 역할',
-    subtitle:'서명된 파일의 무결성과 같은 문서 ID에 공개 등록된 기준의 일치를 구분한다.',
-    leftTitle:'02·03 수신 경로의 성공 조건과 반례', mono:true,
-    left:'S = recover712(D, signature) == trusted.issuer\nC = chainId + issuer + transaction/receipt checks\n    + canonical block + event + finality checks\nR = (record.hash == D.documentHash)\n    && (record.issuedAt == D.issuedAt)\nF = SHA256(submittedPDF) == D.documentHash\n\nMATCH requires S && C && R && F\n\nPDF alone changed: F=false (signature can detect)\nSigned alternate file, same ID: S=true, F=true\nExisting original record differs: R=false\n=> valid signature alone cannot establish registration',
-    rightTitle:'블록체인 기록이 추가하는 것',
-    right:'여러 수신자가 같은 ID의\n최초 등록 기준을 조회한다.\n발급기관 DB 수정과 분리된 기록이다.\n\n전자서명만으로도 파일 변경을\n탐지할 수 있다.\n\n서명된 대체 문서 비교는\n가치를 설명하는 보조 시나리오이며\n현재 화면에 구현한 사례는 아니다.',
-    limit:'위 반례는 신뢰 발급자가 같은 ID의 다른 내용을 다시 서명한 상황을 가정한다. 현재 데모는 원본·PDF 변경본을 실증했다. 다른 체인·투명성 로그와의 비교도 가능하다.',
-    refs:['eip','storage'], code:'verification.ts:217–365; DocumentRegistry.sol:43–60',
-    paths:['apps/web/src/live/verification.ts#L217','packages/chain/contracts/DocumentRegistry.sol#L43'],
-    notes:'현재 02·03의 수신 파일 경로는 transactionHash를 필수로 요구한다. verifyDocument() 함수 타입 자체에서는 optional이다. 재서명한 대체 문서에 기존 거래 해시를 붙이면 현재 코드는 거래 입력 대조에서 먼저 invalid를 반환하며 records 조회까지 가지 않는다. 따라서 위 R=false는 비교 사례의 논리적 성질이며 현재 화면에서 관측한 실행 순서를 뜻하지 않는다. transactionHash를 지운 JSON도 현 파서가 거절하므로 이것을 해결책으로 사용하지 않는다. 후속 보조 사례는 등록의 필수 검사를 유지한 채 로컬 파일·서명 검사와 등록 기준 불일치를 별도로 보여주도록 설계해야 한다. 새 오프체인 서명에는 발급자 지갑 승인이 필요하나 새 온체인 등록은 필요 없다. 한 번 변경한 PDF를 원래 바이트로 복원하면 다시 일치한다. 따라서 현재 제출본의 원본 일치를 검사하며 모든 유통 이력의 연속 무변경을 증명하지 않는다. 중앙 DB도 중복 ID를 거절할 수 있다. 블록체인의 추가 가치는 공통 상태·합의·외부 조회와 발급기관 DB와의 통제 경계 분리에 있다.',
-  },
-  {
-    title:'두 실행 환경 · 재현성과 검증 범위',
-    subtitle:'같은 알고리즘·계약·신뢰 기준을 재사용한다. 별도 실행 가능성과 독립 보안 검증은 구분한다.',
-    leftTitle:'실행 경로와 검수 근거',
-    left:'02 브라우저\n  PDF + JSON 입력 / 로컬 해시·서명 복구 / RPC 조회\n03 Node.js 번들 (Node 22 이상)\n  같은 parseVerificationFile / verifyDocument 사용\n  node verify.mjs <PDF> <JSON>\n\nCLI 종료 코드: 0 match, 2 file-mismatch, 1 기타\n원본: match / 120 BTC 변경본: file-mismatch\n입력 거절 6건 / live 회귀 47건 통과 기록\n\nZIP: 소스·규격·고정 신뢰 설정·의존성 라이선스\n03 화면: 보존된 실제 실행 결과, 새 RPC 실행 아님',
-    rightTitle:'재현의 조건',
-    right:'동일 파일·서명·계약을 사용한다.\n조회한 finalized 높이는 실행마다\n달라질 수 있으므로 함께 기록한다.\n\n현재 양쪽 모두 같은 공개 RPC에 의존.\n코드·배포 설정도 공통 신뢰 전제다.\n\n검증 성공이 독립 코드 감사,\n완전한 탈중앙화, 상용 운영 승인을\n뜻하지 않는다.',
-    limit:'실행 보고서에는 판정·해시·조회 블록·검사 시각을 보존한다. 공식 접근 권한·신뢰 목록 배포·RPC 운영과 새 서명 비교 사례는 미확정 또는 미구현이다.',
-    refs:['rpc'], code:'tools/external-verifier/verify.ts; docs/external-verification/IMPLEMENTATION.md',
-    paths:['tools/external-verifier/verify.ts','docs/external-verification/IMPLEMENTATION.md','apps/web/public/external-verifier/manifest.json'],
-    notes:'이 슬라이드의 공개 02·03 회귀 기록과 기본 배포 패키지는 기존 한울 증명서에 대한 것이다. 2026-11-06 인하테크홀딩스 신규 발급본은 별도로 finalized·원본 match·변경본 file-mismatch를 확인했다. 공개 기본 자료와 03 번들의 신규 파일 교체·재검수는 아직 남아 있으며 두 증거를 혼동하지 않는다.',
-  },
-  {
+    title: "최종 판정 · 전자서명과 등록 기준의 역할",
+    subtitle: "02에는 유효한 재서명과 기존 등록 원본의 불일치를 보여주는 실제 비교 사례가 있다.",
+    leftTitle: "verifySignedComparison()의 판정 경로",
+    mono: true,
+    left: "C = candidate (signed 120 BTC PDF, no txHash)\nP = registeredProof (original proof, with txHash)\nrequire same ID; SHA256(PDF) == C.documentHash\nrequire recover712(C) == trusted.issuer\nR = verifyDocument(PDF, P, trusted, client)\n// includes tx/receipt/event/block/finality/records\nreferenceTrusted = R.signatureValid\n  && R.chainRecordValid\n  && R.status in {match, file-mismatch}\nrequire referenceTrusted\nregistrationConflict = !sameHex(C.documentHash,\n  P.documentHash) || C.issuedAt !== P.issuedAt",
+    rightTitle: "실제 관측 결과 · 11월 7일",
+    right: "원본: 100 BTC / 0xba9bca0b…6579f3c\n재서명: 120 BTC / 0x42c75760…df546e\n같은 문서 ID · 같은 발급 기재시각\n\nPDF와 새 서명: 일치\n서명자: 지정한 시험 발급자\n기존 등록 기록: 유효\n기존 등록 원본과 대조: 불일치\n\n새 등록 거래는 보내지 않았다.\n02 비교 사례만 지원하며\n03 일반 검증 패키지에는 미포함.",
+    limit: "신뢰 발급자가 다른 내용에 다시 서명한 통제된 비교다. 서명 위조 사례가 아니다. 같은 ID 재등록은 계약이 거절하지만 다른 ID의 새 발급까지 막지는 않는다.",
+    refs: ["eip","storage"],
+    code: "signed-comparison.ts; verification.ts; 2026-11-07-signed-comparison/verification.json",
+    paths: ["apps/web/src/live/signed-comparison.ts","apps/web/src/live/verification.ts","packages/chain/contracts/DocumentRegistry.sol","docs/portfolio/2026-11-07-signed-comparison/verification.json"],
+    notes: "일반 수신 파일의 transactionHash 필수 조건은 그대로다. 비교 전용 koda-signed-comparison-v1은 등록 주장이 없는 candidate와 기존 등록 거래의 reference를 분리한다. candidate의 해시·서명을 확인한 뒤 기존 verifyDocument로 reference의 거래 입력·영수증·이벤트·정식 블록·finality·발급자·records를 모두 검사한다. 새 서명에 기존 거래 해시를 붙여 오류를 우회하지 않는다. 코드에는 같거나 다른 파일의 일반 판정도 있으며 본 슬라이드는 실제 120 BTC 비교 경로를 발췌한 것이다. 관측 finalized 높이 12077483. 실제 시험 발급자가 지갑에서 메시지 서명했고 새 온체인 등록과 가스 납부는 없었다. 변경 후 원래 바이트로 복원된 이력까지 검출하지는 않는다. 중앙 DB도 중복 ID를 거절할 수 있다. 블록체인의 추가 가치는 발급기관 DB와 통제 경계가 다른 공통 기록·합의·외부 조회에 있으며 Ethereum만 가능한 성질이라고 주장하지 않는다.",
+  },  {
+    title: "두 실행 환경 · 재현성과 검증 범위",
+    subtitle: "같은 알고리즘·계약·신뢰 기준을 재사용한다. 별도 실행 가능성과 독립 보안 검증은 구분한다.",
+    leftTitle: "실행 경로와 검수 근거",
+    left: "02 브라우저\n  PDF + JSON / 로컬 해시·서명 복구 / 실시간 RPC 조회\n  인하 원본 · PDF 변경본 · 실제 재서명 비교본\n\n03 Node.js 번들 (Node 22 이상)\n  parseVerificationFile / verifyDocument 재사용\n  node verify.mjs <PDF> <JSON>\n  CLI 종료 코드: 0 match, 2 file-mismatch, 1 기타\n\n인하 원본 match / 120 BTC 변경본 file-mismatch\n실행: 11월 6일 20:12:19 KST · finalized 12,076,101\n03 화면은 보존된 실행 결과, 버튼에서 새 RPC 실행 아님",
+    rightTitle: "재현의 조건",
+    right: "동일 파일·서명·계약을 사용한다.\n조회한 finalized 높이는 실행마다\n달라질 수 있으므로 함께 기록한다.\n\n현재 양쪽 모두 같은 공개 RPC에 의존.\n코드·배포 설정도 공통 신뢰 전제다.\n\n검증 성공이 독립 코드 감사,\n완전한 탈중앙화, 상용 운영 승인을\n뜻하지 않는다.",
+    limit: "03 패키지는 원본·PDF 변경본의 일반 검증을 지원한다. 02의 재서명 비교 전용 포맷은 지원하지 않는다. 공식 접근 권한·신뢰 목록·RPC 운영은 별도 설계 대상이다.",
+    refs: ["rpc"],
+    code: "tools/external-verifier/verify.ts; docs/external-verification/IMPLEMENTATION.md",
+    paths: ["tools/external-verifier/verify.ts","docs/external-verification/IMPLEMENTATION.md","apps/web/public/external-verifier/manifest.json"],
+    notes: "공개 기본 자료와 03 패키지는 인하테크홀딩스 발급본으로 교체됐다. manifest.json의 documentId·등록 블록·파일 해시가 신규 Inha 등록과 같다. 화면은 실제 Node 실행 결과를 보존해 보여주며, 별도 환경에서 내려받은 코드를 실행하면 RPC를 새로 조회한다. 코드·규격·고정 신뢰 설정·의존성 라이선스가 패키지에 포함된다. 동일 알고리즘을 다른 환경에서 실행하는 것과 독립적으로 감사를 받은 별도 구현은 구분한다. 두 경로는 같은 공개 RPC와 신뢰 설정을 사용한다.",
+  },  {
     title:'viem client · 발급자 지갑과 제3자 조회의 분리',
     subtitle:'Wallet Client는 MetaMask의 시험 발급자만 사용한다. 수신자 검증은 Public Client의 읽기 전용 RPC 경로다.',
     leftTitle:'현재 소스 발췌 · 두 client 생성', mono:true,
@@ -202,6 +205,33 @@ export const slides = [
     refs:['gas','viemWallet','viemPublic'], code:'apps/web/src/live/wallet.ts:89–99; verification.ts:252–311',
     paths:['apps/web/src/live/wallet.ts#L89','apps/web/src/live/verification.ts#L252'],
     notes:'Ethereum 공식 문서는 실제 가스비를 사용 가스량과 단위 가스 가격의 곱으로 설명한다. EIP-1559 영수증의 effectiveGasPrice를 사용한 이 식은 실제 지불액 산출에 쓰이며, 현 화면은 그 값을 별도 표기하지 않는다. simulateContract는 사전 시뮬레이션이고 상태 변경을 만들지 않으며, 후속 writeContract만 거래 제출 경로다.',
+  },
+  {
+    title: "실증 기록 · 인하테크홀딩스 문서 등록 거래",
+    subtitle: "가상 BTC 잔고 증명서의 검증정보를 Sepolia에 실제 등록했다. 아래 거래는 자산 매매·이체가 아니다.",
+    leftTitle: "Transaction hash · 전체 값",
+    mono: true,
+    left: "0xb75fdf3acb19b955e451e86cb3c27c2d\n18f3ed3079f33624a3be71afd16310eb\n\nContract (To)\n0xC13083047C0657FF576A972469d982b51E43dCB3\n\nTrial issuer (From)\n0x5994aBF9b20319213c384a814f5C804FCF6bf9a7\n\nCall: register(documentId, hash, issuedAt, signature)\nValue: 0 ETH / Receipt: success\nBlock: 12,076,051 / Chain ID: 11155111",
+    rightTitle: "시간과 비용 · 보존된 관측",
+    right: "발급 기재시각\n2026-11-06 19:43:00 KST\n\n등록 블록 시각\n2026-11-06 19:44:00 KST\n\n가스 사용량: 245,032\n수수료: 0.000367548004410576\nSepolia ETH (시험 자산)\n\n20:01:32 KST 수집 당시\nfinalized 12,076,070에 포함",
+    limit: "시험 계정으로 가상 증명서를 등록한 증거다. KODA 공식 발급이나 BTC 100개의 실제 보유를 증명하지 않는다. 위 시각은 정확한 합의 확정 시각과 구분한다.",
+    refs: ["registration","contractExplorer"],
+    code: "inha-20261106/registration-finalized.json; reproduction.json",
+    paths: ["docs/portfolio/2026-11-06-sepolia/inha-20261106/registration-finalized.json","docs/portfolio/2026-11-06-sepolia/inha-20261106/reproduction.json"],
+    notes: "등록 거래 전체 해시는 줄바꿈 없이 0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb 이다. 클릭할 탐색기 링크: https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb . 계약: https://sepolia.etherscan.io/address/0xC13083047C0657FF576A972469d982b51E43dCB3 . deployment transaction과 document registration transaction은 서로 다르다. 배포 거래는 0x2bf8e548990c8e391430c7f2f3344a955e912bf1efc915740617a8d51bb80de7. 잔고 기준시점은 2026-10-31 23:59:59 KST로 PDF에 기록했다. issuedAt=1793961780은 발급자가 서명한 값이다. receipt의 gasUsed 245032 × effectiveGasPrice 1500000018 wei = 367548004410576 wei. 수수료는 이번 문서 등록만의 값이며 배포 비용과 다르다. 11월 7일 추가한 120 BTC 비교용 서명은 오프체인 메시지 서명으로 새 등록 거래가 아니다.",
+  },
+  {
+    title: "탐색기 확인 · 거래 성공에서 원본 대조까지",
+    subtitle: "Etherscan은 체인 기록을 보여주는 도구다. 문서와 기록의 관계는 우리 검증기에서 추가로 확인한다.",
+    leftTitle: "거래 페이지에서 확인할 항목",
+    left: "① Status / Block\n   실행 성공 여부, 포함된 블록과 시각\n② From / To / Value / Transaction Fee\n   시험 발급자 → 고정 계약, 전송액 0 ETH, 등록 비용\n③ Input Data\n   register selector 0xf0c9379a + ABI 인수\n   documentId · documentHash · issuedAt · signature\n④ Logs\n   DocumentRegistered 이벤트의 ID·해시·발급시각\n\nABI 해석 표시는 탐색기의 소스 등록 상태에 따라 다름.\n원시 input·topics·data는 로컬 ABI로 해석할 수 있다.",
+    rightTitle: "우리 검증기에서 추가 확인",
+    right: "제출 PDF의 SHA-256 계산\n→ 함께 받은 서명의 발급자 확인\n→ 같은 ID의 확정된 records 조회\n→ 등록 거래·이벤트와 대조\n\n원본 해시: 0xba9bca0b…6579f3c\n재서명본: 0x42c75760…df546e\n\n탐색기 Success = 등록 실행 성공\n원본 일치 = 파일·서명·등록 대조\n두 판정은 같은 뜻이 아니다.",
+    limit: "등록 내용의 진실성·공식 법인 신원·증명서의 법적 효력을 탐색기 성공 표시로 판단하지 않는다. 현재 앱은 RPC 응답을 사용하며 합의·포함 증명을 직접 검증하지 않는다.",
+    refs: ["registration","rpc"],
+    code: "verification.ts; signed-comparison.ts; registration-finalized.json",
+    paths: ["apps/web/src/live/verification.ts","apps/web/src/live/signed-comparison.ts","docs/portfolio/2026-11-06-sepolia/inha-20261106/registration-finalized.json"],
+    notes: "탐색기는 https://sepolia.etherscan.io/tx/0xb75fdf3acb19b955e451e86cb3c27c2d18f3ed3079f33624a3be71afd16310eb 에서 연다. 컨트랙트 소스 검증 표시와 Read Contract 탭의 제공 여부는 이번 문서의 검증 근거로 삼지 않는다. 사용한 근거는 보존된 RPC 응답, Solidity ABI, 컴파일 산출물과 실제 파일 바이트다. Document ID: 0xdada759a9083cf2925597621c83e530e62625c56d4fbd31c1874e43926f019fe. 원본 SHA-256: 0xba9bca0bd4723155b7084a54a3bb0f41bb235b94bc4ea44fa331bc94f6579f3c. 재서명본 SHA-256: 0x42c75760d2ffded3f5ead8c19a5c7d83b20bc6d722f8b5236ac570cbe3df546e. 이벤트 topic0: 0x6ff0ae8cb7683b055d1eebe67d788ee55ddc6c87bd826eb7f74c23daa95965c8. topics[1]은 documentId, data는 ABI(documentHash, issuedAt)다.",
   },
 ];
 
@@ -234,11 +264,11 @@ export async function rewriteBatch({presentation,input}) {
     text(13,primary[1]?`[2] ${primary[1][0]}  ${primary[1][1]}`:'',56,656,1168,20,12.7,muted);
     text(14,`구현 근거 @${sourceCommit.slice(0,7)}: ${item.code}`,56,684,1110,20,12.6,muted);
     text(15,String(index+1).padStart(2,'0'),1182,683,42,24,14,green,true);
-    slide.speakerNotes.text=[item.title,item.subtitle,item.leftTitle,item.left,item.rightTitle,item.right,`범위·한계: ${item.limit}`,item.notes??'', '공식 참고문헌 (확인일 2026-11-06):',...item.refs.map(k=>`${references[k][0]}\n${references[k][1]}`),'현재 코드의 근거 (고정 소스):',...item.paths.map(p=>repo+p)].join('\n\n');
+    slide.speakerNotes.text=[item.title,item.subtitle,item.leftTitle,item.left,item.rightTitle,item.right,`범위·한계: ${item.limit}`,item.notes??'', '공식 참고문헌·실증 자료 (정리일 2026-11-07):',...item.refs.map(k=>`${references[k][0]}\n${references[k][1]}`),'현재 코드의 근거 (고정 소스):',...item.paths.map(p=>repo+p)].join('\n\n');
   }
   return {updated:input.indices.map(i=>i+1),slideCount:presentation.slides.items.length};
 }
 
 export function referenceMarkdown() {
-  return '# KODA 증빙 검증 기술 부록 — 구현 명세와 근거\n\n기술 참고용 자료. 확인일: 2026-11-06. 기준 소스: `'+sourceCommit+'`. 현재 데모 기술·동작은 변경하지 않았다.\n\n'+slides.map((s,i)=>`## ${i+1}. ${s.title}\n\n${s.subtitle}\n\n### ${s.leftTitle}\n\n${s.mono?'```text\n'+s.left+'\n```':s.left}\n\n### ${s.rightTitle}\n\n${s.right}\n\n**범위·한계:** ${s.limit}\n\n${s.notes??''}\n\n**공식 근거**\n\n${s.refs.map(k=>`- [${references[k][0]}](${references[k][1]})`).join('\n')}\n\n**현재 구현**\n\n${s.paths.map(p=>`- [${p}](${repo+p})`).join('\n')}\n`).join('\n');
+  return '# KODA 증빙 검증 기술 부록 — 구현 명세와 근거\n\n기술 참고용 자료. 정리일: 2026-11-07. 기준 소스: `'+sourceCommit+'`. 현재 데모 기술·동작은 변경하지 않았다.\n\n'+slides.map((s,i)=>`## ${i+1}. ${s.title}\n\n${s.subtitle}\n\n### ${s.leftTitle}\n\n${s.mono?'```text\n'+s.left+'\n```':s.left}\n\n### ${s.rightTitle}\n\n${s.right}\n\n**범위·한계:** ${s.limit}\n\n${s.notes??''}\n\n**공식 문서·실증 근거**\n\n${s.refs.map(k=>`- [${references[k][0]}](${references[k][1]})`).join('\n')}\n\n**현재 구현**\n\n${s.paths.map(p=>`- [${p}](${repo+p})`).join('\n')}\n`).join('\n');
 }

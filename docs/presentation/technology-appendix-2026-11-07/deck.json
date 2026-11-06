@@ -1,0 +1,15 @@
+{
+  "title": "KODA 증빙 검증 · 기술 어펜딕스 초안",
+  "pageId": "page_e2ea284cc66c81918bfacd219cb82695",
+  "url": "https://chatgpt.com/space/page_e2ea284cc66c81918bfacd219cb82695",
+  "artifactRef": "artifact_external_9393caff-b1c7-4359-a34f-be65344752bf",
+  "stateVersion": 23,
+  "slideCount": 18,
+  "implementationSource": "7d543a2ee778011381631c268c45a9e3d14acbe0",
+  "reviewedDate": "2026-11-07",
+  "checks": {
+    "allSlidesRendered": true,
+    "layoutBoxesWithinSlide": true
+  },
+  "note": "Slides 17-18 add actual Inha registration and explorer reading guide. Slides 1/8/13/14 reflect current fixtures and signed comparison. Product code unchanged."
+}
