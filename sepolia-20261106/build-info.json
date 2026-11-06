@@ -1,8 +1,9 @@
 {
-  "sourceBranch": "feat/first-demo",
-  "asset": "native BTC (fictional certificate)",
   "network": "Ethereum Sepolia",
-  "builtAtUtc": "2026-11-06T00:27:46.9849533Z",
-  "sourceCommit": "cf3e37e6a2309791c1d233db2dcfc902e31cdb29",
-  "purpose": "architecture-led team feedback"
+  "asset": "native BTC (fictional certificate)",
+  "sourceCommit": "e6ffa69f18697b305540217356a0be38ae29005e",
+  "purpose": "Ethereum design labels; Sepolia execution metadata",
+  "sourceBranch": "feat/first-demo",
+  "designNetwork": "Ethereum L1",
+  "builtAtUtc": "2026-11-06T00:43:32.8553347Z"
 }
