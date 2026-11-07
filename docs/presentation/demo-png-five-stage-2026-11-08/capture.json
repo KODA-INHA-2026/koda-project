@@ -1,0 +1,115 @@
+{
+  "capturedAt": "2026-11-07T18:56:49.212Z",
+  "url": "https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=7b59c6c",
+  "build": {
+    "designNetwork": "Ethereum L1",
+    "builtAtUtc": "2026-11-07T18:55:10.3283045Z",
+    "sourceBranch": "feat/first-demo",
+    "network": "Ethereum Sepolia",
+    "purpose": "Five-stage demo with visible issuer processing and preserved third-party query and response",
+    "asset": "native BTC (fictional certificate)",
+    "sourceCommit": "7b59c6c303e46be63b7e65e39bfc147313c83e08",
+    "signedComparison": "user-approved message signature; no new registration transaction"
+  },
+  "sourceCommit": "7b59c6c303e46be63b7e65e39bfc147313c83e08",
+  "viewport": {
+    "width": 1536,
+    "height": 1260
+  },
+  "deviceScaleFactor": 4,
+  "method": "Native 4x Chrome rendering from the published five-stage build. Issuance exports use the existing .ij-canvas; dashboard exports retain the existing cropped dashboard treatment; the comparison export includes the complete Ethereum request/response experience. Verification screenshots assert vertical PDF/JSON rows. Actual Sepolia RPC reads are used, with no new wallet signature or transaction.",
+  "shots": [
+    {
+      "file": "01_원본_발급.png",
+      "state": "01 original issuance canvas from the published five-stage build",
+      "width": 4296,
+      "height": 1680,
+      "bytes": 195465,
+      "sha256": "d1dd581cb46d861fdad14c8e4a8888a4f3a4823f41a3b79c72ea1184e8288729"
+    },
+    {
+      "file": "02_전자서명_해시_생성.png",
+      "state": "02 SHA-256 and EIP-712/ECDSA issuance evidence canvas",
+      "width": 4296,
+      "height": 1860,
+      "bytes": 214280,
+      "sha256": "b99bf06b6462a949851ce2190a0c3cccc6e27dd90674363466119a73adfa0cbe"
+    },
+    {
+      "file": "03_블록체인_기록_고객사_전달.png",
+      "state": "03 actual recorded Ethereum reference and KODA-customer-third-party handoff canvas",
+      "width": 4296,
+      "height": 1840,
+      "bytes": 239366,
+      "sha256": "52ec515fd24dd19a1b33430de34674a6433d5e689b5b5210dff949b236f2059b"
+    },
+    {
+      "file": "04a_검증_전.png",
+      "state": "04 dashboard with the real original PDF and verification JSON loaded before verification",
+      "width": 2748,
+      "height": 2852,
+      "bytes": 217869,
+      "sha256": "066e6633e7efddec082bfc49d1fc1ab7fe9164b190d03b26f64d1e917895167e"
+    },
+    {
+      "file": "04b_원본_검증_성공.png",
+      "state": "04 actual Sepolia RPC verification of the original; all three checks confirmed",
+      "width": 2748,
+      "height": 3060,
+      "bytes": 275912,
+      "sha256": "22801c54237ebb5177c1a39fc890d00ff110c8e30ce27f7681d47a9475884e5c"
+    },
+    {
+      "file": "04c_Ethereum_조회_응답_대조.png",
+      "state": "04 actual signed comparison paused at compare with Ethereum, RPC request, response and both hashes visible",
+      "width": 4292,
+      "height": 2652,
+      "bytes": 312181,
+      "sha256": "63e88f36c43dd8be8f83404c0bd8546f1dc760b4d8f61ea95bdebf1e2334032e"
+    },
+    {
+      "file": "04d_재서명_등록원본_불일치.png",
+      "state": "04 valid re-signature and PDF pair, but conflict with the finalized registered original",
+      "width": 2748,
+      "height": 3184,
+      "bytes": 312112,
+      "sha256": "1de5a0c26efaf5d465b1224de4f8a364049c336b0e2c73e712944b8ee4cacc57"
+    },
+    {
+      "file": "04e_PDF만_변경_불일치.png",
+      "state": "04 changed PDF does not match the originally signed hash or registered original",
+      "width": 2748,
+      "height": 3060,
+      "bytes": 282912,
+      "sha256": "d37440238439d3892d850e1435cd9f0599bba1cf270033cd51d7a46b4801bdc5"
+    },
+    {
+      "file": "05_외부환경_실행기록.png",
+      "state": "05 saved actual external Node.js verifier execution record from the published build",
+      "width": 2404,
+      "height": 1664,
+      "bytes": 151914,
+      "sha256": "da90b9fbd170e5a396f0c1fab32b3c4158ba57d7bca4620a2e0b8cb072448b9e"
+    }
+  ],
+  "errors": [],
+  "walletMethods": [
+    "eth_accounts"
+  ],
+  "zip": {
+    "file": "C:\\Users\\sghta\\koda-project\\deliverables\\KODA_데모_01-05_최신화면_9장_20261108.zip",
+    "bytes": 1960117,
+    "sha256": "3d995c5c53ff5924312bf2104669b28b46d2facc255f88180ac01ebf68a35e1d",
+    "entries": [
+      "01_원본_발급.png",
+      "02_전자서명_해시_생성.png",
+      "03_블록체인_기록_고객사_전달.png",
+      "04a_검증_전.png",
+      "04b_원본_검증_성공.png",
+      "04c_Ethereum_조회_응답_대조.png",
+      "04d_재서명_등록원본_불일치.png",
+      "04e_PDF만_변경_불일치.png",
+      "05_외부환경_실행기록.png"
+    ]
+  }
+}
