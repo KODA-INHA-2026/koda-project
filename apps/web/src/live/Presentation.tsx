@@ -49,6 +49,7 @@ export function Presentation(props: PresentationProps) {
     const url = new URL(window.location.href);
     url.searchParams.set('view', ACT_VIEWS[next]!);
     window.history.replaceState(null, '', url);
+    window.scrollTo(0, 0);
   };
   const begin = (replay: boolean) => setMotion(reducedMotion ? undefined : { step: 'prepare', paused: false, replay, enteredAt: performance.now(), elapsed: 0,
     previousResult: replay ? undefined : props.result, previousTrace: replay ? undefined : props.verificationTrace });

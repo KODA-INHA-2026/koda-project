@@ -86,7 +86,7 @@ export function ArchitectureMap(props: ArchitectureMapProps) {
           <rect x="74" y="5" width="27" height="27" />
         </g>
         <line x1="18" y1="70" x2="282" y2="70" />
-        <text className="kam-contract" x="18" y="94">DocumentRegistry</text>
+        <text className="kam-contract" x="18" y="94">등록·조회 컨트랙트</text>
         <text className="kam-chain-note" x="282" y="94" textAnchor="end">원본 PDF는 저장하지 않음</text>
       </g>
 

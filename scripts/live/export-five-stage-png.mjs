@@ -4,11 +4,12 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 
-const sourceCommit = '1e1eaadc20252754ad54ff5723c30b4bf4c2e43d';
-const url = 'https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=1e1eaad';
-const output = resolve('deliverables/KODA_데모_01-05_최신화면_8장_20261107');
-const zipPath = resolve('deliverables/KODA_데모_01-05_최신화면_8장_20261107.zip');
-const evidence = resolve('docs/presentation/demo-png-five-stage-2026-11-07');
+const sourceCommit = process.argv[2];
+if (!/^[0-9a-f]{40}$/.test(sourceCommit ?? '')) throw new Error('Pass the published source commit (40 hex characters).');
+const url = `https://koda-inha-2026.github.io/koda-project/sepolia-20261106/?revision=${sourceCommit.slice(0, 7)}`;
+const output = resolve('deliverables/KODA_데모_01-05_최신화면_9장_20261108');
+const zipPath = `${output}.zip`;
+const evidence = resolve('docs/presentation/demo-png-five-stage-2026-11-08');
 const viewport = { width: 1536, height: 1260 };
 const deviceScaleFactor = 4;
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -133,14 +134,14 @@ try {
 
   await page.locator('.kp-acts button').nth(1).click();
   await expect(page.locator('.ij-root')).toHaveAttribute('data-issuance-stage', '2');
-  await expect(page.locator('.ij-digest')).toContainText('0x');
-  await expect(page.locator('.ij-signature code')).toContainText('0x');
+  await expect(page.locator('.ij-proof-packet .ij-hash-field')).toContainText('0x');
+  await expect(page.locator('.ij-attached-signature')).toContainText('발급자 서명 연결');
   await captureLocator('.ij-canvas', '02_전자서명_해시_생성.png', '02 SHA-256 and EIP-712/ECDSA issuance evidence canvas');
 
   await page.locator('.kp-acts button').nth(2).click();
   await expect(page.locator('.ij-root')).toHaveAttribute('data-issuance-stage', '3');
   await expect(page.locator('.ij-stored-record code')).toContainText('0x');
-  await expect(page.locator('.ij-handoff')).toContainText('KODA가 발급');
+  await expect(page.locator('.ij-handoff')).toContainText('KODA');
   await expect(page.locator('.ij-handoff')).toContainText('고객사');
   await expect(page.locator('.ij-handoff')).toContainText('제3자');
   await captureLocator('.ij-canvas', '03_블록체인_기록_고객사_전달.png', '03 actual recorded Ethereum reference and KODA-customer-third-party handoff canvas');
@@ -179,6 +180,13 @@ try {
   await expect(page.locator('.ve-questions .is-warning')).toHaveCount(2);
   await captureDashboard('04d_재서명_등록원본_불일치.png', '04 valid re-signature and PDF pair, but conflict with the finalized registered original');
 
+  await page.getByRole('button', { name: /PDF만 변경/ }).click();
+  await expect(verify).toBeEnabled();
+  await verify.click();
+  await expect(page.locator('.ve-outcome')).toHaveClass(/is-mismatch/, { timeout: 120000 });
+  await expect(page.locator('.ve-local-checks .is-warning')).toHaveCount(1);
+  await captureDashboard('04e_PDF만_변경_불일치.png', '04 changed PDF does not match the originally signed hash or registered original');
+
   await page.locator('.kp-acts button').nth(4).click();
   await expect(page.locator('.kp-root')).toHaveAttribute('data-presentation-act', '5');
   await expect(page.locator('.ev-run')).toContainText('실제 실행 기록');
@@ -189,7 +197,7 @@ try {
   expect(walletMethods.filter(method => method !== 'eth_accounts')).toEqual([]);
   shots.sort((a, b) => a.file.localeCompare(b.file, 'ko'));
   const pngFiles = (await readdir(output)).filter(file => file.toLowerCase().endsWith('.png')).sort((a, b) => a.localeCompare(b, 'ko'));
-  expect(pngFiles).toHaveLength(8);
+  expect(pngFiles).toHaveLength(9);
   expect(pngFiles).toEqual(shots.map(shot => shot.file));
 
   const zip = new AdmZip();

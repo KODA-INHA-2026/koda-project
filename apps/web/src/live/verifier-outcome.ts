@@ -1,4 +1,24 @@
 import type { SignedComparisonResult as VerificationResult } from './signed-comparison';
+import type { VerificationTraceEvent } from './verification';
+
+// These are local checks on the submitted files, not the final chain-backed verdict.
+export function localVerificationChecks(
+  result: VerificationResult | undefined,
+  trace: VerificationTraceEvent[],
+  signedHash: string | undefined,
+  comparison: boolean,
+) {
+  const signature = trace.findLast(event => event.id === 'signature' && (comparison
+    ? event.operation === '재서명 정보의 발급자 주소 복구'
+    : event.operation === 'EIP-712 서명자 주소 복구'));
+  const digest = trace.findLast(event => event.id === 'sha256' && (comparison
+    ? event.operation === '재서명 PDF 전체 바이트 SHA-256'
+    : event.operation === '제출 PDF 전체 바이트 SHA-256'));
+  const fileHash = digest?.detail?.match(/^0x[0-9a-f]{64}$/i)?.[0] ?? result?.fileHash;
+  const signatureValid = (comparison ? result?.signedComparison?.signatureValid : result?.signatureValid)
+    ?? (signature?.state === 'success' ? true : signature?.state === 'failure' ? false : undefined);
+  return { signatureValid, fileMatch: fileHash && signedHash ? fileHash.toLowerCase() === signedHash.toLowerCase() : undefined };
+}
 
 export type VerifierOutcomeKind = 'idle' | 'busy' | 'match' | 'mismatch' | 'pending' | 'failure';
 
@@ -33,7 +53,7 @@ function questionsFor(result: VerificationResult): VerifierQuestion[] {
     return [
       { label: 'KODA가 발급한 문서인지', value: '발급서명 확인', state: 'confirmed' },
       { label: '발급 당시 원본과 일치하는지', value: '일치', state: 'confirmed' },
-      { label: '이후 변경되지 않았는지', value: '변경 없음', state: 'confirmed' },
+      { label: '이후 변경되지 않았는지', value: '현재 파일이 원본과 같음', state: 'confirmed' },
     ];
   }
   if (result.status === 'file-mismatch') {

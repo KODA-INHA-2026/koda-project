@@ -19,6 +19,19 @@
 .ve-scenarios{display:flex;align-items:center;gap:6px;margin:0 0 14px;flex-wrap:wrap}.ve-scenarios>span{font-size:11px;color:var(--muted);margin-right:8px}.ve-scenarios button{display:flex;align-items:center;gap:8px;min-height:38px;padding:8px 12px;background:transparent;border:1px solid var(--line);border-radius:5px;color:var(--forest-deep);font-size:11px}.ve-scenarios button small{font-size:10px;color:var(--muted)}.ve-scenarios button[aria-pressed=true]{background:#e4f1e8;border-color:#8fbaa0;font-weight:650}.ve-scenarios button:disabled{opacity:.5;cursor:default}.ve-comparison-context{font-size:11px;color:var(--muted);line-height:1.6;margin:-4px 0 13px}.ve-local-checks{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;font-size:10px;line-height:1.5;margin:-4px 0 12px;color:var(--muted)}.ve-local-checks>span{font-size:9px}.ve-local-checks strong{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:550}.ve-local-checks strong.is-confirmed{color:var(--forest)}.ve-local-checks .ve-icon{width:13px;height:13px}.ve-registration-value{margin:15px auto 0;max-width:240px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;line-height:1.8;color:var(--forest-deep);word-break:keep-all}
 @media(max-width:650px){.ve-scenarios{gap:6px}.ve-scenarios>span{width:100%;margin:0}.ve-scenarios button{min-height:44px;flex:1;flex-direction:column;gap:3px;padding:8px}.ve-local-checks{gap:6px 10px}.ve-local-checks>span{width:100%}}
 .ve-local-checks{padding:8px 10px;background:#edf6ef;border:1px solid #d1ded5;border-radius:4px}.ve-local-checks strong{font-size:11px}.ve-local-checks .ve-icon{width:14px;height:14px}
+.ve-local-checks strong.is-warning{color:var(--danger)}
+.ve-proof-scope{border-top:1px solid var(--line);padding-top:10px;margin-top:12px;font-size:10px;line-height:1.6;color:var(--muted);word-break:keep-all}
+.ve-why{margin:22px 0 10px;padding:22px 0;border-block:1px solid var(--line);word-break:keep-all}
+.ve-why>div>span{font-size:11px;color:var(--forest)}
+.ve-why h2{font-size:21px;letter-spacing:-.035em;line-height:1.5;margin-top:6px}
+.ve-why p{font-size:13px;color:var(--muted);line-height:1.8;margin-top:9px;max-width:850px}
+.ve-why summary{padding:16px 0 0;font-size:12px;color:var(--forest);cursor:pointer;min-height:44px}
+.ve-why-comparison{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:18px 0}
+.ve-why-comparison>div{padding-left:16px;border-left:2px solid var(--line)}
+.ve-why-comparison>div:last-child{border-color:var(--forest)}
+.ve-why h3{font-size:14px;font-weight:600;line-height:1.6}
+.ve-why .ve-why-limit{font-size:11px}
+@media(max-width:650px){.ve-why-comparison{grid-template-columns:1fr;gap:18px}.ve-why h2{font-size:19px}}
 @media(min-width:851px) and (max-height:1050px){.act-verify .kp-header{min-height:76px;margin-bottom:24px}.ve-stage-heading h1{font-size:31px}}
 @media(min-width:851px) and (max-height:1050px){.ve-stage-heading{margin-bottom:20px}.ve-demo-tools{min-height:44px;margin-bottom:8px}.ve-app-header{height:50px}.ve-app-body{padding:20px}.ve-upload{min-height:60px;padding-block:10px}.ve-primary{min-height:44px;padding-block:11px;margin:12px 0 16px}.ve-compare-tray{padding:8px 0}.ve-compare-tray>div:not(.ve-comparison-sign){padding-block:8px}.ve-result-space{min-height:128px}.ve-app-note{margin-top:11px}.ve-flow-footer{margin-top:20px;padding-top:15px}}
 @media(prefers-reduced-motion:reduce){.ve-transfer-layer{display:none}.ve-compare-tray,.ve-return-slot,.ve-current-block{animation:none!important}}

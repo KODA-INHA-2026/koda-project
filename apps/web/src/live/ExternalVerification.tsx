@@ -24,7 +24,7 @@ export function ExternalVerification() {
     <div className="ev-route" aria-label="외부 검증 입력과 조회 흐름">
       <section><small>고객사가 제출</small><strong>PDF + 검증정보</strong><p>04에서 사용한 같은 두 파일</p></section><span aria-hidden="true">→</span>
       <section className="is-local"><small>외부 수신자 · 자신의 컴퓨터</small><strong>공개 검증 코드 실행</strong><p>파일 해시 · 발급서명 · 등록 기록 대조</p></section><span aria-hidden="true">↔</span>
-      <section><small>조회할 공통 기준</small><strong>Ethereum</strong><p>같은 DocumentRegistry</p></section>
+      <section><small>조회할 공통 기준</small><strong>Ethereum</strong><p>04와 같은 컨트랙트의 등록 기록</p></section>
     </div>
     <div className="ev-workbench">
       <section className="ev-package">
@@ -39,7 +39,7 @@ export function ExternalVerification() {
         <div className="ev-command"><span>실행 명령</span><code>{manifest?.command ?? '실행 자료 확인 중'}</code></div>
         {run && <div className={`ev-verdict ${matches ? 'is-match' : 'is-mismatch'}`}><span aria-hidden="true">{matches ? '✓' : '×'}</span><strong>{matches ? '등록 원본과 일치' : run.status === 'file-mismatch' ? '등록 원본과 불일치' : '검증 미완료'}</strong></div>}
         <dl><div><dt>제출 PDF 해시</dt><dd>{short(run?.fileHash)}</dd></div><div><dt>Ethereum 등록 해시</dt><dd>{short(run?.chainHash)}</dd></div><div><dt>조회 기준 블록</dt><dd>{run?.finalizedBlock ?? '확인 전'} <small>finalized</small></dd></div></dl>
-        <p className="ev-note">이 화면은 별도 실행 결과를 보여줍니다. 자료를 내려받으면 본인의 환경에서 새로 조회할 수 있습니다.</p>
+        <p className="ev-note">이 화면은 이전에 Node.js로 실행해 보존한 결과입니다. 자료를 내려받으면 수신자의 환경에서 새로 조회할 수 있습니다.</p>
         {run?.checkedAt && <time dateTime={run.checkedAt}>{new Date(run.checkedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })} KST 실행</time>}
       </section>
     </div>

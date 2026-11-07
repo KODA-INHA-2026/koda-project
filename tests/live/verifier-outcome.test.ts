@@ -1,6 +1,41 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { verifierOutcome } from '../../apps/web/src/live/verifier-outcome.ts';
+import { localVerificationChecks, verifierOutcome } from '../../apps/web/src/live/verifier-outcome.ts';
+import type { VerificationTraceEvent } from '../../apps/web/src/live/verification.ts';
+
+const originalHash = `0x${'11'.repeat(32)}` as const;
+const changedHash = `0x${'22'.repeat(32)}` as const;
+
+test('local signature and file checks stay distinct from the final registration verdict', () => {
+  const original = localVerificationChecks({ status: 'match', message: '', signatureValid: true, fileHash: originalHash }, [], originalHash, false);
+  const altered = localVerificationChecks({ status: 'file-mismatch', message: '', signatureValid: true, fileHash: changedHash }, [], originalHash, false);
+  const resigned = localVerificationChecks({ status: 'file-mismatch', message: '', fileHash: changedHash,
+    signedComparison: { signatureValid: true, fileMatch: true, signedHash: changedHash, registrationConflict: true } }, [], changedHash, true);
+  assert.deepEqual(original, { signatureValid: true, fileMatch: true });
+  assert.deepEqual(altered, { signatureValid: true, fileMatch: false });
+  assert.deepEqual(resigned, { signatureValid: true, fileMatch: true });
+});
+
+test('unknown or failed hashing is not rendered as a mismatch', () => {
+  assert.deepEqual(localVerificationChecks(undefined, [], originalHash, false), { signatureValid: undefined, fileMatch: undefined });
+  const failed: VerificationTraceEvent[] = [{ id: 'sha256', operation: '제출 PDF 전체 바이트 SHA-256', location: 'local', state: 'failure', detail: 'Web Crypto SHA-256 계산 실패' }];
+  assert.deepEqual(localVerificationChecks({ status: 'unavailable', message: '' }, failed, originalHash, false), { signatureValid: undefined, fileMatch: undefined });
+});
+
+test('resigned candidate checks are not replaced by the original reference signature', () => {
+  const trace: VerificationTraceEvent[] = [
+    { id: 'sha256', operation: '재서명 PDF 전체 바이트 SHA-256', location: 'local', state: 'success', detail: changedHash },
+    { id: 'signature', operation: '재서명 정보의 발급자 주소 복구', location: 'local', state: 'success' },
+    { id: 'signature', operation: '등록 원본의 EIP-712 발급자 주소 복구', location: 'local', state: 'failure' },
+  ];
+  assert.deepEqual(localVerificationChecks({ status: 'unavailable', message: '', signatureValid: false }, trace, changedHash, true), { signatureValid: true, fileMatch: true });
+});
+
+test('local success during an RPC outage does not turn the final verdict into success', () => {
+  const result = { status: 'unavailable' as const, message: 'RPC failed', signatureValid: true, fileHash: originalHash };
+  assert.deepEqual(localVerificationChecks(result, [], originalHash, false), { signatureValid: true, fileMatch: true });
+  assert.equal(verifierOutcome(result).kind, 'failure');
+});
 
 test('signed comparison keeps valid issuer evidence distinct from registered-original conflict', () => {
   const outcome = verifierOutcome({ status: 'file-mismatch', message: 'registered original differs',

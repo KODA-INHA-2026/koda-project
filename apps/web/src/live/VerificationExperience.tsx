@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { addressUrl, transactionUrl } from './wallet';
 import type { PresentationProps } from './presentation-types';
 import { MOTION_LABEL, MOTION_MS, type MotionStep } from './presentation-sequence';
-import { verifierOutcome } from './verifier-outcome';
+import { localVerificationChecks, verifierOutcome } from './verifier-outcome';
 import './verification-experience.css';
 
 type Motion = { step: MotionStep; paused: boolean; replay: boolean; reducedMotion: boolean; replayRun: () => void; finish: () => void; toggle: () => void };
@@ -17,10 +17,9 @@ function Icon({ name }: { name: 'file' | 'check' | 'close' | 'alert' | 'arrow' |
   };
   return <svg className="ve-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={paths[name]} /></svg>;
 }
-function ProductIcon({ name }: { name: 'building' | 'audit' | 'verify' }) {
+function ProductIcon({ name }: { name: 'building' | 'verify' }) {
   const paths = {
     building: 'M4 21V4h11v17M15 9h5v12M8 8h3m-3 4h3m-3 4h3m9 5H2',
-    audit: 'M6 3h12v18H6ZM9 7h6m-6 4h6m-6 4h3',
     verify: 'M4 4h10v5h6v11H4Zm10 0v5h6m-12 6 2 2 4-5',
   };
   return <svg className="ve-product-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={paths[name]} /></svg>;
@@ -33,10 +32,7 @@ export function VerificationExperience(props: Props) {
   const signedComparison = props.result?.signedComparison;
   const comparingSigned = Boolean(props.comparisonReference);
   const conflict = signedComparison?.registrationConflict === true;
-  const candidateSignature = trace.findLast(event => event.operation === '재서명 정보의 발급자 주소 복구');
-  const candidateFile = trace.findLast(event => event.operation === '재서명 PDF 전체 바이트 SHA-256');
-  const signatureChecked = signedComparison?.signatureValid ?? (candidateSignature?.state === 'success' ? true : candidateSignature?.state === 'failure' ? false : undefined);
-  const signedFileChecked = signedComparison?.fileMatch ?? (candidateFile?.state === 'success' ? true : candidateFile?.state === 'failure' ? false : undefined);
+  const { signatureValid: signatureChecked, fileMatch: signedFileChecked } = localVerificationChecks(props.result, trace, props.proof?.documentHash, comparingSigned);
   const running = step !== 'ready' && step !== 'result';
   const finished = step === 'result' && Boolean(props.result) && !props.verificationBusy;
   const fileHash = trace.findLast(event => event.id === 'sha256' && event.state === 'success')?.detail ?? props.result?.fileHash;
@@ -108,21 +104,20 @@ export function VerificationExperience(props: Props) {
         <aside className="ve-product-nav" aria-label="KODA 대시보드 메뉴 예시">
           <div className="ve-product-org"><ProductIcon name="building" /><strong>외부 수신자</strong></div>
           <div className="ve-product-nav-section"><span><ProductIcon name="verify" />문서 검증</span><strong aria-current="page">증빙 문서 검증</strong></div>
-          <div className="ve-product-nav-section is-muted"><span><ProductIcon name="audit" />감사</span><small>메시지 서명 검증</small></div>
           <p>KODA</p>
         </aside>
         <div className="ve-app-main">
-          <header className="ve-app-header"><div><small>감사</small><strong>증빙 문서 검증</strong></div><span>제3자 검증</span></header>
+          <header className="ve-app-header"><div><small>KODA · 외부 수신자용</small><strong>증빙 문서 검증</strong></div><span>제3자 검증</span></header>
           <div className="ve-app-body">
           <label className="ve-upload"><span className="ve-upload-heading"><b>전달받은 두 파일</b><em>파일 불러오기</em></span><span className={`ve-file-row${props.selectedName ? ' is-loaded' : ''}`}><Icon name="file" /><span><b>증명서 PDF</b><small>{props.selectedName ?? '선택 전'}</small></span><small>{props.selectedName ? '불러옴' : '필요'}</small></span><span className={`ve-file-row${props.selectedProofName ? ' is-loaded' : ''}`}><span className="ve-json-icon" aria-hidden="true">{'{ }'}</span><span><b>검증정보 JSON</b><small>{props.selectedProofName ?? '문서 ID·원본 해시·발급서명'}</small></span><small>{props.selectedProofName ? '불러옴' : '필요'}</small></span><input aria-label="전달받은 PDF와 검증정보 선택" disabled={props.busy} type="file" multiple accept="application/pdf,application/json,.pdf,.json" onChange={event => { props.onSelectFiles(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label>
           {props.inputError && <p className="ve-input-error" role="alert">{props.inputError}</p>}
           {(props.selectedName || props.selectedProofName || props.inputLoading) && <div className="ve-input-status"><span>{props.inputLoading ? '파일 읽는 중' : props.inputSource === 'sample' ? '발표용 예시 자료' : '수신자가 선택한 파일'}</span><button disabled={props.busy} onClick={props.onClearFiles}>다시 선택</button></div>}
           <button ref={buttonRef} className="ve-primary" disabled={!props.canVerify || props.busy || running} onClick={props.onVerify}>{props.verificationBusy ? '검증 중' : running ? '처리 흐름 표시 중' : props.result ? '다시 검증하기' : '문서 검증하기'}<Icon name="arrow" /></button>
-          {comparingSigned ? <div className="ve-local-checks" aria-label="제출 문서의 서명과 파일 검사" aria-live="polite">
-            <span>브라우저 검사</span>
-            <strong className={signatureChecked ? 'is-confirmed' : ''}>{signatureChecked && <Icon name="check" />}발급서명 {signatureChecked === undefined ? '검사 전' : signatureChecked ? '확인' : '확인 불가'}</strong>
-            <strong className={signedFileChecked ? 'is-confirmed' : ''}>{signedFileChecked && <Icon name="check" />}서명된 PDF {signedFileChecked === undefined ? '검사 전' : signedFileChecked ? '일치' : '불일치'}</strong>
-          </div> : <p className={`ve-local-operation${step === 'prepare' ? ' is-active' : ''}`}>브라우저에서 PDF 해시·발급서명 확인</p>}
+          <div className="ve-local-checks" aria-label="제출 문서의 서명과 파일 검사" aria-live="polite">
+            <span>수신자의 브라우저</span>
+            <strong className={signatureChecked === undefined ? '' : signatureChecked ? 'is-confirmed' : 'is-warning'}>{signatureChecked && <Icon name="check" />}발급서명 {signatureChecked === undefined ? '확인 전' : signatureChecked ? '유효' : '확인 불가'}</strong>
+            <strong className={signedFileChecked === undefined ? '' : signedFileChecked ? 'is-confirmed' : 'is-warning'}>{signedFileChecked && <Icon name="check" />}PDF ↔ 서명정보 {signedFileChecked === undefined ? '대조 전' : signedFileChecked ? '일치' : '불일치'}</strong>
+          </div>
           <div className={`ve-compare-tray${returned ? ' has-record' : ''}`} aria-label="제출 PDF와 등록 기록 대조">
             <div className={`ve-file-digest${fileHash ? ' has-hash' : ''}`}><span>제출 PDF <small>SHA-256</small></span><code>{short(fileHash)}</code></div>
             <div className="ve-comparison-sign" aria-label={compared ? isMatch ? '해시 일치' : '해시 불일치' : '대조 전'}>{compared ? isMatch ? '=' : '≠' : '·'}</div>
@@ -133,6 +128,7 @@ export function VerificationExperience(props: Props) {
               <div className="ve-verdict"><div className="ve-outcome-icon"><Icon name={outcome.kind === 'match' ? 'check' : outcome.kind === 'mismatch' ? 'close' : 'alert'} /></div><h2>{outcome.title}</h2></div>
               {(outcome.kind === 'failure' || outcome.kind === 'pending' || conflict) && <p className="ve-error-reason">{outcome.description}</p>}
               <ol className="ve-questions">{outcome.questions.map(question => <li key={question.label} className={`is-${question.state}`}><span>{question.label}</span><strong>{question.state === 'confirmed' ? <Icon name="check" /> : null}{question.value}</strong></li>)}</ol>
+              <p className="ve-proof-scope">문서의 발급서명과 원본 일치 여부를 확인합니다. 실제 BTC 잔고·소유권이나 전달 중의 모든 편집 이력을 증명하는 결과는 아닙니다.</p>
             </section> : <div className="ve-live-state" aria-live="polite"><span className={running ? 'is-working' : ''} /><div><h2>{step === 'ready' ? readyTitle : MOTION_LABEL[step]}</h2><p>{step === 'ready' ? '검증정보의 발급서명과 등록된 원본을 확인합니다.' : step === 'prepare' ? '발급서명과 조회 기준을 확인하는 중입니다.' : step === 'request' ? 'PDF는 보내지 않고 문서 ID로 조회합니다.' : step === 'record' ? '이미 등록된 기록을 읽습니다.' : step === 'return' ? '이 기록이 PDF를 대조할 기준입니다.' : '두 해시가 같은지 확인합니다.'}</p></div></div>}
           </div>
           <p className="ve-app-note">파일은 이 브라우저에서 처리하고, Ethereum에서는 등록 기록을 조회합니다.</p>
@@ -147,9 +143,9 @@ export function VerificationExperience(props: Props) {
           <g className="ve-block-neighbor"><path d="M5 55 18 43h38L43 55ZM43 55 56 43v46L43 101ZM5 55h38v46H5Z" /><path d="M224 55 237 43h38L262 55ZM262 55 275 43v46L262 101ZM224 55h38v46h-38Z" /></g>
           <g className="ve-current-block"><path className="ve-block-top" d="M89 33 111 13h83L172 33Z" /><path className="ve-block-side" d="M172 33 194 13v88l-22 20Z" /><path className="ve-block-face" d="M89 33h83v88H89Z" /><path className="ve-block-lines" d="M106 55h49M106 70h49M106 85h32" /></g>
         </svg>
-        <div ref={registryRef} className="ve-registry-record"><span>등록된 원본 해시</span><code>{recordVisible ? short(props.result?.chainHash) : props.result?.status === 'not-registered' && finished ? '등록 기록 없음' : '조회 전'}</code><small>스마트컨트랙트에서 기록 읽기</small></div>
-        <p className="ve-chain-note">확정된 블록 기준 · 조회 가스비 없음</p>
-        {conflict && returned && <p className="ve-registration-value">새 서명과 별개로,<br />이미 등록된 기준을 확인합니다.</p>}
+        <div ref={registryRef} className="ve-registry-record"><span>같은 문서 ID에 등록된 원본</span><code>{recordVisible ? short(props.result?.chainHash) : props.result?.status === 'not-registered' && finished ? '등록 기록 없음' : '조회 전'}</code><small>{recordVisible ? `확정 블록 #${props.result?.finalizedBlock}` : '등록·조회 스마트컨트랙트'}</small></div>
+        <p className="ve-chain-note">조회에는 지갑·가스비가 필요하지 않습니다.</p>
+        <p className="ve-registration-value">{conflict && returned ? <>서명이 새로 만들어져도,<br />등록된 원본은 그대로입니다.</> : <>발급자도 같은 문서 ID의 원본을<br />교체할 수 없도록 구현했습니다.</>}</p>
       </section>
 
       <div className="ve-route-labels" aria-label="브라우저와 Ethereum 사이의 조회 경로">
@@ -173,6 +169,18 @@ export function VerificationExperience(props: Props) {
         {finished && !reducedMotion && <button onClick={props.motion.replayRun}>과정 다시 보기<Icon name="play" /></button>}
       </div>
     </div>
+    <section className="ve-why" aria-label="이 검증에서 블록체인이 추가하는 가치">
+      <div><span>왜 블록체인인가</span><h2>대조할 기준을 발급기관 밖에도 남깁니다</h2></div>
+      <p>고객사의 증빙을 받은 기관들이 KODA 검증 서버의 응답에만 의존하지 않고, 같은 등록 기록을 직접 조회할 수 있습니다.</p>
+      <details><summary>서버로도 검증할 수 있는데, 무엇이 다른가요?</summary>
+        <div className="ve-why-comparison">
+          <div><h3>전자서명 + KODA 검증 서버</h3><p>서버에 원본 해시를 보관하고 수정 권한을 제한하면, 다시 서명한 문서도 등록 원본과 대조할 수 있습니다. 기준 기록과 조회 응답은 서버의 운영·통제로 관리합니다.</p></div>
+          <div><h3>전자서명 + Ethereum</h3><p>지정 발급자만 등록하고 같은 문서 ID의 재등록을 거부하는 규칙을 컨트랙트에 구현했습니다. Ethereum이 규칙을 실행하고 기록을 유지하므로, 수신자는 발급기관 밖의 공통 기록을 확인할 수 있습니다.</p></div>
+        </div>
+        <p>재서명 사례는 ‘서명이 유효함’과 ‘등록 원본과 같음’이 다르다는 것을 보여줍니다. 이 대조 자체는 서버로도 가능합니다. 우리는 중요한 증빙이 여러 기관에서 활용될 때, 발급자에게도 적용되는 등록 규칙과 외부에서 확인할 공통 기준을 두는 데 가치를 뒀습니다.</p>
+        <p className="ve-why-limit">블록체인만이 가능한 방식이라는 뜻은 아닙니다. 별도 감사·외부 기록 관리 같은 대안도 있으며, 등록 비용과 확정 대기, 키·조회 환경 관리가 추가됩니다. 실제 업무 시간·비용 절감은 아직 측정하지 않았습니다.</p>
+      </details>
+    </section>
     <details className="ve-evidence"><summary>기술 상세·실제 조회 기록</summary><p>제출 파일·서명된 발급정보·체인 기록의 세 해시를 모두 대조합니다. 화면은 관측된 처리를 순서대로 보여주며, 이동 시간은 실제 네트워크 소요 시간이 아닙니다. 배포·서명·확정 상태 확인을 포함한 전체 실행 순서는 아래 기록을 따릅니다.</p><dl>
       <dt>문서 ID</dt><dd>{props.proof?.documentId ?? '준비 전'}</dd><dt>제출 PDF 해시</dt><dd>{props.result?.fileHash ?? '조회 전'}</dd><dt>제출 서명정보의 해시</dt><dd>{props.proof?.documentHash ?? '준비 전'}</dd><dt>체인에서 읽은 해시</dt><dd>{props.result?.chainHash ?? '조회 전'}</dd><dt>발급서명</dt><dd>{props.proof?.signature ?? '준비 전'}</dd><dt>복구한 발급자</dt><dd>{signedComparison?.recoveredAddress ?? props.result?.recoveredAddress ?? '조회 전'}</dd><dt>확정 블록</dt><dd>{props.result?.finalizedBlock ?? '조회 전'}</dd>
       {props.comparisonReference && <><dt>등록 원본의 서명정보</dt><dd>{props.comparisonReference.documentHash}</dd><dt>등록 원본의 거래</dt><dd>{props.comparisonReference.transactionHash}</dd></>}
