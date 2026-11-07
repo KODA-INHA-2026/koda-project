@@ -1,10 +1,10 @@
 {
   "designNetwork": "Ethereum L1",
-  "builtAtUtc": "2026-11-06T17:45:22.8112917Z",
+  "builtAtUtc": "2026-11-07T18:55:10.3283045Z",
   "sourceBranch": "feat/first-demo",
   "network": "Ethereum Sepolia",
-  "purpose": "CEO four-stage presentation flow with a separate external verification draft",
+  "purpose": "Five-stage demo with visible issuer processing and preserved third-party query and response",
   "asset": "native BTC (fictional certificate)",
-  "sourceCommit": "1e1eaadc20252754ad54ff5723c30b4bf4c2e43d",
+  "sourceCommit": "7b59c6c303e46be63b7e65e39bfc147313c83e08",
   "signedComparison": "user-approved message signature; no new registration transaction"
 }
